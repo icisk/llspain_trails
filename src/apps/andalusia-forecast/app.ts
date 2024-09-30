@@ -15,4 +15,4 @@ const Element = createCustomElement({
     }
 });
 
-customElements.define("andalusia-forcast", Element);
+customElements.define("andalusia-forecast", Element);
