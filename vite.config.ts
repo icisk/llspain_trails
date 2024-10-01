@@ -46,7 +46,7 @@ export default defineConfig(({ mode }) => {
 
                 // Additional directories to include as html (must contain index.html files)
                 sites: [
-                    "sites/andalusia-forecast",
+                    //"sites/andalusia-forecast",
 
                     // Include sample sites in the build
                     //...sampleSites
@@ -70,10 +70,10 @@ export default defineConfig(({ mode }) => {
             globals: true,
             environment: "happy-dom",
             setupFiles: ["testing/global-setup.ts"],
-         
+
             server: {
                 deps: {
-                    // Workaround to fix some import issues, see 
+                    // Workaround to fix some import issues, see
                     // https://github.com/open-pioneer/trails-openlayers-base-packages/issues/314
                     inline: [/@open-pioneer[/\\]/]
                 }
