@@ -22,11 +22,21 @@ Point your browser at it and start programming!
 
 Additional in-depth information can be found in the [Documentation](./docs/README.md).
 
-## See also
+## Docker
 
--   [Core packages](https://github.com/open-pioneer/trails-core-packages): Contains the runtime package and other central packages.
--   [OpenLayers base packages](https://github.com/open-pioneer/trails-openlayers-base-packages): Contains packages using OpenLayers to render a map.
--   [Build tools](https://github.com/open-pioneer/trails-build-tools): Contains our build tooling such as the Vite plugin.
+**Build** the image with:
+
+```shell
+docker build -t 52north/i-cisk-guadalquivir:latest .
+```
+
+**Run** the image with:
+
+```shell
+docker run -p 80:8080 --rm --name ll-spain 52north/i-cisk-guadalquivir:latest
+```
+
+**Access** the application in your browser <http://localhost/>.
 
 ## License
 

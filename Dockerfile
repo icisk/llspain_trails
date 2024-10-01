@@ -1,11 +1,10 @@
-FROM node:20-slim AS base
+FROM node:20-slim AS build
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 
 RUN corepack enable
-# TODO: is it possible to use a version string like 9.x as outlined in the README.md!?
-RUN corepack prepare pnpm@9.5.0 --activate
+RUN corepack use pnpm@9.x
 
 COPY . /app
 WORKDIR /app
@@ -17,28 +16,7 @@ RUN pnpm install
 # RUN pnpm install --frozen-lockfile
 RUN pnpm build
 
-FROM nginx:alpine3.19
-# copy nginx config
-#COPY ./docker/nginx.conf /etc/nginx/conf.d/default.conf
-# TODO: check if default nginx conf is working
-# copy build
-COPY --from=base /app/dist/www /usr/share/nginx/html
+FROM nginxinc/nginx-unprivileged:stable-alpine-slim
 
-USER root
-# TODO: Check for non-root nginx base image
-## add permissions for nginx user
-RUN chown -R nginx:nginx /usr/share/nginx/html && chmod -R 755 /usr/share/nginx/html && \
-        chown -R nginx:nginx /var/cache/nginx && \
-        chown -R nginx:nginx /var/log/nginx && \
-        chown -R nginx:nginx /etc/nginx/conf.d
-RUN touch /var/run/nginx.pid && \
-        chown -R nginx:nginx /var/run/nginx.pid
-
-## switch to non-root user
-USER nginx
-
-# can be used to adjust config files before starting
-#COPY docker/bootstrap.sh /bootstrap.sh
-#CMD ["sh", "/bootstrap.sh"]
-#EXPOSE 8080
-# PORT should be 80 by default...
+# copy application from build stage to run stage
+COPY --from=build /app/dist/www /usr/share/nginx/html
