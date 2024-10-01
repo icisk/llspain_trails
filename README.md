@@ -1,5 +1,6 @@
 # I-CISK - LL Spain
 
+[![Test and Build](https://github.com/icisk/llspain_trails/actions/workflows/test-and-build.yml/badge.svg)](https://github.com/icisk/llspain_trails/actions/workflows/test-and-build.yml) [![Audit dependencies (daily)](https://github.com/icisk/llspain_trails/actions/workflows/audit-dependencies.yml/badge.svg)](https://github.com/icisk/llspain_trails/actions/workflows/audit-dependencies.yml)
 
 ## Quick start
 
