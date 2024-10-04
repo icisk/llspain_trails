@@ -1,5 +1,3 @@
-// SPDX-FileCopyrightText: 2023 Open Pioneer project (https://github.com/open-pioneer)
-// SPDX-License-Identifier: Apache-2.0
 import { Box, Center, Container, Flex, HStack, Spacer } from "@open-pioneer/chakra-integration";
 import { CoordinateViewer } from "@open-pioneer/coordinate-viewer";
 import { MapAnchor, MapContainer } from "@open-pioneer/map";
@@ -53,7 +51,14 @@ export function AppUI() {
             .then((response) => response.json())
             .then((data) => {
                 console.log("Fetched data:", data);
-                setData(data);
+                const hasValidData = Object.values(data.ranges).some(range =>
+                    range.values.some(value => value > -1e37 && value < 1e37)
+                );
+                if (hasValidData) {
+                    setData(data);
+                } else {
+                    console.warn("No valid data available for the selected area.");
+                }
                 setLoading(false);
             })
             .catch((error) => {
