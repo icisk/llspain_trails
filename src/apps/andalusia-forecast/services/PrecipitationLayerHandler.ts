@@ -54,6 +54,7 @@ export class PrecipitationLayerHandlerImpl implements PrecipitationLayerHandler 
         this.mapRegistry.getMapModel(MAP_ID).then((model) => {
             this.layer = new WebGLTileLayer({
                 source: this.createSource(),
+                zIndex: 0, // Order of the Layers
                 style: {
                     color: [
                         "case",
