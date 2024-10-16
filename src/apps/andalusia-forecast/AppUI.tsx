@@ -21,6 +21,11 @@ import { useMapModel } from "@open-pioneer/map";
 import MapBrowserEvent from "ol/MapBrowserEvent";
 import { transform } from "ol/proj";
 
+import { Vector as VectorLayer } from 'ol/layer';
+import { Vector as VectorSource } from 'ol/source';
+import Feature from 'ol/Feature';
+import { Circle as CircleStyle, Fill, Stroke, Style } from 'ol/style';
+
 interface DataResponse {
     ranges: {
         [key: string]: {
@@ -29,18 +34,26 @@ interface DataResponse {
     };
 }
 
+const markerSource = new VectorSource();
+const markerLayer = new VectorLayer({
+    source: markerSource,
+    zIndex: 1
+});
+
+let displayCoordinates;
+
+
 export function AppUI() {
     const [data, setData] = useState<DataResponse | null>(null);
     const [_loading, setLoading] = useState(true);
     const [_error, setError] = useState<string | null>(null);
     const [clickedCoordinates, setClickedCoordinates] = useState<number[] | null>(null);
-    let options;
-
+    
     const intl = useIntl();
 
     useEffect(() => {
         if (!clickedCoordinates) return;
-
+        displayCoordinates = transform(clickedCoordinates, "EPSG:25830", "EPSG:3857")
         const [x, y] = clickedCoordinates;
 
         const url = `https://i-cisk.dev.52north.org/data/collections/creaf_forecast/position?coords=POINT(${x}%20${y})&parameter-name=pc05,pc10,pc25,pc50,pc75,pc90,pc95`;
@@ -71,11 +84,71 @@ export function AppUI() {
     const mapState = useMapModel(MAP_ID);
     const _months_eng = ["january", "february", "march", "april", "may", "june", "july", "august"];
     const months_esp = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto"];
+    const initialSeriesData = [
+        { name: "pc05", data: [] },
+        { name: "pc10", data: [] },
+        { name: "pc25", data: [] },
+        { name: "pc50", data: [] },
+        { name: "pc75", data: [] },
+        { name: "pc90", data: [] },
+        { name: "pc95", data: [] }
+    ];
+
+    let options = {
+        title: {
+            text: "Precipitation Data"
+        },
+        xAxis: {
+            //categories: months_eng
+            categories: months_esp
+        },
+        yAxis: {
+            title: {
+                text: "Precipitation (mm)"
+            },
+            min: 0,
+            max: 250
+        },
+        series: initialSeriesData
+    };
+
+    const markerStyle = new Style({
+        image: new CircleStyle({
+            radius: 6,  // Size of the marker
+            fill: new Fill({ color: 'red' }),  // Fill color (red)
+            stroke: new Stroke({
+                color: 'black',  // Outline color (black)
+                width: 2         // Width of the outline
+            })
+        })
+    });
+
+    useEffect(() => {
+        if (mapState?.map?.olMap) {
+          const olMap = mapState.map.olMap;
+          olMap.addLayer(markerLayer);
+      
+          return () => {
+            olMap.removeLayer(markerLayer); // Cleanup on unmount
+          };
+        }
+      }, [mapState]);
 
     const handleMapClick = (event: MapBrowserEvent<MouseEvent>) => {
         const coordinatesEPSG3857 = event.coordinate;
+        console.log(coordinatesEPSG3857);
         const coordinatesEPSG25830 = transform(coordinatesEPSG3857, "EPSG:3857", "EPSG:25830");
         setClickedCoordinates(coordinatesEPSG25830);
+
+        markerSource.clear();
+
+        const marker = new Feature({
+            geometry: new Point(coordinatesEPSG3857),
+        });
+
+        marker.setStyle(markerStyle);
+
+        markerSource.addFeature(marker);
     };
 
     useEffect(() => {
@@ -95,22 +168,7 @@ export function AppUI() {
             name: param,
             data: data.ranges[param]?.values || []
         }));
-
-        options = {
-            title: {
-                text: "Precipitation Data"
-            },
-            xAxis: {
-                //categories: months_eng
-                categories: months_esp
-            },
-            yAxis: {
-                title: {
-                    text: "Precipitation (mm)"
-                }
-            },
-            series: seriesData
-        };
+        options.series = seriesData;
     }
 
     const completeExtent = {
@@ -183,6 +241,11 @@ export function AppUI() {
             </Center>
 
             <Box p={4}>
+            <div style={{ marginBottom: "10px", fontSize: "16px" }}>
+                {displayCoordinates 
+                    ? `Clicked Coordinates: ${displayCoordinates[0].toFixed(2)}, ${displayCoordinates[1].toFixed(2)}`
+                    : "No clicked coordinates yet."}
+            </div>
                 <div>
                     <HighchartsReact highcharts={Highcharts} options={options} />
                 </div>
