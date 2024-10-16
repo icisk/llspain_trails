@@ -11,5 +11,5 @@
         "@open-pioneer/scale-bar": "^0.4.3",
         "@open-pioneer/reactivity": "^0.1.0",
         "@conterra/reactivity-core": "^0.4.2"
-    }
+        }
 }

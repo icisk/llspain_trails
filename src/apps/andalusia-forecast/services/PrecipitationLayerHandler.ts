@@ -1,5 +1,3 @@
-// SPDX-FileCopyrightText: 2023 Open Pioneer project (https://github.com/open-pioneer)
-// SPDX-License-Identifier: Apache-2.0
 import { reactive, Reactive } from "@conterra/reactivity-core";
 import { MapRegistry, SimpleLayer } from "@open-pioneer/map";
 import { DeclaredService, ServiceOptions } from "@open-pioneer/runtime";
@@ -57,8 +55,10 @@ export class PrecipitationLayerHandlerImpl implements PrecipitationLayerHandler 
                 style: {
                     color: [
                         "case",
-                        ["<=", ["band", 1], 0.0],
-                        [0, 0, 0, 0],
+                        ["all", ["==", ["band", 1], 0], ["==", ["band", 2], 0]],
+                        [0, 0, 0, 0], // Transparent for 0 values outside the area of interest
+                        ["==", ["band", 1], 0],
+                        "red", // Red for actual 0 values within the area of interest
                         ["<=", ["band", 1], 0.15],
                         "red",
                         ["<=", ["band", 1], 0.3],
@@ -73,29 +73,9 @@ export class PrecipitationLayerHandlerImpl implements PrecipitationLayerHandler 
                         "indigo",
                         "violet"
                     ]
-                    // color: [
-                    //     "interpolate",
-                    //     ["linear"],
-                    //     ["band", 1],
-                    //     0, // ndvi values <= -0.2 will get the color below
-                    //     [0, 0, 0, 0],
-                    //     0.01, // ndvi values between -0.2 and 0 will get an interpolated color between the one above and the one below
-                    //     "red",
-                    //     0.15,
-                    //     "orange",
-                    //     0.3,
-                    //     "yellow",
-                    //     0.45,
-                    //     "green",
-                    //     0.6,
-                    //     "blue",
-                    //     0.75,
-                    //     "indigo",
-                    //     0.9,
-                    //     "violet"
-                    // ]
                 }
             });
+
             model?.layers.addLayer(
                 new SimpleLayer({
                     title: "Precipitation Forecast",
@@ -117,6 +97,7 @@ export class PrecipitationLayerHandlerImpl implements PrecipitationLayerHandler 
     get currentVariable(): Variable {
         return this.#currentVariable.value;
     }
+
     setVariable(variable: Variable): void {
         this.#currentVariable.value = variable;
         this.layer?.setSource(this.createSource());
@@ -124,11 +105,18 @@ export class PrecipitationLayerHandlerImpl implements PrecipitationLayerHandler 
 
     private createSource() {
         const year = 2024;
-        const url = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/precip_forecats/cog_PLforecast_${this.currentMonth}_${year}_${this.currentVariable}_NoNDVI_RegMult_E3_MAP_Corrected.tif`;
+        const precipitationUrl = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/precip_forecats/cog_PLforecast_${this.currentMonth}_${year}_${this.currentVariable}_NoNDVI_RegMult_E3_MAP_Corrected.tif`;
+        const maskUrl = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/precip_forecats/cog_PLforecast_${Month.february}_${year}_${Variable.pc95}_NoNDVI_RegMult_E3_MAP_Corrected.tif`;
+        
         return new GeoTIFF({
             sources: [
                 {
-                    url,
+                    url: precipitationUrl,
+                    max: 50,
+                    min: 0
+                },
+                {
+                    url: maskUrl,
                     max: 50,
                     min: 0
                 }
