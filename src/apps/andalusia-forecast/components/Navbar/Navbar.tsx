@@ -1,32 +1,34 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Navbar.css';
+import {Box, HStack, Button} from "@chakra-ui/react";
 
 const Navbar: React.FC = () => {
     return (
-        <nav>
-            <ul>
-                <li>
-                    <p>Andalusia Living Lab</p>
-                </li>
-                <li>
-                    <Link to="/">Home</Link>
-                </li>
-                <li>
-                    <Link to="/forecast">Forecast</Link>
-                </li>
-                <li>
-                    <Link to="/historicclimatedata1">Historic Climate Data 1</Link>
-                </li>
-                <li>
-                    <Link to="/historicclimatedata2">Historic Climate Data 2</Link>
-                </li>
-                <li>
-                    <Link to="/biologicaleffectivedegreedays">Biological Effective Degree Days</Link>
-                </li>
-            </ul>
-        </nav>
-    );
+            <Box>
+                <HStack spacing={4} justify="space-evenly" width="100%">
+                    <Button as={Link} to="/" variant="outline">
+                        Home
+                    </Button>
+                    <Button as={Link} to="/forecast" variant="outline">
+                        Forecast
+                    </Button>
+                    <Button as={Link} to="/historicclimatedata1" variant="outline">
+                        Historic Climate Data 1
+                    </Button>
+                    <Button as={Link} to="/historicclimatedata2" variant="outline">
+                        Historic Climate Data 2
+                    </Button>
+                    <Button as={Link} to="/biologicaleffectivedegreedays" variant="outline">
+                        Biological Effective Degree Days
+                    </Button>
+                    <Button as={Link} to="/hydrologicalservice" variant="outline">
+                        Hydro Service
+                    </Button>
+                </HStack>
+            </Box>
+
+);
 };
 
 export default Navbar;

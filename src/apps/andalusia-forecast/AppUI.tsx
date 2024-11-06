@@ -6,6 +6,7 @@ import { Forecast } from "./pages/Forecast";
 import HistoricClimateData1 from "./pages/HistoricClimateData1";
 import HistoricClimateData2 from "./pages/HistoricClimateData2";
 import BiologicalEffectiveDegreeDays from "./pages/BiologicalEffectiveDegreeDays";
+import HydrologicalService from "./pages/HydrologicalService";
 import Navbar from "./components/Navbar/Navbar";
 
 const AppUI = () => {
@@ -18,6 +19,7 @@ const AppUI = () => {
                 <Route path="/HistoricClimateData1" element={<HistoricClimateData1 />} />
                 <Route path="/HistoricClimateData2" element={<HistoricClimateData2 />} />
                 <Route path="/BiologicalEffectiveDegreeDays" element={<BiologicalEffectiveDegreeDays />} />
+                <Route path="/HydrologicalService" element={<HydrologicalService />} />
             </Routes>
         </Router>
     );

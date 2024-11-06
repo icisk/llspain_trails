@@ -1,5 +1,7 @@
 # at least one empty yaml file must exist for each supported language
 # (might be empty if all messages are defined in the packages used by this app)
 messages:
-  heading: Medium-term weather forecasts (up to 6 months)
-  description: Climate predictions for planning economic activities - hunting, livestock and agricultural farms, forestry and training activities.
+  heading_forecast: Medium-term weather forecasts (up to 6 months)
+  description_forecast: Climate predictions for planning economic activities - hunting, livestock and agricultural farms, forestry and training activities.
+  heading_hydro: Hydrological Service
+  description_hydro: This is a story map about hydrological facts
