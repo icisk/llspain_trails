@@ -11,6 +11,9 @@ export default defineBuildConfig({
         MapProvider: {
             provides: ["map.MapConfigProvider"]
         },
+        StoryMapProvider: {
+            provides: ["map.MapConfigProvider"]
+        },
         PrecipitationLayerHandlerImpl: {
             provides: ["app.PrecipitationLayerHandler"],
             references: {

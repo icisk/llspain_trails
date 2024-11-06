@@ -1,12 +1,15 @@
 import React from 'react';
+import {InfoBoxComponent} from "info-box";
+import {useIntl} from "open-pioneer:react-hooks";
+
 
 const Home = () => {
+    const intl = useIntl();
     return (
-        <>
-            <h3>Welcome!</h3>
-            <p>This webpage exhibits some first examples for the visualization of cimate and meteorological data for Living Lab Andalusia in Spain in the I-CISK project.</p>
-            <p>Navigate through the top bar to explore the different visualizations.</p>
-        </>
+        <InfoBoxComponent
+            header={intl.formatMessage({id: "heading_home"})}
+            description={intl.formatMessage({id: "description_home"})}
+        ></InfoBoxComponent>
         
     )
 };

@@ -189,7 +189,7 @@ export function Forecast() {
         <Container minWidth={"container.xl"}>
             <InfoBoxComponent
                 header={intl.formatMessage({ id: "heading_forecast" })}
-                description={intl.formatMessage({ id: "description" })}
+                description={intl.formatMessage({ id: "description_forecast" })}
             ></InfoBoxComponent>
 
             <Center pt={2}>

@@ -5,7 +5,7 @@ import {Box, HStack, Button} from "@chakra-ui/react";
 
 const Navbar: React.FC = () => {
     return (
-            <Box>
+            <Box style={{padding: 20}}>
                 <HStack spacing={4} justify="space-evenly" width="100%">
                     <Button as={Link} to="/" variant="outline">
                         Home

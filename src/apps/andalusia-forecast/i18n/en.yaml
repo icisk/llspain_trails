@@ -1,6 +1,8 @@
 # at least one empty yaml file must exist for each supported language
 # (might be empty if all messages are defined in the packages used by this app)
 messages:
+  heading_home: Welcome!
+  description_home: This webpage exhibits some first examples for the visualization of climate and meteorological data for Living Lab Andalusia in Spain in the I-CISK project. Navigate through the top bar to explore the different visualizations.
   heading_forecast: Medium-term weather forecasts (up to 6 months)
   description_forecast: Climate predictions for planning economic activities - hunting, livestock and agricultural farms, forestry and training activities.
   heading_hydro: Hydrological Service

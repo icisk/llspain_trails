@@ -1,15 +1,25 @@
 import React from 'react';
 
-import {MapAnchor, MapContainer, useMapModel} from "@open-pioneer/map";
-import {MAP_ID} from "../services/MapProvider";
+import {
+    MapAnchor,
+    MapConfig,
+    MapConfigProvider,
+    MapContainer, SimpleLayer,
+    useMapModel
+} from "@open-pioneer/map";
+import { MAP_ID, MapProvider} from "../services/MapProvider";
 import {Container, Flex, Box} from "@open-pioneer/chakra-integration";
 import {ZoomIn, ZoomOut} from "@open-pioneer/map-navigation";
 import {InfoBoxComponent} from "info-box";
 import {useIntl} from "open-pioneer:react-hooks";
+import proj4 from "proj4";
+import {register} from "ol/proj/proj4";
+import TileLayer from "ol/layer/Tile";
+import OSM from "ol/source/OSM";
 
 
 export function HydrologicalService(){
-    const mapState = useMapModel(MAP_ID);
+
     const intl = useIntl();
     return (
         // <>       
@@ -29,7 +39,7 @@ export function HydrologicalService(){
             ></InfoBoxComponent>
             <p>blabla</p>
             <Box height={"500px"}>
-                <MapContainer mapId={MAP_ID} role="main"/>
+                <MapContainer mapId={'test'} role="main"/>
             </Box>
 
         </Container>
