@@ -11,7 +11,7 @@ export const markerStyle = new Style({
     })
 });
 
-export const createMarker = (coordinates: number[], markerStyle: Style) => {
+export const createMarker = (coordinates: number[], markerStyle: Style) :Feature<Point> => {
     const marker = new Feature({
         geometry: new Point(coordinates),
     });

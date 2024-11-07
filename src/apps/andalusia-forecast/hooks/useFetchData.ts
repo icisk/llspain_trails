@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { transform } from "ol/proj";
 
-export function useFetchData(clickedCoordinates) {
+export function useFetchData(clickedCoordinates :any) {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -9,7 +9,7 @@ export function useFetchData(clickedCoordinates) {
     useEffect(() => {
         if (!clickedCoordinates) return;
 
-        const fetchData = async (x, y) => {
+        const fetchData = async (x :any, y :any) => {
             const url = `https://i-cisk.dev.52north.org/data/collections/creaf_forecast/position?coords=POINT(${x}%20${y})&parameter-name=pc05,pc10,pc25,pc50,pc75,pc90,pc95`;
             try {
                 setLoading(true);
@@ -17,8 +17,8 @@ export function useFetchData(clickedCoordinates) {
                 if (!response.ok) throw new Error("Network response was not ok");
                 const jsonData = await response.json();
                 setData(jsonData);
-            } catch (err) {
-                setError("Failed to fetch data.");
+            } catch (err :any) {
+                setError(err.message);
             } finally {
                 setLoading(false);
             }

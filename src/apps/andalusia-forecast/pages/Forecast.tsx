@@ -20,9 +20,6 @@ import MapBrowserEvent from "ol/MapBrowserEvent";
 import { transform } from "ol/proj";
 import { Vector as VectorLayer } from "ol/layer";
 import { Vector as VectorSource } from "ol/source";
-import Feature from "ol/Feature";
-import { Circle as CircleStyle, Fill, Stroke, Style } from "ol/style";
-import { Point } from "ol/geom";
 import { createMarker, markerStyle } from "../components/utils/marker";
 import {completeExtent, cazorlaPoint, pedrochesPoint} from "../components/utils/globals";
 
@@ -47,13 +44,13 @@ export function Forecast() {
     
 
     // Update chart options when data changes
-    useEffect(() => {
+    useEffect(() :void => {
         if (data) {
             const seriesData = Object.keys(data.ranges).map((param) => ({
                 name: param,
                 data: data.ranges[param].values || []
             }));
-            setChartOptions((prevOptions) => ({
+            setChartOptions((prevOptions :any) => ({
                 ...prevOptions,
                 series: seriesData
             }));
