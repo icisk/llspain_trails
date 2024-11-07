@@ -5,7 +5,7 @@ import { useReactiveSnapshot } from "@open-pioneer/reactivity";
 import { useService } from "open-pioneer:react-hooks";
 import { ChangeEvent } from "react";
 
-import { enumKeys } from "../helper";
+import { enumKeys } from "../components/utils/helper";
 import { Month, PrecipitationLayerHandler } from "../services/PrecipitationLayerHandler";
 
 export function ChangeMonth() {
