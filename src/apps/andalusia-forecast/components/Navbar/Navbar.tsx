@@ -14,13 +14,13 @@ const Navbar: React.FC = () => {
                         Forecast
                     </Button>
                     <Button as={Link} to="/historicclimatedata1" variant="outline">
-                        Historic Climate Data 1
+                        comparing 2 Timesteps
                     </Button>
                     <Button as={Link} to="/historicclimatedata2" variant="outline">
-                        Historic Climate Data 2
+                        climate projections (?)
                     </Button>
                     <Button as={Link} to="/biologicaleffectivedegreedays" variant="outline">
-                        Biological Effective Degree Days
+                        Bioindicators/ Drought
                     </Button>
                     <Button as={Link} to="/hydrologicalservice" variant="outline">
                         Hydro Service
