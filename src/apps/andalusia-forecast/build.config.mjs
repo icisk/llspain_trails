@@ -14,6 +14,9 @@ export default defineBuildConfig({
         StoryMapProvider: {
             provides: ["map.MapConfigProvider"]
         },
+        BioindicatorMapProvider: {
+            provides: ["map.MapConfigProvider"]
+        },
         PrecipitationLayerHandlerImpl: {
             provides: ["app.PrecipitationLayerHandler"],
             references: {

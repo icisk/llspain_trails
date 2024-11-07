@@ -7,3 +7,5 @@ messages:
   description_forecast: Climate predictions for planning economic activities - hunting, livestock and agricultural farms, forestry and training activities.
   heading_hydro: Hydrological Service
   description_hydro: This is a story map about hydrological facts
+  heading_bioindicators: Bioindicators/Drought
+  description_bioindicators: This is a page to explore the biological effective degree days.

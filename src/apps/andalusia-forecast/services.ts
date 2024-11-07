@@ -3,3 +3,4 @@
 export { MapProvider } from "./services/MapProvider";
 export { StoryMapProvider } from "./services/StoryMapProvider";
 export { PrecipitationLayerHandlerImpl } from "./services/PrecipitationLayerHandler";
+export { BioindicatorMapProvider } from "./services/BioindicatorMapProvider"
