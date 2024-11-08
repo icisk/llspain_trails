@@ -82,8 +82,8 @@ catalogs:
       specifier: ^4.7.8
       version: 4.7.8
     happy-dom:
-      specifier: ^14.12.3
-      version: 14.12.3
+      specifier: ^15.10.2
+      version: 15.10.2
     husky:
       specifier: ^9.1.1
       version: 9.1.1
@@ -230,7 +230,7 @@ importers:
         version: 4.7.8
       happy-dom:
         specifier: 'catalog:'
-        version: 14.12.3
+        version: 15.10.2
       highcharts:
         specifier: ^11.4.8
         version: 11.4.8
@@ -278,7 +278,7 @@ importers:
         version: 1.8.1(eslint@8.57.0)(vite@5.4.8(@types/node@18.19.41)(sass@1.77.8))
       vitest:
         specifier: 'catalog:'
-        version: 2.0.4(@types/node@18.19.41)(happy-dom@14.12.3)(jsdom@24.1.1)(sass@1.77.8)
+        version: 2.0.4(@types/node@18.19.41)(happy-dom@15.10.2)(jsdom@24.1.1)(sass@1.77.8)
 
   src/apps/andalusia-forecast:
     dependencies:
@@ -2414,8 +2414,8 @@ packages:
     engines: {node: '>=0.4.7'}
     hasBin: true
 
-  happy-dom@14.12.3:
-    resolution: {integrity: sha512-vsYlEs3E9gLwA1Hp+w3qzu+RUDFf4VTT8cyKqVICoZ2k7WM++Qyd2LwzyTi5bqMJFiIC/vNpTDYuxdreENRK/g==}
+  happy-dom@15.10.2:
+    resolution: {integrity: sha512-NbA5XrSovenJIIcfixCREX3ZnV7yHP4phhbfuxxf4CPn+LZpz/jIM9EqJ2DrPwgVDSMoAKH3pZwQvkbsSiCrUw==}
     engines: {node: '>=16.0.0'}
 
   has-bigints@1.0.2:
@@ -6342,7 +6342,7 @@ snapshots:
     optionalDependencies:
       uglify-js: 3.17.4
 
-  happy-dom@14.12.3:
+  happy-dom@15.10.2:
     dependencies:
       entities: 4.5.0
       webidl-conversions: 7.0.0
@@ -7640,7 +7640,7 @@ snapshots:
     optionalDependencies:
       vite: 5.4.8(@types/node@18.19.41)(sass@1.77.8)
 
-  vitest@2.0.4(@types/node@18.19.41)(happy-dom@14.12.3)(jsdom@24.1.1)(sass@1.77.8):
+  vitest@2.0.4(@types/node@18.19.41)(happy-dom@15.10.2)(jsdom@24.1.1)(sass@1.77.8):
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@vitest/expect': 2.0.4
@@ -7663,7 +7663,7 @@ snapshots:
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 18.19.41
-      happy-dom: 14.12.3
+      happy-dom: 15.10.2
       jsdom: 24.1.1
     transitivePeerDependencies:
       - less
