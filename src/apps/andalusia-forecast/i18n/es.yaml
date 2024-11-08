@@ -1,5 +1,13 @@
 # at least one empty yaml file must exist for each supported language
 # (might be empty if all messages are defined in the packages used by this app)
 messages:
-  heading: Pronósticos meteorológicos a medio plazo (hasta 6 meses)
-  description: Predicciones climáticas para planificar actividades económicas - monterías, explotaciones ganaderas y agrícolas, actividades forestales y de formación.
+  heading_home: Welcome!
+  description_home: This webpage exhibits some first examples for the visualization of climate and meteorological data for Living Lab Andalusia in Spain in the I-CISK project. Navigate through the top bar to explore the different visualizations.
+  heading_forecast: Pronósticos meteorológicos a medio plazo (hasta 6 meses)
+  description_forecast: Predicciones climáticas para planificar actividades económicas - monterías, explotaciones ganaderas y agrícolas, actividades forestales y de formación.
+  heading_hydro: Hydrological Service
+  description_hydro: This is a story map about hydrological facts
+  heading_bioindicators: Bioindicators/Drought
+  description_bioindicators: This is a page to explore the biological effective degree days.
+  heading_historic: historic climatic maps
+  description_historic: historic climadata by METEO

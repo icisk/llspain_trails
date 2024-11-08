@@ -34,8 +34,8 @@ export function HydrologicalService(){
 
         <Container minWidth={"container.xl"}>
             <InfoBoxComponent
-                header={intl.formatMessage({id: "heading_hydro"})}
-                description={intl.formatMessage({id: "description_hydro"})}
+                header={intl.formatMessage({id: "hydro_service.heading"})}
+                description={intl.formatMessage({id: "hydro_service.heading_descr"})}
             ></InfoBoxComponent>
             <p>blabla</p>
             <Box height={"500px"}>

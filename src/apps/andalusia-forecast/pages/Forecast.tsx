@@ -21,8 +21,9 @@ import { transform } from "ol/proj";
 import { Vector as VectorLayer } from "ol/layer";
 import { Vector as VectorSource } from "ol/source";
 import { createMarker, markerStyle } from "../components/utils/marker";
-import {completeExtent, cazorlaPoint, pedrochesPoint} from "../components/utils/globals";
 
+import {RegionZoom} from "../components/RegionZoom/RegionZoom";
+import {getMonthArray} from "../components/utils/globals";
 
 // Marker layer for displaying clicks
 const markerSource = new VectorSource();
@@ -36,7 +37,7 @@ export function Forecast() {
 
     // State for managing chart options
     const [chartOptions, setChartOptions] = useState({
-        title: { text: "Precipitation Data" },
+        title: { text: intl.formatMessage({id: "global.plot.header_precip"}) },
         xAxis: { categories: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto"] },
         yAxis: { title: { text: "Precipitation (mm)" }, min: 0, max: 350 },
         series: []
@@ -87,12 +88,12 @@ export function Forecast() {
     };
 
 
-    
+    console.log(getMonthArray())
     return (
         <Container minWidth={"container.xl"}>
             <InfoBoxComponent
-                header={intl.formatMessage({ id: "heading_forecast" })}
-                description={intl.formatMessage({ id: "description_forecast" })}
+                header={intl.formatMessage({id: "forecast.heading"})}
+                description={intl.formatMessage({id: "forecast.heading_descr"})}
             ></InfoBoxComponent>
 
             <Center pt={2}>
@@ -106,49 +107,33 @@ export function Forecast() {
                 <MapContainer mapId={MAP_ID} role="main">
                     <MapAnchor position="bottom-right" horizontalGap={10} verticalGap={30}>
                         <Flex role="bottom-right" direction="column" gap={1} padding={1}>
-                            <ZoomIn mapId={MAP_ID} />
-                            <ZoomOut mapId={MAP_ID} />
+                            <ZoomIn mapId={MAP_ID}/>
+                            <ZoomOut mapId={MAP_ID}/>
                         </Flex>
                     </MapAnchor>
                 </MapContainer>
+                
             </Box>
 
+
             <HStack height="24px">
-                <CoordinateViewer mapId={MAP_ID} displayProjectionCode="EPSG:4326" precision={3} />
+            <CoordinateViewer mapId={MAP_ID} displayProjectionCode="EPSG:4326" precision={3} />
                 <Spacer />
                 <ScaleBar mapId={MAP_ID} />
                 <ScaleViewer mapId={MAP_ID} />
             </HStack>
-
-            <Center pt={2}>
-                <HStack>
-                    <ZoomPointButtonComponent
-                        label="Cazorla"
-                        mapId={MAP_ID}
-                        point={cazorlaPoint.geom}
-                        zoom={cazorlaPoint.zoom}
-                    />
-                    <ZoomPointButtonComponent
-                        label="Los Pedroches"
-                        mapId={MAP_ID}
-                        point={pedrochesPoint.geom}
-                        zoom={pedrochesPoint.zoom}
-                    />
-                    <ZoomPointButtonComponent
-                        label="General"
-                        mapId={MAP_ID}
-                        point={completeExtent.geom}
-                        zoom={completeExtent.zoom}
-                    />
-                </HStack>
-            </Center>
+            
+            <RegionZoom MAP_ID={MAP_ID} />
 
             <Box p={4}>
                 <div style={{ marginBottom: "10px", fontSize: "16px" }}>
                     {clickedCoordinates
-                        ? `Clicked Coordinates: ${clickedCoordinates[0].toFixed(2)}, ${clickedCoordinates[1].toFixed(2)}`
-                        : "No clicked coordinates yet."}
+                        ? intl.formatMessage({id: "global.map.coord_clicked"}, 
+                            {x:clickedCoordinates[0].toFixed(2),
+                             y:clickedCoordinates[1].toFixed(2)})
+                        : intl.formatMessage({id: "global.map.no_coord_clicked"})}
                 </div>
+
                 <div>
                     <HighchartsReact highcharts={Highcharts} options={chartOptions} />
                 </div>

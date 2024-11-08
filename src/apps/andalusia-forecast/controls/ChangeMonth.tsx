@@ -8,6 +8,8 @@ import { ChangeEvent } from "react";
 import { enumKeys } from "../components/utils/helper";
 import { Month, PrecipitationLayerHandler } from "../services/PrecipitationLayerHandler";
 
+import {getMonthArray} from "../components/utils/globals";
+
 export function ChangeMonth() {
     const prepSrvc = useService<PrecipitationLayerHandler>("app.PrecipitationLayerHandler");
 

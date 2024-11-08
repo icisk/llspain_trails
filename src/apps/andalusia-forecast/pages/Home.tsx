@@ -10,8 +10,8 @@ const Home = () => {
         <Box>
             <img src="/images/logo.png" alt = "I-CISK logo" style={{ width: "40%", height: "auto" }}/>
             <InfoBoxComponent
-                header={intl.formatMessage({id: "heading_home"})}
-                description={intl.formatMessage({id: "description_home"})}
+                header={intl.formatMessage({id: "home.heading"})}
+                description={intl.formatMessage({id: "home.heading_descr"})}
             ></InfoBoxComponent>
         </Box>
         
