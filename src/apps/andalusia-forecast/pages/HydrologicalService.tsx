@@ -16,6 +16,9 @@ import proj4 from "proj4";
 import {register} from "ol/proj/proj4";
 import TileLayer from "ol/layer/Tile";
 import OSM from "ol/source/OSM";
+import {RegionZoom} from "../components/RegionZoom/RegionZoom";
+import {ZoomPointButtonComponent} from "zoom-point-button";
+import {pedrochesPoint} from "../components/utils/globals";
 
 
 export function HydrologicalService(){
@@ -41,6 +44,9 @@ export function HydrologicalService(){
             <Box height={"500px"}>
                 <MapContainer mapId={'test'} role="main"/>
             </Box>
+            
+            <RegionZoom MAP_ID={'test'} />
+            
 
         </Container>
 

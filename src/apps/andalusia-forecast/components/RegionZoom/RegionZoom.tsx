@@ -4,7 +4,11 @@ import {ZoomPointButtonComponent} from "zoom-point-button";
 import {MAP_ID} from "../../services/MapProvider";
 import {cazorlaPoint, completeExtent, pedrochesPoint} from "../utils/globals";
 
-export function RegionZoom({ MAP_ID :string }) {
+interface RegionZoomProps {
+    MAP_ID: string; 
+}
+
+export function RegionZoom({ MAP_ID } : RegionZoomProps) {
     return(
         <Center pt={2}>
             <HStack>

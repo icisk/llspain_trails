@@ -1,14 +1,8 @@
 // Forecast.tsx
 import React, { useState, useEffect } from "react";
 import { Box, Center, Container, Flex, HStack, Spacer } from "@open-pioneer/chakra-integration";
-import { CoordinateViewer } from "@open-pioneer/coordinate-viewer";
-import { MapAnchor, MapContainer } from "@open-pioneer/map";
-import { ZoomIn, ZoomOut } from "@open-pioneer/map-navigation";
-import { ScaleBar } from "@open-pioneer/scale-bar";
-import { ScaleViewer } from "@open-pioneer/scale-viewer";
-import { InfoBoxComponent } from "info-box";
+
 import { useIntl } from "open-pioneer:react-hooks";
-import { ZoomPointButtonComponent } from "zoom-point-button";
 import { ChangeMonth } from "../controls/ChangeMonth";
 import { MAP_ID } from "../services/MapProvider";
 import { ChangeVariable } from "../controls/ChangeVariable";
@@ -20,10 +14,11 @@ import MapBrowserEvent from "ol/MapBrowserEvent";
 import { transform } from "ol/proj";
 import { Vector as VectorLayer } from "ol/layer";
 import { Vector as VectorSource } from "ol/source";
-import { createMarker, markerStyle } from "../components/utils/marker";
 
-import {RegionZoom} from "../components/RegionZoom/RegionZoom";
+import { createMarker, markerStyle } from "../components/utils/marker";
 import {getMonthArray} from "../components/utils/globals";
+import {Header} from "../components/MainComponents/Header";
+import {Map} from "../components/MainComponents/Map"
 
 // Marker layer for displaying clicks
 const markerSource = new VectorSource();
@@ -90,11 +85,8 @@ export function Forecast() {
 
     console.log(getMonthArray())
     return (
-        <Container minWidth={"container.xl"}>
-            <InfoBoxComponent
-                header={intl.formatMessage({id: "forecast.heading"})}
-                description={intl.formatMessage({id: "forecast.heading_descr"})}
-            ></InfoBoxComponent>
+        <Container minWidth={"container.xl"}>            
+            <Header subpage={'forecast'} />
 
             <Center pt={2}>
                 <HStack>
@@ -102,37 +94,17 @@ export function Forecast() {
                     <ChangeVariable />
                 </HStack>
             </Center>
-
-            <Box height={"500px"} pt={2}>
-                <MapContainer mapId={MAP_ID} role="main">
-                    <MapAnchor position="bottom-right" horizontalGap={10} verticalGap={30}>
-                        <Flex role="bottom-right" direction="column" gap={1} padding={1}>
-                            <ZoomIn mapId={MAP_ID}/>
-                            <ZoomOut mapId={MAP_ID}/>
-                        </Flex>
-                    </MapAnchor>
-                </MapContainer>
-                
-            </Box>
-
-
-            <HStack height="24px">
-            <CoordinateViewer mapId={MAP_ID} displayProjectionCode="EPSG:4326" precision={3} />
-                <Spacer />
-                <ScaleBar mapId={MAP_ID} />
-                <ScaleViewer mapId={MAP_ID} />
-            </HStack>
             
-            <RegionZoom MAP_ID={MAP_ID} />
+            <Map MAP_ID={MAP_ID}/>
 
             <Box p={4}>
-                <div style={{ marginBottom: "10px", fontSize: "16px" }}>
-                    {clickedCoordinates
-                        ? intl.formatMessage({id: "global.map.coord_clicked"}, 
-                            {x:clickedCoordinates[0].toFixed(2),
-                             y:clickedCoordinates[1].toFixed(2)})
-                        : intl.formatMessage({id: "global.map.no_coord_clicked"})}
-                </div>
+                {/*<div style={{ marginBottom: "10px", fontSize: "16px" }}>*/}
+                {/*    {clickedCoordinates*/}
+                {/*        ? intl.formatMessage({id: "global.map.coord_clicked"}, */}
+                {/*            {x:clickedCoordinates[0].toFixed(2),*/}
+                {/*             y:clickedCoordinates[1].toFixed(2)})*/}
+                {/*        : intl.formatMessage({id: "global.map.no_coord_clicked"})}*/}
+                {/*</div>*/}
 
                 <div>
                     <HighchartsReact highcharts={Highcharts} options={chartOptions} />

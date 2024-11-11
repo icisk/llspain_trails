@@ -1,35 +1,26 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import './Navbar.css';
 import {Box, HStack, Button} from "@chakra-ui/react";
+import {useIntl} from "open-pioneer:react-hooks";
+import NavButton from "./NavButton";
+
+
 
 const Navbar: React.FC = () => {
+    const intl = useIntl();
     return (
-            <Box style={{padding: 20}}>
-                <HStack spacing={4} justify="space-evenly" width="100%">
-                    <Button as={Link} to="/" variant="outline">
-                        Home
-                    </Button>
-                    <Button as={Link} to="/forecast" variant="outline">
-                        Forecast
-                    </Button>
-                    <Button as={Link} to="/historicclimatedata1" variant="outline">
-                        comparing 2 Timesteps
-                    </Button>
-                    <Button as={Link} to="/historicclimatedata2" variant="outline">
-                        historic station data
-                    </Button>
-                    <Button as={Link} to="/climateprojection" variant="outline">
-                        climate projections (?)
-                    </Button>
-                    <Button as={Link} to="/phaenology" variant="outline">
-                        phaenology model
-                    </Button>
-                    <Button as={Link} to="/hydrologicalservice" variant="outline">
-                        Hydro Service
-                    </Button>
-                </HStack>
-            </Box>
+        <Box style={{ padding: 20 }}>
+            <HStack spacing={4} justify="space-evenly" width="100%">
+                <NavButton to="/" id="home.nav" />
+                <NavButton to="/forecast" id="forecast.nav" />
+                <NavButton to="/historicclimatedata1" id="historic_compare.nav" />
+                <NavButton to="/historicclimatedata2" id="historic_station.nav" />
+                <NavButton to="/projections" id="projections.nav" />
+                <NavButton to="/phenology" id="phenology.nav" />
+                <NavButton to="/hydrologicalservice" id="hydro_service.nav" />
+            </HStack>
+        </Box>
 
 );
 };
