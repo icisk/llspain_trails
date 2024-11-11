@@ -28,9 +28,9 @@ import {MAP_ID} from "../services/BioindicatorMapProvider";
 import {ChangeVariable} from "../controls/ChangeVariable";
 import {completeExtent, cazorlaPoint, pedrochesPoint} from "../components/utils/globals";
 
-export default BiologicalEffectiveDegreeDays;
+export default Phaenology;
 
-export function BiologicalEffectiveDegreeDays() {
+export function Phaenology() {
     const intl = useIntl();
     const [sliderValue, setSliderValue] = useState(1981);
 

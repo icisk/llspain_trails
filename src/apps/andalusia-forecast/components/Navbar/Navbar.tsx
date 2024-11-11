@@ -17,10 +17,13 @@ const Navbar: React.FC = () => {
                         comparing 2 Timesteps
                     </Button>
                     <Button as={Link} to="/historicclimatedata2" variant="outline">
+                        historic station data
+                    </Button>
+                    <Button as={Link} to="/climateprojection" variant="outline">
                         climate projections (?)
                     </Button>
-                    <Button as={Link} to="/biologicaleffectivedegreedays" variant="outline">
-                        Bioindicators/ Drought
+                    <Button as={Link} to="/phaenology" variant="outline">
+                        phaenology model
                     </Button>
                     <Button as={Link} to="/hydrologicalservice" variant="outline">
                         Hydro Service
