@@ -1,13 +1,70 @@
 # at least one empty yaml file must exist for each supported language
 # (might be empty if all messages are defined in the packages used by this app)
 messages:
-  heading_home: Welcome!
-  description_home: This webpage exhibits some first examples for the visualization of climate and meteorological data for Living Lab Andalusia in Spain in the I-CISK project. Navigate through the top bar to explore the different visualizations.
-  heading_forecast: Pronósticos meteorológicos a medio plazo (hasta 6 meses)
-  description_forecast: Predicciones climáticas para planificar actividades económicas - monterías, explotaciones ganaderas y agrícolas, actividades forestales y de formación.
-  heading_hydro: Hydrological Service
-  description_hydro: This is a story map about hydrological facts
-  heading_bioindicators: Bioindicators/Drought
-  description_bioindicators: This is a page to explore the biological effective degree days.
-  heading_historic: historic climatic maps
-  description_historic: historic climadata by METEO
+  
+  global:
+    units:
+      c: ºC
+      mm: mm
+    vars:
+      temp: Temperatura
+      temp_min: Temperatura minmal
+      temp_max: Temperatura maximal
+      temp_mean: Temperatura medial
+      precip: Precipitación 
+      precip_cum: Precipitación acumulada
+    controls:
+      sel_month: Seleccione el mes 
+      sel_year: Seleccione el año
+      sel_var: Seleccione el variable
+    map:
+      coord_clicked: coordenadas clicadas {x} & {y} #bsp mit dynamischen inputs
+      no_coord_clicked: Aún no hay coordenadas clicadas
+    plot:
+      header_precip: Precipitación Data
+      header_temp: Temperatura Data
+    months:
+      jan: Enero
+      feb: Febrero
+      mar: Marzo
+      apr: Abril
+      may: Mayo
+      jun: Junio
+      jul: Julio
+      aug: Agosto
+      sep: Septiembre
+      oct: Octubre
+      nov: Noviembre
+      dec: Diciembre
+
+  home:
+    nav: Home
+    heading: Hola!
+    heading_descr: This webpage exhibits some first examples for the visualization of climate and meteorological data for Living Lab Andalusia in Spain in the I-CISK project. Navigate through the top bar to explore the different visualizations.
+  forecast:
+    nav: Forecast
+    heading: Medium-term weather forecasts (up to 6 months)
+    heading_descr: Climate predictions for planning economic activities - hunting, livestock and agricultural farms, forestry and training activities.
+  historic_compare:
+    nav: Mapas climáticos históricos
+    heading: Mapas climáticos históricos
+    heading_descr: Explore los mapas generados a partir datos históricos de la red de estaciones meteorológicas de la AEMET entre los años 2000 y 2020.
+    info:
+      temp: Monthly mean Temperature Monatliche modellierung der Temperaturdaten nach lorum ipsum bla Hochgekrempelte Ärmel, freches Lächeln, Taylor-Swift-Armbänder. Robert Habecks Kanzlervideo zeigt ungewollt, wie nutzlos die aktuellen politischen Inszenierungen sind.
+      precip: Nach der CDU dürfen nun auch die Grünen das Lied Zeit, dass sich was dreht nicht mehr im Wahlkampf benutzen. "Wir haben heute auch die Partei Bündnis 90/Die Grünen und Herrn Habeck aufgefordert, es in Zukunft zu unterlassen, Lieder von Herbert Grönemeyer und hier konkret das Lied 'Zeit, dass sich was dreht' für Wahlkampfzwecke zu nutzen", teilte Grönemeyers Medienanwalt Christian Schertz der Nachrichtenagentur dpa mit.
+  historic_station:
+    nav: Station Data
+    heading: Historic station Data
+    heading_descr: historic station data by METEO
+  projections:
+    nav: Climate Projections (oil model?)
+    heading: Climate Projections
+    heading_descr: CLimate Projections until 2100
+  phenology:
+    nav: Phenology Indicators
+    heading: Bioindicators/Drought
+    heading_descr: This is a page to explore the biological effective degree days
+  hydro_service:
+    nav: Hydrological Service
+    heading: Hydrological Service
+    heading_descr: This is a story map about hydrological facts

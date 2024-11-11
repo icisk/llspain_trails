@@ -3,7 +3,9 @@
 import { defineBuildConfig } from "@open-pioneer/build-support";
 
 export default defineBuildConfig({
-    i18n: ["en", /*"es"*/],
+    i18n: ["en", 
+        // "es"
+    ],
     ui: {
         references: ["app.PrecipitationLayerHandler"]
     },

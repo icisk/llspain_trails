@@ -14,6 +14,7 @@ import {RadioGroup, Radio} from "@open-pioneer/chakra-integration";
 import {InfoTooltip} from "../components/InfoTooltip/InfoTooltip";
 import {RegionZoom} from "../components/RegionZoom/RegionZoom";
 import {Header} from "../components/MainComponents/Header";
+import {Map} from "../components/MainComponents/Map";
 
 
 
@@ -22,10 +23,7 @@ const HistoricClimateData1 = () => {
     return (
         <Container minWidth={"container.xl"}>
             <Header subpage={'historic_compare'} />
-            <p style={{
-                fontSize: '30px',
-                color: 'red'
-            }}>https://openlayers.org/en/latest/examples/layer-swipe.html</p>
+
 
             <Container flex={2} minWidth={"container.xl"}>
                 <HStack width="100%">
@@ -62,18 +60,7 @@ const HistoricClimateData1 = () => {
                             </VStack>
                         </RadioGroup>
 
-                        <Box height={"500px"} pt={2}>
-                            <MapContainer mapId={MAP_ID} role="main">
-                                <MapAnchor position="bottom-right" horizontalGap={10}
-                                           verticalGap={30}>
-                                    <Flex role="bottom-right" direction="column" gap={1}
-                                          padding={1}>
-                                        <ZoomIn mapId={MAP_ID}/>
-                                        <ZoomOut mapId={MAP_ID}/>
-                                    </Flex>
-                                </MapAnchor>
-                            </MapContainer>
-                        </Box>
+
                     </div>
                     <div style={{flex: 1}}>
 
@@ -109,24 +96,17 @@ const HistoricClimateData1 = () => {
                             </VStack>
                         </RadioGroup>
 
-                        <Box height={"500px"} pt={2}>
-                            <MapContainer mapId={MAP_ID} role="next">
-                                <MapAnchor position="bottom-right" horizontalGap={10}
-                                           verticalGap={30}>
-                                    <Flex role="bottom-right" direction="column" gap={1}
-                                          padding={1}>
-                                        <ZoomIn mapId={MAP_ID}/>
-                                        <ZoomOut mapId={MAP_ID}/>
-                                    </Flex>
-                                </MapAnchor>
-                            </MapContainer>
-                        </Box>
+
                     </div>
                 </HStack>
-                <RegionZoom MAP_ID={MAP_ID}/>
+                <p style={{
+                    fontSize: '30px',
+                    color: 'red'
+                }}>https://openlayers.org/en/latest/examples/layer-swipe.html</p>
+                <Map MAP_ID={MAP_ID}/>
+
 
             </Container>
-
         </Container>
 
 
