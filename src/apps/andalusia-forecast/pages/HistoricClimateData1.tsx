@@ -9,12 +9,12 @@ import {MapAnchor, MapContainer} from "@open-pioneer/map";
 import {MAP_ID} from "../services/MapProvider";
 import {ZoomIn, ZoomOut} from "@open-pioneer/map-navigation";
 import {RadioGroup, Radio} from "@open-pioneer/chakra-integration";
-
+import {Map} from "@open-pioneer/map";
 
 import {InfoTooltip} from "../components/InfoTooltip/InfoTooltip";
 import {RegionZoom} from "../components/RegionZoom/RegionZoom";
 import {Header} from "../components/MainComponents/Header";
-import {Map} from "../components/MainComponents/Map";
+import {MainMap} from "../components/MainComponents/MainMap";
 
 
 
@@ -103,7 +103,7 @@ const HistoricClimateData1 = () => {
                     fontSize: '30px',
                     color: 'red'
                 }}>https://openlayers.org/en/latest/examples/layer-swipe.html</p>
-                <Map MAP_ID={MAP_ID}/>
+                <MainMap MAP_ID={MAP_ID}/>
 
 
             </Container>

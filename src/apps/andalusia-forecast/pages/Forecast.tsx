@@ -18,7 +18,7 @@ import { Vector as VectorSource } from "ol/source";
 import { createMarker, markerStyle } from "../components/utils/marker";
 import {getMonthArray} from "../components/utils/globals";
 import {Header} from "../components/MainComponents/Header";
-import {Map} from "../components/MainComponents/Map"
+import {MainMap} from "../components/MainComponents/MainMap"
 
 // Marker layer for displaying clicks
 const markerSource = new VectorSource();
@@ -95,7 +95,7 @@ export function Forecast() {
                 </HStack>
             </Center>
             
-            <Map MAP_ID={MAP_ID}/>
+            <MainMap MAP_ID={MAP_ID}/>
 
             <Box p={4}>
                 {/*<div style={{ marginBottom: "10px", fontSize: "16px" }}>*/}

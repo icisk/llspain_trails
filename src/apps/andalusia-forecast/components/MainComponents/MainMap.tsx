@@ -11,7 +11,7 @@ interface MapIdProps {
     MAP_ID: string;
 }
 
-export function Map({MAP_ID} :MapIdProps){
+export function MainMap({MAP_ID} :MapIdProps){
     return (
         <>
             <Box height={"500px"} pt={2}>
