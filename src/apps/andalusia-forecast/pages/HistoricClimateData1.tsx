@@ -9,8 +9,6 @@ import {MapAnchor, MapContainer} from "@open-pioneer/map";
 import {MAP_ID} from "../services/MapProvider";
 import {ZoomIn, ZoomOut} from "@open-pioneer/map-navigation";
 import {RadioGroup, Radio} from "@open-pioneer/chakra-integration";
-import {Map} from "@open-pioneer/map";
-
 import {InfoTooltip} from "../components/InfoTooltip/InfoTooltip";
 import {RegionZoom} from "../components/RegionZoom/RegionZoom";
 import {Header} from "../components/MainComponents/Header";

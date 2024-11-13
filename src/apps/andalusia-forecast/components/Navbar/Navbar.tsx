@@ -15,7 +15,7 @@ const Navbar: React.FC = () => {
                 <NavButton to="/" id="home.nav" />
                 <NavButton to="/forecast" id="forecast.nav" />
                 <NavButton to="/historicclimatedata1" id="historic_compare.nav" />
-                <NavButton to="/historicclimatedata2" id="historic_station.nav" />
+                {/*/<NavButton to="/historicclimatedata2" id="historic_station.nav" />*/}
                 <NavButton to="/projections" id="projections.nav" />
                 <NavButton to="/phenology" id="phenology.nav" />
                 <NavButton to="/hydrologicalservice" id="hydro_service.nav" />

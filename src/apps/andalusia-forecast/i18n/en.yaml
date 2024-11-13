@@ -42,11 +42,11 @@ messages:
     heading: Welcome!
     heading_descr: This webpage exhibits some first examples for the visualization of climate and meteorological data for Living Lab Andalusia in Spain in the I-CISK project. Navigate through the top bar to explore the different visualizations.
   forecast:
-    nav: Forecast
+    nav: Forecast (MID JAN)
     heading: Medium-term weather forecasts (up to 6 months)
     heading_descr: Climate predictions for planning economic activities - hunting, livestock and agricultural farms, forestry and training activities.
   historic_compare:
-    nav: Compare historic Data
+    nav: Compare historic Data tif & stations (MID JAN)
     heading: historic climatic maps
     heading_descr: historic climadata
     info:
@@ -57,14 +57,14 @@ messages:
     heading: Historic station Data
     heading_descr: historic station data by METEO
   projections:
-    nav: Climate Projections (oil model?)
+    nav: Climate Projections (pending)
     heading: Climate Projections
     heading_descr: CLimate Projections until 2100
   phenology:
-    nav: Phenology Indicators
+    nav: Phenology Indicators & oil model (DATA BY DEZ)
     heading: Bioindicators/Drought
     heading_descr: This is a page to explore the biological effective degree days
   hydro_service:
-    nav: Hydrological Service
+    nav: Hydrological Service (DATA BY DEZ)
     heading: Hydrological Service
     heading_descr: This is a story map about hydrological facts
