@@ -1,0 +1,276 @@
+[33mcommit 27a585cbbe9dc228f6d95eb08353cd4ea54aa11d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mnew-structure[m[33m, [m[1;31morigin/new-structure[m[33m)[m
+Author: N1c7 <164860123+N1c7@users.noreply.github.com>
+Date:   Wed Nov 20 12:54:29 2024 +0100
+
+    Add files via upload
+
+[33mcommit 799dea2cd300cde1ad7aaacff309bdc29f637d8c[m
+Author: lraeuschel <l.raeuschel@52north.org>
+Date:   Thu Nov 14 13:53:17 2024 +0100
+
+    Add a Map Slider for the historic climate data tab
+
+[33mcommit 1da71c197fba774a48db96d124e6ca3547a62cae[m
+Author: JohannesSchnell <j.schnell@52north.org>
+Date:   Wed Nov 13 13:32:03 2024 +0100
+
+    added deadline info to navbar
+
+[33mcommit 007fdbc2687155afe9882f4f8784013c652d874a[m
+Author: JohannesSchnell <j.schnell@52north.org>
+Date:   Tue Nov 12 10:44:40 2024 +0100
+
+    change map to mainmap
+
+[33mcommit 90b398b1d98dfbf799d9448eda90600b0cb6bd7d[m
+Author: JohannesSchnell <j.schnell@52north.org>
+Date:   Mon Nov 11 14:29:02 2024 +0100
+
+    started es lang i18n; changed compare 2 maps to ol slider
+
+[33mcommit 6cc4dbae843aaeb460bf4d4fe327351eb15c640e[m
+Author: JohannesSchnell <j.schnell@52north.org>
+Date:   Mon Nov 11 14:03:38 2024 +0100
+
+    added more components; created all subpages
+
+[33mcommit e01ce4bf3b59869ac491d82c2c50ea84d1b00138[m
+Author: JohannesSchnell <j.schnell@52north.org>
+Date:   Mon Nov 11 10:26:01 2024 +0100
+
+    rename some pages; added all pages
+
+[33mcommit 23dc2f331045d005aa94fa1f8cabbecc05218e96[m
+Author: JohannesSchnell <j.schnell@52north.org>
+Date:   Fri Nov 8 15:05:30 2024 +0100
+
+    new components; prepared i18n; comparing tab; tooltip
+
+[33mcommit 12ace82dac2dfb29dbbdcac711d6c97e77a22626[m
+Author: lraeuschel <l.raeuschel@52north.org>
+Date:   Thu Nov 7 17:54:25 2024 +0100
+
+    Add a map, infobox and a slider to the bioindicator tab
+
+[33mcommit 85dc20b50c93e306230822da0e7d6cc74c6c4960[m
+Author: JohannesSchnell <j.schnell@52north.org>
+Date:   Thu Nov 7 14:12:31 2024 +0100
+
+    any
+
+[33mcommit 89437331c247c090dec1dbbec76dd803a23af4b0[m
+Author: JohannesSchnell <j.schnell@52north.org>
+Date:   Thu Nov 7 13:53:12 2024 +0100
+
+    mv helper.ts
+
+[33mcommit 1b46f62982753c2c7a6eb1a390f4864a27284d4c[m
+Merge: 1ab202e 29d23a6
+Author: JohannesSchnell <j.schnell@52north.org>
+Date:   Thu Nov 7 13:36:42 2024 +0100
+
+    Merge branch 'new-structure' of github.com:icisk/llspain_trails into new-structure
+
+[33mcommit 1ab202ef822616a6db42491434906c2d9be87641[m
+Author: JohannesSchnell <j.schnell@52north.org>
+Date:   Thu Nov 7 13:36:15 2024 +0100
+
+    restructe components added utils
+
+[33mcommit 29d23a645c385cd02fa296b4bdfeac22dba19898[m
+Author: lraeuschel <l.raeuschel@52north.org>
+Date:   Thu Nov 7 12:30:53 2024 +0100
+
+    Add the icisk logo for the home tab
+
+[33mcommit e9c7a88219784ca6ad3d1bc266be0cb57bff02c3[m
+Author: JohannesSchnell <j.schnell@52north.org>
+Date:   Wed Nov 6 14:29:44 2024 +0100
+
+    neue Karte als service hinzu
+
+[33mcommit 1591884d627daa5a4326bc62d7f149eb676afed2[m
+Author: JohannesSchnell <j.schnell@52north.org>
+Date:   Wed Nov 6 13:00:24 2024 +0100
+
+    added horizontalstack for navbar; Hydro Service
+
+[33mcommit 695c69823bc92b6ae367af5cd389e93ff8b16953[m
+Author: lraeuschel <l.raeuschel@52north.org>
+Date:   Tue Nov 5 11:30:56 2024 +0100
+
+    Add the pages and a navbar to the structure
+
+[33mcommit bdbdaeb35981625bd92c1dba5d5b44d12cc7c0ee[m
+Merge: 6b502f7 f9d93c5
+Author: N1c7 <nick.vannuland99@gmail.com>
+Date:   Wed Oct 16 14:34:02 2024 +0200
+
+    Merge branch 'main' of https://github.com/icisk/llspain_trails
+
+[33mcommit 6b502f77c2c8020e7a6445edba7c46ca379d2e2c[m
+Author: N1c7 <nick.vannuland99@gmail.com>
+Date:   Wed Oct 16 14:33:16 2024 +0200
+
+    changed vis of forecasted 0 values
+
+[33mcommit f9d93c5f549f84355a9d5ee547f3ed4dd3506668[m
+Author: lraeuschel <l.raeuschel@52north.org>
+Date:   Tue Oct 8 13:41:15 2024 +0200
+
+    Add a marker and a display for the clicked coordinate and add a static y-axis for the diagram
+
+[33mcommit 97fd9b15b115e701ea073973cb3c2ec8c0bc75ce[m
+Author: N1c7 <nick.vannuland99@gmail.com>
+Date:   Fri Oct 4 09:20:57 2024 +0200
+
+    No more almost zero values when trying to load Highchart out of bounds
+
+[33mcommit 8cc7aedc15e3ccd81ef4d3d5aa97dd3a9cc98eec[m
+Author: EHJ-52n <e.h.juerrens@52north.org>
+Date:   Tue Oct 1 16:27:31 2024 +0200
+
+    Try to fix "TOOMANYREQUESTS" on https://ghcr.io/v2/aquasecurity/trivy-db/manifests/2
+
+[33mcommit 652a38f9ced60e16a3860870e5c42212690aa9d1[m[33m ([m[1;33mtag: [m[1;33mspain-v2.0[m[33m)[m
+Author: EHJ-52n <e.h.juerrens@52north.org>
+Date:   Tue Oct 1 16:06:41 2024 +0200
+
+    Add build pipeline workflow
+
+[33mcommit 0c9f9128a9f00293a9e7c25ab39b1565b85800bb[m
+Author: EHJ-52n <e.h.juerrens@52north.org>
+Date:   Tue Oct 1 14:13:39 2024 +0200
+
+    Update workflow action versions
+
+[33mcommit eb766f0dbeb2c0d26b63501c89553444ebfcf439[m
+Author: EHJ-52n <e.h.juerrens@52north.org>
+Date:   Tue Oct 1 14:11:38 2024 +0200
+
+    Fix workflows
+
+[33mcommit 8cdbdd2bebaa9d43dc64e3045a486fb9c5fdb284[m
+Author: EHJ-52n <e.h.juerrens@52north.org>
+Date:   Tue Oct 1 13:51:39 2024 +0200
+
+    Remove removed script
+
+[33mcommit ac210eca0e1a52b0d310fa8747597ba902591a4d[m
+Author: EHJ-52n <e.h.juerrens@52north.org>
+Date:   Tue Oct 1 13:51:19 2024 +0200
+
+    Remove CHANGELOG.md from trails-starter
+
+[33mcommit c0b56f8de62eeac49a1f9e54fd64e8fc069fb62f[m
+Author: EHJ-52n <e.h.juerrens@52north.org>
+Date:   Tue Oct 1 13:48:26 2024 +0200
+
+    Add workflows and badges for dep audit, build and test
+
+[33mcommit 17302f10da91871d1dd79844874b0faa5a26e805[m
+Author: EHJ-52n <e.h.juerrens@52north.org>
+Date:   Tue Oct 1 13:46:10 2024 +0200
+
+    Revamp README.md to be more LL Spain specific
+
+[33mcommit b21dbfc961d69dc0132298fa281e426d0bc8e160[m
+Author: EHJ-52n <e.h.juerrens@52north.org>
+Date:   Tue Oct 1 13:45:31 2024 +0200
+
+    Clean-Up Docker -file, config and docu
+    
+    - switched to nginx-unprivileged as base for run stage
+    
+    - add docu on building and running image
+    
+    - simplified Dockerfile
+    
+    - be more generic with "corepack use pnpm@9.x"
+
+[33mcommit 929b6477e95ac808132e13cb743c5ef050e0857a[m
+Author: EHJ-52n <e.h.juerrens@52north.org>
+Date:   Tue Oct 1 13:42:22 2024 +0200
+
+    Re-organize sites
+    
+    - remove sub site
+    
+    - replace root site by sub site content
+
+[33mcommit d6d7115acf9edde41caa879b4f5f8e1e9321014d[m
+Author: EHJ-52n <e.h.juerrens@52north.org>
+Date:   Tue Oct 1 13:41:09 2024 +0200
+
+    Remove azure pipelines workflow
+
+[33mcommit 6aea3bd988145399261fa8bc464a2ff594cf2e9a[m
+Author: JohannesSchnell <j.schnell@52north.org>
+Date:   Tue Oct 1 09:54:05 2024 +0200
+
+    added more config files
+
+[33mcommit d3ba10f29423d9d9c0a5c268802f92c10847cb50[m
+Author: EHJ-52n <e.h.juerrens@52north.org>
+Date:   Mon Sep 30 15:55:03 2024 +0200
+
+    Add .gitignore
+
+[33mcommit 70542a5d385e3b2b7e4a7cbdfcc1adab0a1fb42c[m
+Author: EHJ-52n <e.h.juerrens@52north.org>
+Date:   Mon Sep 30 15:39:00 2024 +0200
+
+    Add missing eslint configuration
+    
+    fixing
+    
+     => ERROR [base 8/8] RUN pnpm build                                                                                                                                                                                                                                 0.9s
+    ------
+     > [base 8/8] RUN pnpm build:
+    0.480
+    0.480 > starter@ build /app
+    0.480 > vite build
+    0.480
+    0.719 vite v5.4.8 building for production...
+    0.856 transforming...
+    0.872 ✓ 4 modules transformed.
+    0.873 x Build failed in 139ms
+    0.873 error during build:
+    0.873 [vite-plugin-eslint] No ESLint configuration found in /app/src/apps/andalusia-forecast.
+    0.873 file: /app/src/apps/andalusia-forecast/app.ts
+    0.873     at CascadingConfigArrayFactory._finalizeConfigArray (/app/node_modules/.pnpm/@eslint+eslintrc@2.1.4/node_modules/@eslint/eslintrc/dist/eslintrc.cjs:4000:19)
+    0.873     at CascadingConfigArrayFactory.getConfigArrayForFile (/app/node_modules/.pnpm/@eslint+eslintrc@2.1.4/node_modules/@eslint/eslintrc/dist/eslintrc.cjs:3791:21)
+    0.873     at CLIEngine.isPathIgnored (/app/node_modules/.pnpm/eslint@8.57.0/node_modules/eslint/lib/cli-engine/cli-engine.js:1000:18)
+    0.873     at ESLint.isPathIgnored (/app/node_modules/.pnpm/eslint@8.57.0/node_modules/eslint/lib/eslint/eslint.js:681:26)
+    0.873     at Object.transform (file:///app/node_modules/.pnpm/vite-plugin-eslint@1.8.1_eslint@8.57.0_vite@5.4.8_@types+node@18.19.41_sass@1.77.8_/node_modules/vite-plugin-eslint/dist/index.mjs:1:1868)
+    0.873     at file:///app/node_modules/.pnpm/rollup@4.22.4/node_modules/rollup/dist/es/shared/node-entry.js:19936:40
+    0.873     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    0.884  ELIFECYCLE  Command failed with exit code 1.
+    ------
+    Dockerfile:18
+    --------------------
+      16 |     # should be enabled in production deployment image build
+      17 |     # RUN pnpm install --frozen-lockfile
+      18 | >>> RUN pnpm build
+      19 |
+      20 |     FROM nginx:alpine3.19
+    --------------------
+    ERROR: failed to solve: process "/bin/sh -c pnpm build" did not complete successfully: exit code: 1
+
+[33mcommit 2e64a4fdaf034b64ed749435b63a3250b4986cd0[m
+Author: EHJ-52n <e.h.juerrens@52north.org>
+Date:   Mon Sep 30 15:38:00 2024 +0200
+
+    Minor changes
+
+[33mcommit acc165390140dfd6f1127ec85cd661787eff9947[m
+Author: EHJ-52n <e.h.juerrens@52north.org>
+Date:   Mon Sep 30 15:11:08 2024 +0200
+
+    Fix typo: andalusia-forcast -> andalusia-forecast
+
+[33mcommit 7c7a953f81c25b47fe8851897169943882a8f444[m[33m ([m[1;31morigin/working_ex[m[33m)[m
+Author: JohannesSchnell <j.schnell@52north.org>
+Date:   Fri Sep 27 13:05:47 2024 +0200
+
+    init with latest clone from trails-starter 27.09.2024 12:00
