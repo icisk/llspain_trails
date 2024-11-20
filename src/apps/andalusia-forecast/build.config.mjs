@@ -1,0 +1,35 @@
+// SPDX-FileCopyrightText: 2023 Open Pioneer project (https://github.com/open-pioneer)
+// SPDX-License-Identifier: Apache-2.0
+import { defineBuildConfig } from "@open-pioneer/build-support";
+
+export default defineBuildConfig({
+    i18n: ["en", 
+        // "es"
+    ],
+    ui: {
+        references: ["app.PrecipitationLayerHandler"]
+    },
+    services: {
+        MidtermForecastMapProvider: {
+            provides: ["map.MapConfigProvider"]
+        },
+        StoryMapProvider: {
+            provides: ["map.MapConfigProvider"]
+        },
+        HydrologicalMapProvider: {
+            provides: ["map.MapConfigProvider"]
+        },
+        ProjectionMapProvider: {
+            provides: ["map.MapConfigProvider"]
+        },
+        BioindicatorMapProvider: {
+            provides: ["map.MapConfigProvider"]
+        },
+        PrecipitationLayerHandlerImpl: {
+            provides: ["app.PrecipitationLayerHandler"],
+            references: {
+                mapRegistry: "map.MapRegistry"
+            }
+        }
+    }
+});

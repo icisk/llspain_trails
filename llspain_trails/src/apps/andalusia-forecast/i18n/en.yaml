@@ -1,0 +1,5 @@
+# at least one empty yaml file must exist for each supported language
+# (might be empty if all messages are defined in the packages used by this app)
+messages:
+  heading: Medium-term weather forecasts (up to 6 months)
+  description: Climate predictions for planning economic activities - hunting, livestock and agricultural farms, forestry and training activities.

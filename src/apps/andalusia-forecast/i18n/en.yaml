@@ -1,0 +1,70 @@
+# at least one empty yaml file must exist for each supported language
+# (might be empty if all messages are defined in the packages used by this app)
+messages:
+  
+  global:
+    units:
+      c: ºC 
+      mm: mm
+    vars:
+      temp: Temperature
+      temp_min: min Temperature
+      temp_max: max Temperature
+      temp_mean: mean Temperature
+      precip: Precipitation
+      precip_cum: cumulative Precipitation
+    controls:
+      sel_month: Select Month
+      sel_year: Select Year
+      sel_var: Select Variable
+    map:
+      coord_clicked: Clicked Coordinates at {x} & {y} #bsp mit dynamischen inputs
+      no_coord_clicked: No clicked coordinates yet
+    plot:
+      header_precip: Precipitation Data
+      header_temp: Temperature Data
+    months:
+      jan: January
+      feb: February
+      mar: March
+      apr: April
+      may: May
+      jun: June
+      jul: July
+      aug: August
+      sep: September
+      oct: October
+      nov: November
+      dec: December
+
+  home:
+    nav: Home
+    heading: Welcome!
+    heading_descr: This webpage exhibits some first examples for the visualization of climate and meteorological data for Living Lab Andalusia in Spain in the I-CISK project. Navigate through the top bar to explore the different visualizations.
+  forecast:
+    nav: Forecast (MID JAN)
+    heading: Medium-term weather forecasts (up to 6 months)
+    heading_descr: Climate predictions for planning economic activities - hunting, livestock and agricultural farms, forestry and training activities.
+  historic_compare:
+    nav: Compare historic Data tif & stations (MID JAN)
+    heading: historic climatic maps
+    heading_descr: historic climadata
+    info:
+      temp: Monthly mean Temperature Monatliche modellierung der Temperaturdaten nach lorum ipsum bla Hochgekrempelte Ärmel, freches Lächeln, Taylor-Swift-Armbänder. Robert Habecks Kanzlervideo zeigt ungewollt, wie nutzlos die aktuellen politischen Inszenierungen sind.
+      precip: Nach der CDU dürfen nun auch die Grünen das Lied Zeit, dass sich was dreht nicht mehr im Wahlkampf benutzen. "Wir haben heute auch die Partei Bündnis 90/Die Grünen und Herrn Habeck aufgefordert, es in Zukunft zu unterlassen, Lieder von Herbert Grönemeyer und hier konkret das Lied 'Zeit, dass sich was dreht' für Wahlkampfzwecke zu nutzen", teilte Grönemeyers Medienanwalt Christian Schertz der Nachrichtenagentur dpa mit.
+  historic_station:
+    nav: Station Data
+    heading: Historic station Data
+    heading_descr: historic station data by METEO
+  projections:
+    nav: Climate Projections (pending)
+    heading: Climate Projections
+    heading_descr: CLimate Projections until 2100
+  phenology:
+    nav: Phenology Indicators & oil model (DATA BY DEZ)
+    heading: Bioindicators/Drought
+    heading_descr: This is a page to explore the biological effective degree days
+  hydro_service:
+    nav: Hydrological Service (DATA BY DEZ)
+    heading: Hydrological Service
+    heading_descr: This is a story map about hydrological facts

@@ -1,0 +1,15 @@
+{
+    "name": "andalusia-forecast",
+    "private": true,
+    "dependencies": {
+        "@open-pioneer/chakra-integration": "^1.1.4",
+        "@open-pioneer/map": "^0.6.0",
+        "@open-pioneer/map-navigation": "^0.4.2",
+        "@open-pioneer/runtime": "^2.1.6",
+        "@open-pioneer/coordinate-viewer": "^0.5.3",
+        "@open-pioneer/scale-viewer": "^0.4.3",
+        "@open-pioneer/scale-bar": "^0.4.3",
+        "@open-pioneer/reactivity": "^0.1.0",
+        "@conterra/reactivity-core": "^0.4.2"
+        }
+}
