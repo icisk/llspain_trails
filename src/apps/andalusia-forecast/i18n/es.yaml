@@ -13,6 +13,7 @@ messages:
       temp_mean: Temperatura medial
       precip: Precipitación 
       precip_cum: Precipitación acumulada
+      year: año
     controls:
       sel_month: Seleccione el mes 
       sel_year: Seleccione el año

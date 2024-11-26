@@ -33,12 +33,12 @@ const HistoricClimateData1 = () => {
                                 <>
                                     {intl.formatMessage({ id: "global.controls.sel_year" })}
                                 </>
-                                <Select placeholder="year">
-                                    {[1990, 2000].map(year => (
-                                        <option key={year} value={year}>
-                                            {year}
-                                        </option>
-                                    ))}
+                                <Select placeholder={intl.formatMessage({ id: "global.vars.year"})}>
+                                {[...Array(20)].map((_, i) => 2000 + i).map((year) => (
+                                    <option key={year} value={year}>
+                                        {year}
+                                    </option>
+                                ))}
                                 </Select>
                             </HStack>
                             <ChangeMonth />
@@ -67,12 +67,12 @@ const HistoricClimateData1 = () => {
                                 <>
                                     {intl.formatMessage({ id: "global.controls.sel_year" })}
                                 </>
-                                <Select placeholder="year">
-                                    {[1990, 2000].map(year => (
-                                        <option key={year} value={year}>
-                                            {year}
-                                        </option>
-                                    ))}
+                                <Select placeholder={intl.formatMessage({ id: "global.vars.year"})}>
+                                {[...Array(20)].map((_, i) => 2000 + i).map((year) => (
+                                    <option key={year} value={year}>
+                                        {year}
+                                    </option>
+                                ))}
                                 </Select>
                             </HStack>
                             <ChangeMonth />
@@ -98,6 +98,9 @@ const HistoricClimateData1 = () => {
 
                 <Box>
                     <Box ref={mapRef} w="100%" h="500px" />
+                    {/* <Box height={"500px"}>
+                        <MapContainer mapId={'midterm-forecast'} role="main"/>
+                    </Box> */}
                     <Box>
                         <Slider aria-label="slider-ex" defaultValue={50} onChange={(val) => setSwipeValue(val)}>
                             <SliderTrack>

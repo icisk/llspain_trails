@@ -13,6 +13,7 @@ messages:
       temp_mean: mean Temperature
       precip: Precipitation
       precip_cum: cumulative Precipitation
+      year: year
     controls:
       sel_month: Select Month
       sel_year: Select Year
