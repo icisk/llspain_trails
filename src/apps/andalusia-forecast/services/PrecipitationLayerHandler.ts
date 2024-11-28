@@ -4,7 +4,7 @@ import { DeclaredService, ServiceOptions } from "@open-pioneer/runtime";
 import WebGLTileLayer from "ol/layer/WebGLTile";
 import { GeoTIFF } from "ol/source";
 
-import { MAP_ID } from "./MapProvider";
+import { MAP_ID } from "./MidtermForecastMapProvider";
 
 interface References {
     mapRegistry: MapRegistry;

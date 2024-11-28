@@ -1,7 +1,7 @@
 import React from "react";
 import {Center, HStack} from "@open-pioneer/chakra-integration";
 import {ZoomPointButtonComponent} from "zoom-point-button";
-import {MAP_ID} from "../../services/MapProvider";
+import {MAP_ID} from "../../services/MidtermForecastMapProvider";
 import {cazorlaPoint, completeExtent, pedrochesPoint} from "../utils/globals";
 
 interface RegionZoomProps {

@@ -1,0 +1,8 @@
+{
+    "name": "zoom-point-button",
+    "version": "0.0.0",
+    "private": true,
+    "peerDependencies": {
+        "@open-pioneer/runtime": "^2.1.6"
+    }
+}

@@ -4,7 +4,7 @@ import { Box, Center, Container, Flex, HStack, Spacer } from "@open-pioneer/chak
 
 import { useIntl } from "open-pioneer:react-hooks";
 import { ChangeMonth } from "../controls/ChangeMonth";
-import { MAP_ID } from "../services/MapProvider";
+import { MAP_ID } from "../services/MidtermForecastMapProvider";
 import { ChangeVariable } from "../controls/ChangeVariable";
 import { useFetchData } from "../hooks/useFetchData";
 import Highcharts from "highcharts";

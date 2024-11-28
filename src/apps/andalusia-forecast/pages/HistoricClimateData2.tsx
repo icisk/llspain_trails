@@ -5,7 +5,7 @@ import {InfoBoxComponent} from "info-box";
 import {useIntl} from "open-pioneer:react-hooks";
 import {Header} from "../components/MainComponents/Header";
 import {MainMap} from "../components/MainComponents/MainMap";
-import {MAP_ID} from "../services/MapProvider";
+import {MAP_ID} from "../services/MidtermForecastMapProvider";
 import {MapAnchor, MapContainer} from "@open-pioneer/map";
 import {ZoomIn, ZoomOut} from "@open-pioneer/map-navigation";
 

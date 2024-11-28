@@ -10,10 +10,16 @@ export default defineBuildConfig({
         references: ["app.PrecipitationLayerHandler"]
     },
     services: {
-        MapProvider: {
+        MidtermForecastMapProvider: {
             provides: ["map.MapConfigProvider"]
         },
         StoryMapProvider: {
+            provides: ["map.MapConfigProvider"]
+        },
+        HydrologicalMapProvider: {
+            provides: ["map.MapConfigProvider"]
+        },
+        ProjectionMapProvider: {
             provides: ["map.MapConfigProvider"]
         },
         BioindicatorMapProvider: {

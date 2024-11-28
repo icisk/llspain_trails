@@ -1,7 +1,7 @@
 import React from 'react';
 import {Box, Flex} from "@open-pioneer/chakra-integration";
 import {MapAnchor, MapContainer} from "@open-pioneer/map";
-import {MAP_ID} from "../../services/MapProvider";
+import {MAP_ID} from "../../services/MidtermForecastMapProvider";
 import {ZoomIn, ZoomOut} from "@open-pioneer/map-navigation";
 import {CoordsScaleBar} from "../CoordsScaleBar/CoordsScaleBar";
 import {RegionZoom} from "../RegionZoom/RegionZoom";

@@ -12,7 +12,7 @@ proj4.defs(
 );
 register(proj4);
 
-export const MAP_ID = "test";
+export const MAP_ID = "hydrological-forecast";
 
 export class StoryMapProvider implements MapConfigProvider {
     mapId = MAP_ID;

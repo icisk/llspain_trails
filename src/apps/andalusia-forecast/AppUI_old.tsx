@@ -10,7 +10,7 @@ import { useIntl } from "open-pioneer:react-hooks";
 import { ZoomPointButtonComponent } from "zoom-point-button";
 
 import { ChangeMonth } from "./controls/ChangeMonth";
-import { MAP_ID } from "./services/MapProvider";
+import { MAP_ID } from "./services/MidtermForecastMapProvider";
 import { ChangeVariable } from "./controls/ChangeVariable";
 
 import { useState, useEffect } from "react";
