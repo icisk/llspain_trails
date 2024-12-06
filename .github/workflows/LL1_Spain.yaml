@@ -2,7 +2,6 @@ name: "[LL1 Spain] build push images of Open Pioneer APP"
 concurrency:
   group: "ll1-spain"
   cancel-in-progress: true
-
 env:
   BUILD_CONTEXT: ./
   IMAGE_DESCRIPTION: 52°North I-Cisk Living Lab Guadalquivir, Spain
@@ -12,7 +11,6 @@ env:
   IMAGE_LICENSES: Gplv2
   IMAGE_VENDOR: 52°North GmbH
   METADATA_TAG_PATTERN: spain.*-v(.*)
-
 on:
   workflow_dispatch:
     inputs:
@@ -24,13 +22,11 @@ on:
   push:
     tags:
     - "spain-v*"
-
 jobs:
   build_and_push_app_to_docker_hub:
-
     name: "Open Pioneer APP: build, publish and scan container image"
     runs-on: ubuntu-latest
-
+    timeout-minutes: 5
     steps:
     -
       name: Checkout Repository
