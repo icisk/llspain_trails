@@ -21,13 +21,14 @@ export enum Month {
 }
 
 export enum Variable {
-    pc05 = "pc05",
-    pc10 = "pc10",
-    pc25 = "pc25",
+    // pc05 = "pc05",
+    // pc10 = "pc10",
+    // pc25 = "pc25",
     pc50 = "pc50",
-    pc75 = "pc75",
-    pc90 = "pc90",
-    pc95 = "pc95"
+    // pc75 = "pc75",
+    // pc90 = "pc90",
+    // pc95 = "pc95",
+    uncertainty = "UNCERTAINTY"
 }
 
 export interface PrecipitationLayerHandler
@@ -73,6 +74,30 @@ export class PrecipitationLayerHandlerImpl implements PrecipitationLayerHandler 
                     //     ["<=", ["band", 1], 0.9],
                     //     "indigo",
                     //     "violet"
+                    // ]
+                    // color: [
+                    //     "case",
+                    //     ["all", ["==", ["band", 1], 0], ["==", ["band", 2], 0]],
+                    //     [0, 0, 0, 0], // Transparent for 0 values outside the area of interest
+                    //     ["==", ["band", 1], 0],
+                    //     "red", // Red for actual 0 values within the area of interest
+                    //     ["<=", ["band", 1], 0.33],
+                    //     "orange",
+                    //     ["<=", ["band", 1], 0.66],
+                    //     "green",
+                    //     ["<=", ["band", 1], 1],
+                    // ]
+                    // color: [
+                    //     "case",
+                    //     ["all", ["==", ["*", ["band", 1], 3], 0], ["==", ["*", ["band", 2], 3], 0]],
+                    //     [0, 0, 0, 0], // Transparent for 0 values outside the area of interest
+                    //     ["==", ["*", ["band", 1], 3], 1],
+                    //     "red", // Red for actual 0 values within the area of interest
+                    //     ["<=", ["*", ["band", 1], 3], 2],
+                    //     "orange",
+                    //     ["<=", ["*", ["band", 1], 3], 3],
+                    //     "green",
+                    //
                     // ]
                     color: [
                         "case",
@@ -126,8 +151,8 @@ export class PrecipitationLayerHandlerImpl implements PrecipitationLayerHandler 
 
     private createSource() {
         const year = 2024;
-        const precipitationUrl = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/precip_forecats/cog_PLforecast_${this.currentMonth}_${year}_pc50_NoNDVI_RegMult_E3_MAP_Corrected.tif`;
-        const maskUrl = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/precip_forecats/cog_PLforecast_${Month.february}_${year}_${Variable.pc95}_NoNDVI_RegMult_E3_MAP_Corrected.tif`;
+        const precipitationUrl = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/precip_forecats/cog_PLforecast_${this.currentMonth}_${year}_${this.currentVariable}_NoNDVI_RegMult_E3_MAP_Corrected.tif`;
+        const maskUrl = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/precip_forecats/cog_PLforecast_${Month.february}_${year}_${Variable.pc50}_NoNDVI_RegMult_E3_MAP_Corrected.tif`;
         
         return new GeoTIFF({
             sources: [

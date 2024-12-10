@@ -5,7 +5,7 @@ import * as appMetadata from "open-pioneer:app";
 import AppUI from "./AppUI";
 
 const URL_PARAMS = new URLSearchParams(window.location.search);
-const FORCED_LANG = URL_PARAMS.get("lang") || "en";
+const FORCED_LANG = URL_PARAMS.get("lang") || "es";
 
 const Element = createCustomElement({
     component: AppUI,

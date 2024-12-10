@@ -22,6 +22,7 @@ messages:
       coord_clicked: Clicked Coordinates at {x} & {y} #bsp mit dynamischen inputs
       no_coord_clicked: No clicked coordinates yet
     plot:
+      header_temp_precip: precip temp measurements
       header_precip: Precipitation Data
       header_temp: Temperature Data
     months:
@@ -60,7 +61,7 @@ messages:
   projections:
     nav: Climate Projections (pending)
     heading: Climate Projections
-    heading_descr: CLimate Projections until 2100
+    heading_descr: Climate Projections until 2100
   phenology:
     nav: Phenology Indicators & oil model (DATA BY DEZ)
     heading: Bioindicators/Drought

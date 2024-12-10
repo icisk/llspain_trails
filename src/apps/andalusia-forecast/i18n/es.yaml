@@ -1,18 +1,18 @@
 # at least one empty yaml file must exist for each supported language
 # (might be empty if all messages are defined in the packages used by this app)
 messages:
-  
+
   global:
     units:
-      c: ºC
-      mm: mm
+      c: (ºC)
+      mm: (mm)
     vars:
       temp: Temperatura
       temp_min: Temperatura minmal
       temp_max: Temperatura maximal
-      temp_mean: Temperatura medial
+      temp_mean:  Temperatura media mensual 
       precip: Precipitación 
-      precip_cum: Precipitación acumulada
+      precip_cum:  Precipitación acumulada mensual 
       year: año
     controls:
       sel_month: Seleccione el mes 
@@ -22,6 +22,7 @@ messages:
       coord_clicked: coordenadas clicadas {x} & {y} #bsp mit dynamischen inputs
       no_coord_clicked: Aún no hay coordenadas clicadas
     plot:
+      header_temp_precip: Valores de Precipitación y Temperatura a lo largo de los Meses
       header_precip: Precipitación Data
       header_temp: Temperatura Data
     months:
@@ -41,31 +42,39 @@ messages:
   home:
     nav: Home
     heading: Hola!
-    heading_descr: This webpage exhibits some first examples for the visualization of climate and meteorological data for Living Lab Andalusia in Spain in the I-CISK project. Navigate through the top bar to explore the different visualizations.
+    heading_descr: Esta página web exhibe algunos primeros ejemplos de visualización de datos climáticos y meteorológicos para el Living Lab Andalucía en España 🇪🇸 en el proyecto I-CISK.
   forecast:
-    nav: Forecast
-    heading: Medium-term weather forecasts (up to 6 months)
-    heading_descr: Climate predictions for planning economic activities - hunting, livestock and agricultural farms, forestry and training activities.
+    nav: Mapas previsión a 6 meses
+    heading: Pronósticos meteorológicos mensuales a medio plazo (hasta 6 meses)
+    heading_descr: Predicciones climáticas para planificar actividades económicas - monterías, explotaciones ganaderas y agrícolas, actividades forestales y de formación.
   historic_compare:
     nav: Mapas climáticos históricos
     heading: Mapas climáticos históricos
     heading_descr: Explore los mapas generados a partir datos históricos de la red de estaciones meteorológicas de la AEMET entre los años 2000 y 2020.
     info:
-      temp: Monthly mean Temperature Monatliche modellierung der Temperaturdaten nach lorum ipsum bla Hochgekrempelte Ärmel, freches Lächeln, Taylor-Swift-Armbänder. Robert Habecks Kanzlervideo zeigt ungewollt, wie nutzlos die aktuellen politischen Inszenierungen sind.
-      precip: Nach der CDU dürfen nun auch die Grünen das Lied Zeit, dass sich was dreht nicht mehr im Wahlkampf benutzen. "Wir haben heute auch die Partei Bündnis 90/Die Grünen und Herrn Habeck aufgefordert, es in Zukunft zu unterlassen, Lieder von Herbert Grönemeyer und hier konkret das Lied 'Zeit, dass sich was dreht' für Wahlkampfzwecke zu nutzen", teilte Grönemeyers Medienanwalt Christian Schertz der Nachrichtenagentur dpa mit.
+      temp: 'Modelización de la temperatura media mensual (unidades: ºC) generada por regresión múltiple lineal e interpolación de residuos a partir de los valores en las estaciones y variables geográficas. (Ninyerola M, Pons X Roure JM. 2000. A methodological approach of climatological modelling of air temperature and precipitation through GIS techniques. Int. J. Climatol. 20: 1823–1841)'
+      precip: 'Precipitación acumulada mensual (uniades: mm) Modelización de la precipitación mensual accumulada (unidades: mm) generada por regresión múltiple lineal e interpolación de residuos a partir de los valores en las estaciones y variables geográficas. (Ninyerola M, Pons X Roure JM. 2000. A methodological approach of climatological modelling of air temperature and precipitation through GIS techniques. Int. J. Climatol. 20: 1823–1841)'
   historic_station:
     nav: Station Data
     heading: Historic station Data
     heading_descr: historic station data by METEO
   projections:
-    nav: Climate Projections (oil model?)
+    nav: Climate Projections 
     heading: Climate Projections
-    heading_descr: CLimate Projections until 2100
+    heading_descr: Climate Projections until 2100
   phenology:
-    nav: Phenology Indicators
+    nav: Phenology Indicators & oil model
     heading: Bioindicators/Drought
     heading_descr: This is a page to explore the biological effective degree days
   hydro_service:
     nav: Hydrological Service
     heading: Hydrological Service
     heading_descr: This is a story map about hydrological facts
+overrides:
+  '@open-pioneer/map-navigation':
+    zoom-out:
+      title: alejar
+    zoom-in:
+      title: acercar
+    
+    
