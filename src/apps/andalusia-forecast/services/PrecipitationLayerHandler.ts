@@ -117,7 +117,9 @@ export class PrecipitationLayerHandlerImpl implements PrecipitationLayerHandler 
                         "blue",
                         ["<=", ["band", 1], 0.90],
                         "indigo",
-                        "violet"
+                        ["<=", ["band", 1], 0.999],
+                        "violet",
+                        "purple" // Default color for values > 0.95
                     ]
                 }
             });

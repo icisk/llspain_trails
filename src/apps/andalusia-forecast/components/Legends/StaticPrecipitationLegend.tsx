@@ -10,7 +10,8 @@ const colorMapping = [
     { value: 22.5, color: "green", label: "22.5 - 30 mm" },
     { value: 30, color: "blue", label: "30 - 37.5 mm" },
     { value: 37.5, color: "indigo", label: "37.5 - 45 mm" },
-    { value: 45, color: "violet", label: "45 - 52.5 mm" }
+    { value: 45, color: "violet", label: "45 - 50 mm" },
+    { value: 50, color: "purple", label: "> 50 mm" }
 ];
 
 export const StaticPrecipitationLegend = () => {
