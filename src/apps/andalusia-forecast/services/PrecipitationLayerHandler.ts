@@ -54,23 +54,43 @@ export class PrecipitationLayerHandlerImpl implements PrecipitationLayerHandler 
                 source: this.createSource(),
                 zIndex: 0, // Order of the Layers
                 style: {
+                    // color: [
+                    //     "case",
+                    //     ["all", ["==", ["band", 1], 0], ["==", ["band", 2], 0]],
+                    //     [0, 0, 0, 0], // Transparent for 0 values outside the area of interest
+                    //     ["==", ["band", 1], 0],
+                    //     "red", // Red for actual 0 values within the area of interest
+                    //     ["<=", ["band", 1], 0.15],
+                    //     "red",
+                    //     ["<=", ["band", 1], 0.3],
+                    //     "orange",
+                    //     ["<=", ["band", 1], 0.45],
+                    //     "yellow",
+                    //     ["<=", ["band", 1], 0.6],
+                    //     "green",
+                    //     ["<=", ["band", 1], 0.75],
+                    //     "blue",
+                    //     ["<=", ["band", 1], 0.9],
+                    //     "indigo",
+                    //     "violet"
+                    // ]
                     color: [
                         "case",
-                        ["all", ["==", ["band", 1], 0], ["==", ["band", 2], 0]],
+                        ["all", ["==", ["*", ["band", 1], 50], 0], ["==", ["*", ["band", 2], 50], 0]],
                         [0, 0, 0, 0], // Transparent for 0 values outside the area of interest
-                        ["==", ["band", 1], 0],
+                        ["==", ["*", ["band", 1], 50], 0],
                         "red", // Red for actual 0 values within the area of interest
-                        ["<=", ["band", 1], 0.15],
+                        ["<=", ["*", ["band", 1], 50], 15],
                         "red",
-                        ["<=", ["band", 1], 0.3],
+                        ["<=", ["*", ["band", 1], 50], 30],
                         "orange",
-                        ["<=", ["band", 1], 0.45],
+                        ["<=", ["*", ["band", 1], 50], 45],
                         "yellow",
-                        ["<=", ["band", 1], 0.6],
+                        ["<=", ["*", ["band", 1], 50], 60],
                         "green",
-                        ["<=", ["band", 1], 0.75],
+                        ["<=", ["*", ["band", 1], 50], 75],
                         "blue",
-                        ["<=", ["band", 1], 0.9],
+                        ["<=", ["*", ["band", 1], 50], 90],
                         "indigo",
                         "violet"
                     ]
@@ -106,7 +126,7 @@ export class PrecipitationLayerHandlerImpl implements PrecipitationLayerHandler 
 
     private createSource() {
         const year = 2024;
-        const precipitationUrl = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/precip_forecats/cog_PLforecast_${this.currentMonth}_${year}_${this.currentVariable}_NoNDVI_RegMult_E3_MAP_Corrected.tif`;
+        const precipitationUrl = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/precip_forecats/cog_PLforecast_${this.currentMonth}_${year}_pc50_NoNDVI_RegMult_E3_MAP_Corrected.tif`;
         const maskUrl = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/precip_forecats/cog_PLforecast_${Month.february}_${year}_${Variable.pc95}_NoNDVI_RegMult_E3_MAP_Corrected.tif`;
         
         return new GeoTIFF({

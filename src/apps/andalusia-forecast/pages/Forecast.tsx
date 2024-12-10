@@ -91,7 +91,7 @@ export function Forecast() {
             <Center pt={2}>
                 <HStack>
                     <ChangeMonth />
-                    <ChangeVariable />
+                    {/*<ChangeVariable />*/}
                 </HStack>
             </Center>
             
