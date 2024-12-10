@@ -47,7 +47,7 @@ export class HistoricClimateMapProvider2 implements MapConfigProvider {
                         source: new GeoTIFF({
                             sources: [
                                 {
-                                    url: "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_2000_01_MeanTemperature_v0.tif",
+                                    url: "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_2000_02_MeanTemperature_v0.tif",
                                 }
                             ]
                         }),

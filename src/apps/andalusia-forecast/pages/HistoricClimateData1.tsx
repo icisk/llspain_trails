@@ -11,7 +11,7 @@ import { InfoTooltip } from "../components/InfoTooltip/InfoTooltip";
 import { RegionZoom } from "../components/RegionZoom/RegionZoom";
 import { Header } from "../components/MainComponents/Header";
 import { MainMap } from "../components/MainComponents/MainMap";
-import HistoricClimatehook from '../hooks/HistoricClimatehook';
+import { HistoricClimateHook1, HistoricClimateHook2 }  from '../hooks/HistoricClimatehook';
 
 import { MAP_ID } from '../services/HistoricClimateMapProvider';
 import { MAP_ID2 } from '../services/HistoricClimateMapProvider2';
@@ -21,92 +21,95 @@ const HistoricClimateData1 = () => {
 
     const mapRef = useRef<HTMLDivElement>(null);
 
-    HistoricClimatehook(mapRef);
-
+    //HistoricClimateHook1(mapRef);
+    HistoricClimateHook2(mapRef);
+    
     return (
-        <Container minWidth={"container.xl"}>
-            <Header subpage={'historic_compare'} />
+<Box>
+    <Header subpage={'historic_compare'} />
+    <Box>
+        <HStack>
+            <Container flex={2} minWidth={"container.xl"}>
+                <div style={{flex: 1}}>
+                    <div style={{margin: 20}}>
+                        <HStack>
+                            <>
+                                {intl.formatMessage({id: "global.controls.sel_year"})}
+                            </>
+                            <Select placeholder={intl.formatMessage({id: "global.vars.year"})}>
+                                {[...Array(20)].map((_, i) => 2000 + i).map((year) => (
+                                    <option key={year} value={year}>
+                                        {year}
+                                    </option>
+                                ))}
+                            </Select>
+                        </HStack>
+                        <ChangeMonth/>
+                    </div>
+                    <RadioGroup defaultValue="1">
+                        <p>{intl.formatMessage({id: "global.controls.sel_var"})}:</p>
+                        <VStack gap="1">
+                            <HStack>
+                                <Radio
+                                    value="1">{intl.formatMessage({id: "global.vars.temp"})}</Radio>
+                                <InfoTooltip i18n_path="historic_compare.info.temp"/>
+                            </HStack>
+                            <HStack>
+                                <Radio
+                                    value="2">{intl.formatMessage({id: "global.vars.precip"})}</Radio>
+                                <InfoTooltip i18n_path="historic_compare.info.precip"/>
+                            </HStack>
+                        </VStack>
+                    </RadioGroup>
+                </div>
+                <Box width="100%" height="500px">
+                    <MainMap MAP_ID={MAP_ID}/>
+                </Box>
+            </Container>
 
             <Container flex={2} minWidth={"container.xl"}>
-                <HStack width="100%">
-                    <div style={{ flex: 1 }}>
-                        <div style={{ margin: 20 }}>
-                            <HStack>
-                                <>
-                                    {intl.formatMessage({ id: "global.controls.sel_year" })}
-                                </>
-                                <Select placeholder={intl.formatMessage({ id: "global.vars.year"})}>
+                <div style={{flex: 1}}>
+                    <div style={{margin: 20}}>
+                        <HStack>
+                            <>
+                                {intl.formatMessage({id: "global.controls.sel_year"})}
+                            </>
+                            <Select placeholder={intl.formatMessage({id: "global.vars.year"})}>
                                 {[...Array(20)].map((_, i) => 2000 + i).map((year) => (
                                     <option key={year} value={year}>
                                         {year}
                                     </option>
                                 ))}
-                                </Select>
-                            </HStack>
-                            <ChangeMonth />
-                        </div>
-
-                        <RadioGroup defaultValue="1">
-                            <p>{intl.formatMessage({ id: "global.controls.sel_var" })}:</p>
-                            <VStack gap="1">
-                                <HStack>
-                                    <Radio
-                                        value="1">{intl.formatMessage({ id: "global.vars.temp" })}</Radio>
-                                    <InfoTooltip i18n_path="historic_compare.info.temp" />
-                                </HStack>
-                                <HStack>
-                                    <Radio
-                                        value="2">{intl.formatMessage({ id: "global.vars.precip" })}</Radio>
-                                    <InfoTooltip i18n_path="historic_compare.info.precip" />
-                                </HStack>
-                            </VStack>
-                        </RadioGroup>
+                            </Select>
+                        </HStack>
+                        <ChangeMonth/>
                     </div>
-
-                    <div style={{ flex: 1 }}>
-                        <div style={{ margin: 20 }}>
+                    <RadioGroup defaultValue="1">
+                        <p>{intl.formatMessage({id: "global.controls.sel_var"})}:</p>
+                        <VStack gap="1">
                             <HStack>
-                                <>
-                                    {intl.formatMessage({ id: "global.controls.sel_year" })}
-                                </>
-                                <Select placeholder={intl.formatMessage({ id: "global.vars.year"})}>
-                                {[...Array(20)].map((_, i) => 2000 + i).map((year) => (
-                                    <option key={year} value={year}>
-                                        {year}
-                                    </option>
-                                ))}
-                                </Select>
+                                <Radio
+                                    value="1">{intl.formatMessage({id: "global.vars.temp"})}</Radio>
+                                <InfoTooltip i18n_path="historic_compare.info.temp"/>
                             </HStack>
-                            <ChangeMonth />
-                        </div>
+                            <HStack>
+                                <Radio
+                                    value="2">{intl.formatMessage({id: "global.vars.precip"})}</Radio>
+                                <InfoTooltip i18n_path="historic_compare.info.precip"/>
+                            </HStack>
+                        </VStack>
+                    </RadioGroup>
+                </div>
 
-                        <RadioGroup defaultValue="1">
-                            <p>{intl.formatMessage({ id: "global.controls.sel_var" })}:</p>
-                            <VStack gap="1">
-                                <HStack>
-                                    <Radio
-                                        value="1">{intl.formatMessage({ id: "global.vars.temp" })}</Radio>
-                                    <InfoTooltip i18n_path="historic_compare.info.temp" />
-                                </HStack>
-                                <HStack>
-                                    <Radio
-                                        value="2">{intl.formatMessage({ id: "global.vars.precip" })}</Radio>
-                                    <InfoTooltip i18n_path="historic_compare.info.precip" />
-                                </HStack>
-                            </VStack>
-                        </RadioGroup>
-                    </div>
-                </HStack>
-                    <Box width="100%" height ="500px">
-                        <MainMap MAP_ID={MAP_ID}/>
-                    </Box>
-                    <Box width="100%" height ="500px">
-                        <MainMap MAP_ID={MAP_ID2}/>
-                    </Box>
-                <HStack>
-                </HStack>
+                <Box width="100%" height="500px">
+                    <MainMap MAP_ID={MAP_ID2}/>
+                </Box>
             </Container>
-        </Container>
+        </HStack>
+
+    </Box>
+</Box>
+
     );
 };
 

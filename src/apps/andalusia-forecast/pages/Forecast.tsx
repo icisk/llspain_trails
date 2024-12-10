@@ -14,6 +14,7 @@ import MapBrowserEvent from "ol/MapBrowserEvent";
 import { transform } from "ol/proj";
 import { Vector as VectorLayer } from "ol/layer";
 import { Vector as VectorSource } from "ol/source";
+import {MapContainer} from "@open-pioneer/map";
 
 import { createMarker, markerStyle } from "../components/utils/marker";
 import {getMonthArray} from "../components/utils/globals";
@@ -96,7 +97,7 @@ export function Forecast() {
             </Center>
             
             <Box width="100%" height="500px">
-                <MapContainer mapId="example-map" />
+                <MainMap MAP_ID={MAP_ID} />
             </Box>
             <Box p={4}>
                 <div>

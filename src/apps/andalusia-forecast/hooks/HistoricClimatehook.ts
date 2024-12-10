@@ -24,10 +24,10 @@ register(proj4);
 const HistoricClimateHook1 = (
     mapRef: React.RefObject<HTMLDivElement>,
 ) => {
-    const mapInstanceRef = useRef<Map | null>(null); // Ref to store the map instance
+    const mapInstanceRef1 = useRef<Map | null>(null); // Ref to store the map instance
 
     useEffect(() => {
-        if (!mapRef.current || mapInstanceRef.current) return;
+        if (!mapRef.current || mapInstanceRef1.current) return;
 
         const key = '2sau1xauZfmyliK5rhUv';
 
@@ -56,11 +56,11 @@ const HistoricClimateHook1 = (
             }),
         });
 
-        mapInstanceRef.current = map; // Store the map instance in the ref        
+        mapInstanceRef1.current = map; // Store the map instance in the ref        
 
         return () => {
             map.setTarget(undefined);
-            mapInstanceRef.current = null;
+            mapInstanceRef1.current = null;
         };
     }, [mapRef]);
 
@@ -68,12 +68,12 @@ const HistoricClimateHook1 = (
 };
 
 const HistoricClimateHook2 = (
-    mapRef: React.RefObject<HTMLDivElement>,
+    mapRef2: React.RefObject<HTMLDivElement>,
 ) => {
-    const mapInstanceRef = useRef<Map | null>(null); // Ref to store the map instance
+    const mapInstanceRef2 = useRef<Map | null>(null); // Ref to store the map instance
 
     useEffect(() => {
-        if (!mapRef.current || mapInstanceRef.current) return;
+        if (!mapRef2.current || mapInstanceRef2.current) return;
 
         const key = '2sau1xauZfmyliK5rhUv';
 
@@ -95,22 +95,22 @@ const HistoricClimateHook2 = (
     
         const map = new Map({
             layers: [tile1, cogLayer],
-            target: mapRef.current,
+            target: mapRef2.current,
             view: new View({
                 center: [-460000, 4540000],
                 zoom: 8,
             }),
         });
 
-        mapInstanceRef.current = map; // Store the map instance in the ref        
+        mapInstanceRef2.current = map; // Store the map instance in the ref        
 
         return () => {
             map.setTarget(undefined);
-            mapInstanceRef.current = null;
+            mapInstanceRef2.current = null;
         };
-    }, [mapRef]);
+    }, [mapRef2]);
 
     return null;
 };
 
-export default HistoricClimateHook1;
+export { HistoricClimateHook1, HistoricClimateHook2 };
