@@ -6,5 +6,6 @@ export { PrecipitationLayerHandlerImpl } from "./services/PrecipitationLayerHand
 export { BioindicatorMapProvider } from "./services/BioindicatorMapProvider"
 export { HydrologicalMapProvider } from "./services/HydrologicalMapProvider"
 export { ProjectionMapProvider } from "./services/ProjectionMapProvider"
-
+export { HistoricClimateMapProvider } from "./services/HistoricClimateMapProvider"
+export { HistoricClimateMapProvider2 } from "./services/HistoricClimateMapProvider2"
 

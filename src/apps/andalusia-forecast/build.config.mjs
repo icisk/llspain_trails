@@ -30,6 +30,12 @@ export default defineBuildConfig({
             references: {
                 mapRegistry: "map.MapRegistry"
             }
-        }
+        },
+        HistoricClimateMapProvider: {
+            provides: ["map.MapConfigProvider"]
+        },
+        HistoricClimateMapProvider2: {
+            provides: ["map.MapConfigProvider2"]
+        },
     }
 });

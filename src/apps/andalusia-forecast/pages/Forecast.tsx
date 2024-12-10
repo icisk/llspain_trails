@@ -95,17 +95,10 @@ export function Forecast() {
                 </HStack>
             </Center>
             
-            <MainMap MAP_ID={MAP_ID}/>
-
+            <Box width="100%" height="500px">
+                <MapContainer mapId="example-map" />
+            </Box>
             <Box p={4}>
-                {/*<div style={{ marginBottom: "10px", fontSize: "16px" }}>*/}
-                {/*    {clickedCoordinates*/}
-                {/*        ? intl.formatMessage({id: "global.map.coord_clicked"}, */}
-                {/*            {x:clickedCoordinates[0].toFixed(2),*/}
-                {/*             y:clickedCoordinates[1].toFixed(2)})*/}
-                {/*        : intl.formatMessage({id: "global.map.no_coord_clicked"})}*/}
-                {/*</div>*/}
-
                 <div>
                     <HighchartsReact highcharts={Highcharts} options={chartOptions} />
                 </div>

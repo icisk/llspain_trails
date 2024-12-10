@@ -13,13 +13,15 @@ import { Header } from "../components/MainComponents/Header";
 import { MainMap } from "../components/MainComponents/MainMap";
 import HistoricClimatehook from '../hooks/HistoricClimatehook';
 
+import { MAP_ID } from '../services/HistoricClimateMapProvider';
+import { MAP_ID2 } from '../services/HistoricClimateMapProvider2';
+
 const HistoricClimateData1 = () => {
     const intl = useIntl();
 
     const mapRef = useRef<HTMLDivElement>(null);
-    const [swipeValue, setSwipeValue] = useState<number>(50);
 
-    HistoricClimatehook(mapRef, swipeValue);
+    HistoricClimatehook(mapRef);
 
     return (
         <Container minWidth={"container.xl"}>
@@ -95,21 +97,14 @@ const HistoricClimateData1 = () => {
                         </RadioGroup>
                     </div>
                 </HStack>
-
-                <Box>
-                    <Box ref={mapRef} w="100%" h="500px" />
-                    {/* <Box height={"500px"}>
-                        <MapContainer mapId={'midterm-forecast'} role="main"/>
-                    </Box> */}
-                    <Box>
-                        <Slider aria-label="slider-ex" defaultValue={50} onChange={(val) => setSwipeValue(val)}>
-                            <SliderTrack>
-                                <SliderFilledTrack />
-                            </SliderTrack>
-                            <SliderThumb />
-                        </Slider>
+                    <Box width="100%" height ="500px">
+                        <MainMap MAP_ID={MAP_ID}/>
                     </Box>
-                </Box>
+                    <Box width="100%" height ="500px">
+                        <MainMap MAP_ID={MAP_ID2}/>
+                    </Box>
+                <HStack>
+                </HStack>
             </Container>
         </Container>
     );
