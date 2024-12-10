@@ -17,10 +17,10 @@ proj4.defs(
 );
 register(proj4);
 
-export const MAP_ID = "historical-climate2";
+export const MAP_ID2= "historical-climate2";
 
 export class HistoricClimateMapProvider2 implements MapConfigProvider {
-    mapId = MAP_ID;
+    mapId = MAP_ID2;
 
     async getMapConfig(): Promise<MapConfig> {
         return {
