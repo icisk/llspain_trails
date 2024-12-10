@@ -14,7 +14,7 @@ import { MainMap } from "../components/MainComponents/MainMap";
 import HistoricClimatehook from '../hooks/HistoricClimatehook';
 
 import { MAP_ID } from '../services/HistoricClimateMapProvider';
-import { MAP_ID2 } from '../services/HistoricClimateMapProvider2';
+import { MAP_ID as MAP_ID2} from '../services/HistoricClimateMapProvider2';
 
 const HistoricClimateData1 = () => {
     const intl = useIntl();
@@ -96,14 +96,14 @@ const HistoricClimateData1 = () => {
                             </VStack>
                         </RadioGroup>
                     </div>
-                </HStack>
+                </HStack> 
+                <HStack>
                     <Box width="100%" height ="500px">
                         <MainMap MAP_ID={MAP_ID}/>
                     </Box>
                     <Box width="100%" height ="500px">
                         <MainMap MAP_ID={MAP_ID2}/>
                     </Box>
-                <HStack>
                 </HStack>
             </Container>
         </Container>
