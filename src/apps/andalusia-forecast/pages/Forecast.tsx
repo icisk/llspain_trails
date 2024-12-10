@@ -32,7 +32,7 @@ export function Forecast() {
     // State for managing chart options
     const [chartOptions, setChartOptions] = useState({
         title: { text: intl.formatMessage({ id: "global.plot.header_precip" }) },
-        xAxis: { categories: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto"] },
+        xAxis: { categories: ["Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto"] },
         yAxis: { title: { text: "Precipitation (mm)" }, min: 0, max: 350 },
         series: []
     });

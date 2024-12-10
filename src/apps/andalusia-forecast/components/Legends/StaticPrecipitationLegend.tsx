@@ -4,14 +4,13 @@ import { Box, Text } from "@open-pioneer/chakra-integration";
 import {useIntl} from "open-pioneer:react-hooks";
 
 const colorMapping = [
-    { value: 0, color: "red", label: "0 - 15 mm" },
-    { value: 15, color: "red", label: "15 - 30 mm" },
-    { value: 30, color: "orange", label: "30 - 45 mm" },
-    { value: 45, color: "yellow", label: "45 - 60 mm" },
-    { value: 60, color: "green", label: "60 - 75 mm" },
-    { value: 75, color: "blue", label: "75 - 90 mm" },
-    { value: 90, color: "indigo", label: "90 - 100 mm" },
-    { value: 100, color: "violet", label: "> 100 mm" }
+    { value: 0, color: "red", label: "0 - 7.5 mm" },
+    { value: 7.5, color: "orange", label: "7.5 - 15 mm" },
+    { value: 15, color: "yellow", label: "15 - 22.5 mm" },
+    { value: 22.5, color: "green", label: "22.5 - 30 mm" },
+    { value: 30, color: "blue", label: "30 - 37.5 mm" },
+    { value: 37.5, color: "indigo", label: "37.5 - 45 mm" },
+    { value: 45, color: "violet", label: "45 - 52.5 mm" }
 ];
 
 export const StaticPrecipitationLegend = () => {

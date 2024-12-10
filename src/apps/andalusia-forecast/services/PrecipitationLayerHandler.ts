@@ -44,7 +44,7 @@ export class PrecipitationLayerHandlerImpl implements PrecipitationLayerHandler 
     private layer: WebGLTileLayer | undefined;
 
     #currentMonth: Reactive<Month> = reactive(Month.february);
-    #currentVariable: Reactive<Variable> = reactive(Variable.pc05);
+    #currentVariable: Reactive<Variable> = reactive(Variable.pc50);
 
     constructor(options: ServiceOptions<References>) {
         const { mapRegistry } = options.references;
@@ -105,17 +105,17 @@ export class PrecipitationLayerHandlerImpl implements PrecipitationLayerHandler 
                         [0, 0, 0, 0], // Transparent for 0 values outside the area of interest
                         ["==", ["*", ["band", 1], 50], 0],
                         "red", // Red for actual 0 values within the area of interest
-                        ["<=", ["*", ["band", 1], 50], 15],
+                        ["<=", ["band", 1], 0.15],
                         "red",
-                        ["<=", ["*", ["band", 1], 50], 30],
+                        ["<=", ["band", 1], 0.3],
                         "orange",
-                        ["<=", ["*", ["band", 1], 50], 45],
+                        ["<=", ["band", 1], 0.45],
                         "yellow",
-                        ["<=", ["*", ["band", 1], 50], 60],
+                        ["<=", ["band", 1], 0.60],
                         "green",
-                        ["<=", ["*", ["band", 1], 50], 75],
+                        ["<=", ["band", 1], 0.75],
                         "blue",
-                        ["<=", ["*", ["band", 1], 50], 90],
+                        ["<=", ["band", 1], 0.90],
                         "indigo",
                         "violet"
                     ]
