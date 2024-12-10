@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { createCustomElement } from "@open-pioneer/runtime";
 import * as appMetadata from "open-pioneer:app";
-import { AppUI } from "./AppUI";
+import AppUI from "./AppUI";
 
 const URL_PARAMS = new URLSearchParams(window.location.search);
 const FORCED_LANG = URL_PARAMS.get("lang") || "en";

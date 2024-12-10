@@ -3,12 +3,26 @@
 import { defineBuildConfig } from "@open-pioneer/build-support";
 
 export default defineBuildConfig({
-    i18n: ["en", /*"es"*/],
+    i18n: ["en", 
+        // "es"
+    ],
     ui: {
         references: ["app.PrecipitationLayerHandler"]
     },
     services: {
-        MapProvider: {
+        MidtermForecastMapProvider: {
+            provides: ["map.MapConfigProvider"]
+        },
+        StoryMapProvider: {
+            provides: ["map.MapConfigProvider"]
+        },
+        HydrologicalMapProvider: {
+            provides: ["map.MapConfigProvider"]
+        },
+        ProjectionMapProvider: {
+            provides: ["map.MapConfigProvider"]
+        },
+        BioindicatorMapProvider: {
             provides: ["map.MapConfigProvider"]
         },
         PrecipitationLayerHandlerImpl: {
