@@ -96,7 +96,7 @@ export function Forecast() {
             </Center>
             
             <Box width="100%" height="500px">
-                <MapContainer mapId="example-map" />
+                <MainMap MAP_ID={MAP_ID}/>
             </Box>
             <Box p={4}>
                 <div>
