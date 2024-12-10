@@ -12,6 +12,7 @@ import MapBrowserEvent from "ol/MapBrowserEvent";
 import { transform } from "ol/proj";
 import { Vector as VectorLayer } from "ol/layer";
 import { Vector as VectorSource } from "ol/source";
+
 import { createMarker, markerStyle } from "../components/utils/marker";
 import { getMonthArray } from "../components/utils/globals";
 import { Header } from "../components/MainComponents/Header";
@@ -35,6 +36,7 @@ export function Forecast() {
         yAxis: { title: { text: "Precipitation (mm)" }, min: 0, max: 350 },
         series: []
     });
+    
 
     useEffect(() => {
         if (data) {
@@ -42,28 +44,29 @@ export function Forecast() {
                 name: param,
                 data: data.ranges[param].values || []
             }));
-            setChartOptions((prevOptions: any) => ({
+            setChartOptions((prevOptions :any) => ({
                 ...prevOptions,
                 series: seriesData
             }));
         }
     }, [data]);
-
+    
     useEffect(() => {
         if (mapState?.map?.olMap) {
             const olMap = mapState.map.olMap;
             // add marker layer
             olMap.addLayer(markerLayer);
-            // attach click event handler
+            // attach click event handler 
             olMap.on("click", handleMapClick);
-            // Cleanup function
+            // Cleanup function 
             return () => {
                 olMap.removeLayer(markerLayer);
                 olMap.un("click", handleMapClick);
             };
         }
     }, [mapState]);
-
+    
+    
     // Handle map clicks to set clicked coordinates and add marker
     const handleMapClick = (event: MapBrowserEvent<MouseEvent>) => {
         const coordinatesEPSG3857 = event.coordinate;
@@ -73,15 +76,15 @@ export function Forecast() {
 
         //Clear previous markers and add a new one
         markerSource.clear();
-        const marker = createMarker(coordinatesEPSG3857, markerStyle);
+        const marker = createMarker(coordinatesEPSG3857, markerStyle)
         markerSource.addFeature(marker);
     };
 
-    console.log(getMonthArray());
 
+    console.log(getMonthArray())
     return (
-        <Container minWidth={"container.xl"}>
-            <Header subpage={"forecast"} />
+        <Container minWidth={"container.xl"}>            
+            <Header subpage={'forecast'} />
 
             <Center pt={2}>
                 <HStack>
@@ -96,6 +99,14 @@ export function Forecast() {
             </Box>
 
             <Box p={4}>
+                {/*<div style={{ marginBottom: "10px", fontSize: "16px" }}>*/}
+                {/*    {clickedCoordinates*/}
+                {/*        ? intl.formatMessage({id: "global.map.coord_clicked"}, */}
+                {/*            {x:clickedCoordinates[0].toFixed(2),*/}
+                {/*             y:clickedCoordinates[1].toFixed(2)})*/}
+                {/*        : intl.formatMessage({id: "global.map.no_coord_clicked"})}*/}
+                {/*</div>*/}
+
                 <div>
                     <HighchartsReact highcharts={Highcharts} options={chartOptions} />
                 </div>

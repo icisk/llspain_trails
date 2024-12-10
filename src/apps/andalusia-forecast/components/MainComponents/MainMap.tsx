@@ -14,8 +14,8 @@ interface MapIdProps {
 export function MainMap({MAP_ID} :MapIdProps){
     return (
         <>
-            <Box height={"500px"} pt={2}>
-                <MapContainer mapId={MAP_ID} role="main">
+            <Box height={"500px"} pt={2} overflow="visible">
+                <MapContainer mapId={MAP_ID} role="main" >
                     <MapAnchor position="bottom-right" horizontalGap={10} verticalGap={30}>
                         <Flex role="bottom-right" direction="column" gap={1} padding={1}>
                             <ZoomIn mapId={MAP_ID}/>
@@ -24,8 +24,13 @@ export function MainMap({MAP_ID} :MapIdProps){
                     </MapAnchor>
                 </MapContainer>
             </Box>
-            <CoordsScaleBar MAP_ID={MAP_ID} />
-            <RegionZoom MAP_ID={MAP_ID} />
+            <Box mb={4}>
+                <CoordsScaleBar MAP_ID={MAP_ID} />
+            </Box>
+            <Box mb={4} gap={10}>
+                <RegionZoom MAP_ID={MAP_ID} />
+            </Box>
+            <Box height="40px" />  
         </>
 
     )

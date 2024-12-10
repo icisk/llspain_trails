@@ -6,24 +6,28 @@ import GeoTIFF from 'ol/source/GeoTIFF';
 import XYZ from 'ol/source/XYZ';
 import { getRenderPixel } from 'ol/render';
 
-const HistoricClimateHook = (
+export const MAP_ID = 'historic-climate';
+
+import { MapConfig, MapConfigProvider, SimpleLayer } from "@open-pioneer/map";
+import { register } from "ol/proj/proj4";
+import OSM from "ol/source/OSM";
+import proj4 from "proj4";
+import WebGLTileLayer from "ol/layer/WebGLTile";
+
+proj4.defs(
+    "EPSG:25830",
+    "+proj=utm +zone=30 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs"
+);
+register(proj4);
+
+
+const HistoricClimateHook1 = (
     mapRef: React.RefObject<HTMLDivElement>,
-    swipeValue: number
 ) => {
-    const mapInstanceRef = useRef<Map | null>(null); // Ref to store the map instance
-    const swipeValueRef = useRef(swipeValue); // Ref to store the current swipe value
-
-    // Update swipeValueRef whenever swipeValue changes
-    useEffect(() => {
-        swipeValueRef.current = swipeValue;
-        if (mapInstanceRef.current) {
-            // Redraw the map tiles when the slider value changes
-            mapInstanceRef.current.render();
-        }
-    }, [swipeValue]);
+    const mapInstanceRef1 = useRef<Map | null>(null); // Ref to store the map instance
 
     useEffect(() => {
-        if (!mapRef.current || mapInstanceRef.current) return;
+        if (!mapRef.current || mapInstanceRef1.current) return;
 
         const key = '2sau1xauZfmyliK5rhUv';
 
@@ -33,29 +37,18 @@ const HistoricClimateHook = (
             }),
         });
 
-        // const tile2 = new TileLayer({
-        //     source: new GeoTIFF({
-        //         sources: [
-        //             {
-        //                 url: 'https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_2000_01_MeanTemperature_v0.tif',
-        //             },
-        //         ],
-        //     }),
-        // });
-
-        const tile2 = new TileLayer({
-            source: new XYZ({
-                url: `https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=${key}`,
-                maxZoom: 20,
-                attributions:
-                    '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> ' +
-                    '<a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>',
+        const cogLayer = new WebGLTileLayer({
+            source: new GeoTIFF({
+                sources: [
+                    {
+                        url: "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_2000_01_MeanTemperature_v0.tif",
+                    },
+                ],
             }),
         });
-        
-
+    
         const map = new Map({
-            layers: [tile1, tile2],
+            layers: [tile1, cogLayer],
             target: mapRef.current,
             view: new View({
                 center: [-460000, 4540000],
@@ -63,41 +56,61 @@ const HistoricClimateHook = (
             }),
         });
 
-        mapInstanceRef.current = map; // Store the map instance in the ref
-
-        tile2.on('prerender', (event: any) => {
-            const ctx = event.context;
-            const mapSize = map.getSize();
-            if (!mapSize) return;
-
-            const width = mapSize[0] * (swipeValueRef.current / 100);
-            const tl = getRenderPixel(event, [width, 0]);
-            const tr = getRenderPixel(event, [mapSize[0], 0]);
-            const bl = getRenderPixel(event, [width, mapSize[1]]);
-            const br = getRenderPixel(event, mapSize);
-
-            ctx.save();
-            ctx.beginPath();
-            ctx.moveTo(tl[0], tl[1]);
-            ctx.lineTo(bl[0], bl[1]);
-            ctx.lineTo(br[0], br[1]);
-            ctx.lineTo(tr[0], tr[1]);
-            ctx.closePath();
-            ctx.clip();
-        });
-
-        tile2.on('postrender', (event: any) => {
-            const ctx = event.context;
-            ctx.restore();
-        });
+        mapInstanceRef1.current = map; // Store the map instance in the ref        
 
         return () => {
-            map.setTarget(null);
-            mapInstanceRef.current = null;
+            map.setTarget(undefined);
+            mapInstanceRef1.current = null;
         };
     }, [mapRef]);
 
     return null;
 };
 
-export default HistoricClimateHook;
+const HistoricClimateHook2 = (
+    mapRef2: React.RefObject<HTMLDivElement>,
+) => {
+    const mapInstanceRef2 = useRef<Map | null>(null); // Ref to store the map instance
+
+    useEffect(() => {
+        if (!mapRef2.current || mapInstanceRef2.current) return;
+
+        const key = '2sau1xauZfmyliK5rhUv';
+
+        const tile1 = new TileLayer({
+            source: new XYZ({
+                url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            }),
+        });
+
+        const cogLayer = new WebGLTileLayer({
+            source: new GeoTIFF({
+                sources: [
+                    {
+                        url: "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_2000_01_MeanTemperature_v0.tif",
+                    },
+                ],
+            }),
+        });
+    
+        const map = new Map({
+            layers: [tile1, cogLayer],
+            target: mapRef2.current,
+            view: new View({
+                center: [-460000, 4540000],
+                zoom: 8,
+            }),
+        });
+
+        mapInstanceRef2.current = map; // Store the map instance in the ref        
+
+        return () => {
+            map.setTarget(undefined);
+            mapInstanceRef2.current = null;
+        };
+    }, [mapRef2]);
+
+    return null;
+};
+
+export { HistoricClimateHook1, HistoricClimateHook2 };
