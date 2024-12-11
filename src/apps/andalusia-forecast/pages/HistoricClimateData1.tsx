@@ -15,6 +15,7 @@ import { HistoricClimateHook1, HistoricClimateHook2 }  from '../hooks/HistoricCl
 
 import { MAP_ID } from '../services/HistoricClimateMapProvider';
 import { MAP_ID2 } from '../services/HistoricClimateMapProvider2';
+import {DynamicPrecipitationLegend} from "../components/Legends/DynamicLegend";
 
 const HistoricClimateData1 = () => {
     const intl = useIntl();
@@ -28,7 +29,7 @@ const HistoricClimateData1 = () => {
 <Box>
     <Header subpage={'historic_compare'} />
     <Box>
-        <HStack>
+        <VStack>
             <Container flex={2} minWidth={"container.xl"}>
                 <div style={{flex: 1}}>
                     <div style={{margin: 20}}>
@@ -62,11 +63,14 @@ const HistoricClimateData1 = () => {
                         </VStack>
                     </RadioGroup>
                 </div>
-                <Box width="100%" height="500px">
+                <Box width="100%" height="500px" position="relative">
                     <MainMap MAP_ID={MAP_ID}/>
+                    <DynamicPrecipitationLegend />
                 </Box>
             </Container>
-
+            
+            <Box margin={50}></Box>
+            
             <Container flex={2} minWidth={"container.xl"}>
                 <div style={{flex: 1}}>
                     <div style={{margin: 20}}>
@@ -101,11 +105,12 @@ const HistoricClimateData1 = () => {
                     </RadioGroup>
                 </div>
 
-                <Box width="100%" height="500px">
+                <Box width="100%" height="500px" position="relative">
                     <MainMap MAP_ID={MAP_ID2}/>
+                    <DynamicPrecipitationLegend />
                 </Box>
             </Container>
-        </HStack>
+        </VStack>
 
     </Box>
 </Box>

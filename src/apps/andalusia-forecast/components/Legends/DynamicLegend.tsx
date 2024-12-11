@@ -28,23 +28,23 @@ const p_09 = '#11011eBC'
 
 
 const colorMapping = [
-    { value: 0, color: p_01, label: "0 - 5 mm" },
-    { value: 5, color: p_02, label: "5 - 15 mm" },
-    { value: 15, color: p_03, label: "15 - 30 mm" },
-    { value: 30, color: p_04, label: "30 - 50 mm" },
-    { value: 50, color: p_05, label: "50 - 75 mm" },
-    { value: 75, color: p_06, label: "75 - 100 mm" },
-    { value: 100, color: p_07, label: "100 - 150 mm" },
-    { value: 150, color: p_08, label: "> 150 mm" },
-    //{ value: 300, color: p_09, label: "> 100 mm" },
+    { value: 0, color: pink, label: "<  -10 ºC" },
+    { value: 5, color: cold_blue, label: "-10 - 0 ºC" },
+    { value: 15, color: ice_blue, label: "0 - 10 ºC" },
+    { value: 30, color: green, label: "10 - 20 ºC" },
+    { value: 50, color: yellow, label: "20 - 30 ºC" },
+    { value: 75, color: orange, label: "30 - 40 ºC" },
+    { value: 100, color: red, label: "50 - 60 ºC" },
+    { value: 150, color: dark_red, label: ">  60 ºC" },
+    //{ value: 300, color: p_09, label: "> 100 ºC" },
 ];
 
-export const StaticPrecipitationLegend = () => {
+export const DynamicPrecipitationLegend = () => {
     const intl = useIntl();
-    
+
     return (
         <Box position="absolute" top="10px" right="10px" bg="white" p={2} borderRadius="md" boxShadow="md">
-            <Text fontWeight="bold" mb={2}>{intl.formatMessage({id: "global.vars.precip"})}</Text>
+            <Text fontWeight="bold" mb={2}>{intl.formatMessage({id: "global.vars.temp"})}</Text>
             {colorMapping.map((item, index) => (
                 <Box key={index} display="flex" alignItems="center" mb={1}>
                     <Box width="12px" height="12px" bg={item.color} mr={2} />

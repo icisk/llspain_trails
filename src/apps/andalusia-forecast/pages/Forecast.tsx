@@ -12,7 +12,8 @@ import MapBrowserEvent from "ol/MapBrowserEvent";
 import { transform } from "ol/proj";
 import { Vector as VectorLayer } from "ol/layer";
 import { Vector as VectorSource } from "ol/source";
-
+import { useService } from "open-pioneer:react-hooks";
+import { PrecipitationLayerHandler } from "../services/PrecipitationLayerHandler";
 import { createMarker, markerStyle } from "../components/utils/marker";
 import { getMonthArray } from "../components/utils/globals";
 import { Header } from "../components/MainComponents/Header";
@@ -28,6 +29,10 @@ export function Forecast() {
     const [clickedCoordinates, setClickedCoordinates] = useState<number[] | null>(null);
     const { data, loading, error } = useFetchData(clickedCoordinates);
     const mapState = useMapModel(MAP_ID);
+    const precipitationService = useService<PrecipitationLayerHandler>("app.PrecipitationLayerHandler");
+
+    
+    const currentVariable = precipitationService?.currentVariable;
 
     // State for managing chart options
     const [chartOptions, setChartOptions] = useState({
@@ -95,7 +100,7 @@ export function Forecast() {
 
             <Box position="relative">
                 <MainMap MAP_ID={MAP_ID} />
-                <StaticPrecipitationLegend /> {/* Use the StaticPrecipitationLegend component */}
+                <StaticPrecipitationLegend /> 
             </Box>
 
             <Box p={4}>

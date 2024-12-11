@@ -20,6 +20,16 @@ export enum Month {
     august = "8"
 }
 
+const p_01 = '#C4DAF6BC'
+const p_02 = '#588fe1BC'
+const p_03 = '#1f569eBC'
+const p_04 = '#103278BC'
+const p_05 = '#AA4DD8BC'
+const p_06 = '#912198BC'
+const p_07 = '#591061BC'
+const p_08 = '#290A47BC'
+const p_09 = '#11011eBC'
+
 export enum Variable {
     // pc05 = "pc05",
     // pc10 = "pc10",
@@ -101,23 +111,25 @@ export class PrecipitationLayerHandlerImpl implements PrecipitationLayerHandler 
                     // ]
                     color: [
                         "case",
-                        ["all", ["==", ["*", ["band", 1], 50], 0], ["==", ["*", ["band", 2], 50], 0]],
+                        ["all", ["==", ["*", ["band", 1], 150], 0], ["==", ["*", ["band", 2], 150], 0]],
                         [0, 0, 0, 0], // Transparent for 0 values outside the area of interest
-                        ["==", ["*", ["band", 1], 50], 0],
-                        "red", // Red for actual 0 values within the area of interest
-                        ["<=", ["*", ["band", 1], 50], 15],
-                        "red",
-                        ["<=", ["*", ["band", 1], 50], 30],
-                        "orange",
-                        ["<=", ["*", ["band", 1], 50], 45],
-                        "yellow",
-                        ["<=", ["*", ["band", 1], 50], 60],
-                        "green",
-                        ["<=", ["*", ["band", 1], 50], 75],
-                        "blue",
-                        ["<=", ["*", ["band", 1], 50], 90],
-                        "indigo",
-                        "violet"
+                        ["==", ["*", ["band", 1], 150], 0],
+                        p_01, // Red for actual 0 values within the area of interest
+                        ["<=", ["*", ["band", 1], 150], 5],
+                        p_02,
+                        ["<=", ["*", ["band", 1], 150], 15],
+                        p_03,
+                        ["<=", ["*", ["band", 1], 150], 30],
+                        p_04,
+                        ["<=", ["*", ["band", 1], 150], 50],
+                        p_05,
+                        ["<=", ["*", ["band", 1], 150], 75],
+                        p_06,
+                        ["<=", ["*", ["band", 1], 150], 100],
+                        p_07,
+                        ["<=", ["*", ["band", 1], 150], 150],
+                        p_08,
+                        p_09
                     ]
                 }
             });

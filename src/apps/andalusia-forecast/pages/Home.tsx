@@ -8,7 +8,7 @@ const Home = () => {
     const intl = useIntl();
     return (
         <Box>
-            <img src="/images/logo.png" alt = "I-CISK logo" style={{ width: "40%", height: "auto" }}/>
+            <img src="/public/images/logo.png" alt = "I-CISK logo" style={{ width: "40%", height: "auto" }}/>
             <InfoBoxComponent
                 header={intl.formatMessage({id: "home.heading"})}
                 description={intl.formatMessage({id: "home.heading_descr"})}

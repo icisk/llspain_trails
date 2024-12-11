@@ -19,6 +19,16 @@ register(proj4);
 
 export const MAP_ID = "historical-climate";
 
+//temperature colors
+const pink = '#eb7fe9BC'
+const cold_blue = '#4f59cdBC'
+const ice_blue = '#1ceae1BC'
+const green = '#5fdf65BC'
+const yellow = '#eade57BC'
+const orange = '#ec8647BC'
+const red = '#832525BC'
+const dark_red = '#53050aBC'
+
 export class HistoricClimateMapProvider implements MapConfigProvider {
     mapId = MAP_ID;
 
@@ -47,10 +57,35 @@ export class HistoricClimateMapProvider implements MapConfigProvider {
                         source: new GeoTIFF({
                             sources: [
                                 {
-                                    url: "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_2000_01_MeanTemperature_v0.tif",
+                                    url: "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_2010_07_MeanTemperature_v0.tif",
+                                    max: 50,
+                                    min: 0
                                 }
                             ]
                         }),
+                        style: {
+                            color: [
+                                "case",
+                                ["all", ["==", ["*", ["band", 1], 50], 0], ["==", ["*", ["band", 2], 50], 0]],
+                                [0, 0, 0, 0], // Transparent for 0 values outside the area of interest
+                                ["==", ["*", ["band", 1], 50], -10],
+                                pink, // Red for actual 0 values within the area of interest
+                                ["<=", ["*", ["band", 1], 50], 0],
+                                cold_blue,
+                                ["<=", ["*", ["band", 1], 50], 10],
+                                ice_blue,
+                                ["<=", ["*", ["band", 1], 50], 20],
+                                green,
+                                ["<=", ["*", ["band", 1], 50], 30],
+                                yellow,
+                                ["<=", ["*", ["band", 1], 50], 40],
+                                orange,
+                                ["<=", ["*", ["band", 1], 50], 50],
+                                red,
+                                dark_red
+
+                            ]
+                        },
                         properties: { title: "Mean Temperature (2000-01)" }
                     }),
                     isBaseLayer: false
