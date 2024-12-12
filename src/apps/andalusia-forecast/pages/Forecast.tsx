@@ -76,7 +76,7 @@ export function Forecast() {
     const handleMapClick = (event: MapBrowserEvent<MouseEvent>) => {
         const coordinatesEPSG3857 = event.coordinate;
         const coordinatesEPSG25830 = transform(coordinatesEPSG3857, "EPSG:3857", "EPSG:25830");
-        console.log("Clicked Coordinates (EPSG:25830):", coordinatesEPSG25830);
+        //console.log("Clicked Coordinates (EPSG:25830):", coordinatesEPSG25830);
         setClickedCoordinates(coordinatesEPSG25830);
 
         //Clear previous markers and add a new one
@@ -86,7 +86,7 @@ export function Forecast() {
     };
 
 
-    console.log(getMonthArray())
+    //console.log(getMonthArray())
     return (
         <Container minWidth={"container.xl"}>            
             <Header subpage={'forecast'} />

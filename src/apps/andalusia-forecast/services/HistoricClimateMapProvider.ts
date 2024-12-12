@@ -55,35 +55,35 @@ export class HistoricClimateMapProvider implements MapConfigProvider {
                     title: "Mean Temperature (2000-01)",
                     olLayer: new WebGLTileLayer({
                         source: new GeoTIFF({
+                            normalize: false,
                             sources: [
                                 {
-                                    url: "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_2010_07_MeanTemperature_v0.tif",
-                                    max: 50,
-                                    min: 0
+                                    url: "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_2004_07_MeanTemperature_v0.tif",
+                                    max: 150,
+                                    min: -50,
                                 }
                             ]
                         }),
                         style: {
                             color: [
                                 "case",
-                                ["all", ["==", ["*", ["band", 1], 50], 0], ["==", ["*", ["band", 2], 50], 0]],
+                                ["==", ["*", ["band", 1], 50], 0], //, ["==", ["*", ["band", 2], 50], 0]
                                 [0, 0, 0, 0], // Transparent for 0 values outside the area of interest
-                                ["==", ["*", ["band", 1], 50], -10],
-                                pink, // Red for actual 0 values within the area of interest
-                                ["<=", ["*", ["band", 1], 50], 0],
+                                ["<", ["band", 1], -10],
+                                pink,
+                                ["<=", ["band", 1], 0],
                                 cold_blue,
-                                ["<=", ["*", ["band", 1], 50], 10],
+                                ["<=", ["band", 1], 10],
                                 ice_blue,
-                                ["<=", ["*", ["band", 1], 50], 20],
+                                ["<=", ["band", 1], 20],
                                 green,
-                                ["<=", ["*", ["band", 1], 50], 30],
+                                ["<=", ["band", 1], 30],
                                 yellow,
-                                ["<=", ["*", ["band", 1], 50], 40],
+                                ["<=", ["band", 1], 40],
                                 orange,
-                                ["<=", ["*", ["band", 1], 50], 50],
+                                ["<=", ["band", 1], 50],
                                 red,
                                 dark_red
-
                             ]
                         },
                         properties: { title: "Mean Temperature (2000-01)" }

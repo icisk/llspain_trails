@@ -21,8 +21,8 @@ export enum Month {
 }
 
 const p_01 = '#C4DAF6BC'
-const p_02 = '#588fe1BC'
-const p_03 = '#1f569eBC'
+const p_02 = '#588fe1BC'//'rgba(216,88,225,0.74)' //'#588fe1BC'
+const p_03 = '#1f569eBC'//'rgba(67,158,31,0.74)' //'#1f569eBC'
 const p_04 = '#103278BC'
 const p_05 = '#AA4DD8BC'
 const p_06 = '#912198BC'
@@ -54,7 +54,7 @@ export class PrecipitationLayerHandlerImpl implements PrecipitationLayerHandler 
     private layer: WebGLTileLayer | undefined;
 
     #currentMonth: Reactive<Month> = reactive(Month.february);
-    #currentVariable: Reactive<Variable> = reactive(Variable.pc05);
+    #currentVariable: Reactive<Variable> = reactive(Variable.pc50);
 
     constructor(options: ServiceOptions<References>) {
         const { mapRegistry } = options.references;
@@ -65,75 +65,32 @@ export class PrecipitationLayerHandlerImpl implements PrecipitationLayerHandler 
                 source: this.createSource(),
                 zIndex: 0, // Order of the Layers
                 style: {
-                    // color: [
-                    //     "case",
-                    //     ["all", ["==", ["band", 1], 0], ["==", ["band", 2], 0]],
-                    //     [0, 0, 0, 0], // Transparent for 0 values outside the area of interest
-                    //     ["==", ["band", 1], 0],
-                    //     "red", // Red for actual 0 values within the area of interest
-                    //     ["<=", ["band", 1], 0.15],
-                    //     "red",
-                    //     ["<=", ["band", 1], 0.3],
-                    //     "orange",
-                    //     ["<=", ["band", 1], 0.45],
-                    //     "yellow",
-                    //     ["<=", ["band", 1], 0.6],
-                    //     "green",
-                    //     ["<=", ["band", 1], 0.75],
-                    //     "blue",
-                    //     ["<=", ["band", 1], 0.9],
-                    //     "indigo",
-                    //     "violet"
-                    // ]
-                    // color: [
-                    //     "case",
-                    //     ["all", ["==", ["band", 1], 0], ["==", ["band", 2], 0]],
-                    //     [0, 0, 0, 0], // Transparent for 0 values outside the area of interest
-                    //     ["==", ["band", 1], 0],
-                    //     "red", // Red for actual 0 values within the area of interest
-                    //     ["<=", ["band", 1], 0.33],
-                    //     "orange",
-                    //     ["<=", ["band", 1], 0.66],
-                    //     "green",
-                    //     ["<=", ["band", 1], 1],
-                    // ]
-                    // color: [
-                    //     "case",
-                    //     ["all", ["==", ["*", ["band", 1], 3], 0], ["==", ["*", ["band", 2], 3], 0]],
-                    //     [0, 0, 0, 0], // Transparent for 0 values outside the area of interest
-                    //     ["==", ["*", ["band", 1], 3], 1],
-                    //     "red", // Red for actual 0 values within the area of interest
-                    //     ["<=", ["*", ["band", 1], 3], 2],
-                    //     "orange",
-                    //     ["<=", ["*", ["band", 1], 3], 3],
-                    //     "green",
-                    //
-                    // ]
                     color: [
                         "case",
                         ["all", ["==", ["*", ["band", 1], 150], 0], ["==", ["*", ["band", 2], 150], 0]],
                         [0, 0, 0, 0], // Transparent for 0 values outside the area of interest
-                        ["==", ["*", ["band", 1], 150], 0],
+                        ["<=", ["band", 1], 5],
                         p_01, // Red for actual 0 values within the area of interest
-                        ["<=", ["*", ["band", 1], 150], 5],
+                        ["<=", ["band", 1], 15],
                         p_02,
-                        ["<=", ["*", ["band", 1], 150], 15],
+                        ["<=", ["band", 1], 30],
                         p_03,
-                        ["<=", ["*", ["band", 1], 150], 30],
+                        ["<=", ["band", 1], 50],
                         p_04,
-                        ["<=", ["*", ["band", 1], 150], 50],
+                        ["<=", ["band", 1], 75],
                         p_05,
-                        ["<=", ["*", ["band", 1], 150], 75],
+                        ["<=", ["band", 1], 100],
                         p_06,
-                        ["<=", ["*", ["band", 1], 150], 100],
+                        ["<=", ["band", 1], 150],
                         p_07,
-                        ["<=", ["*", ["band", 1], 150], 150],
+                        ["<=", ["band", 1], 200],
                         p_08,
                         p_09
                     ]
                 }
             });
-
+            console.log(this.layer.getData([1200, 700]));
+            console.log(this.layer.getExtent());
             model?.layers.addLayer(
                 new SimpleLayer({
                     title: "Precipitation Forecast",
@@ -165,12 +122,13 @@ export class PrecipitationLayerHandlerImpl implements PrecipitationLayerHandler 
         const year = 2024;
         const precipitationUrl = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/precip_forecats/cog_PLforecast_${this.currentMonth}_${year}_${this.currentVariable}_NoNDVI_RegMult_E3_MAP_Corrected.tif`;
         const maskUrl = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/precip_forecats/cog_PLforecast_${Month.february}_${year}_${Variable.pc50}_NoNDVI_RegMult_E3_MAP_Corrected.tif`;
-        
+
         return new GeoTIFF({
+            normalize: false,
             sources: [
                 {
                     url: precipitationUrl,
-                    max: 50,
+                    max: 200,
                     min: 0
                 },
                 {
