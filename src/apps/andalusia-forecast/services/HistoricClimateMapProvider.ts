@@ -6,6 +6,10 @@ import TileLayer from "ol/layer/Tile";
 import WebGLTileLayer from "ol/layer/WebGLTile";
 import GeoTIFF from "ol/source/GeoTIFF";
 import OSM from "ol/source/OSM";
+import VectorLayer from "ol/layer/Vector";
+import VectorSource from "ol/source/Vector";
+import GeoJSON from "ol/format/GeoJSON";
+import { Style, Fill, Stroke, Circle } from 'ol/style';
 import { register } from "ol/proj/proj4";
 import proj4 from "proj4";
 import { get as getProjection } from "ol/proj";
@@ -16,6 +20,10 @@ import { createCazorlaLayer, createLosPedrochesLayer } from "../components/utils
 proj4.defs(
     "EPSG:25830",
     "+proj=utm +zone=30 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs"
+);
+proj4.defs(
+    "EPSG:4326",
+    "+proj=longlat +datum=WGS84 +no_defs"  // WGS84 (für GeoJSON)
 );
 register(proj4);
 
@@ -92,6 +100,35 @@ export class HistoricClimateMapProvider implements MapConfigProvider {
                     }),
                     isBaseLayer: false
                 }),
+                new SimpleLayer({
+                    title: "Stations",
+                    olLayer: new VectorLayer({
+                        source: new VectorSource({
+                            url: 'https://i-cisk.dev.52north.org/data/collections/ll_spain_creaf_in_boundary/items?f=json',
+                            format: new GeoJSON(),
+                            projection: 'EPSG:4326'
+                        }),
+                        style: (feature) => {
+                            return new Style({
+                                image: new Circle({
+                                    radius: 5, 
+                                    fill: new Fill({
+                                        color: 'grey'
+                                    }),
+                                    stroke: new Stroke({
+                                        color: 'black',
+                                        width: 1
+                                    })
+                                })
+                            });
+                        },
+                        zIndex: 200
+                    }),
+                    isBaseLayer: false
+                }),
+
+
+
                 new SimpleLayer({
                     title: "Cazorla",
                     olLayer: createCazorlaLayer(),
