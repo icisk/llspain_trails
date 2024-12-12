@@ -9,6 +9,7 @@ import OSM from "ol/source/OSM";
 import { register } from "ol/proj/proj4";
 import proj4 from "proj4";
 import { get as getProjection } from "ol/proj";
+import { createCazorlaLayer, createLosPedrochesLayer } from "../components/utils/regionLayers";
 
 // Registrierung von EPSG:25830
 proj4.defs(
@@ -90,6 +91,16 @@ export class HistoricClimateMapProvider2 implements MapConfigProvider {
                         },
                         properties: { title: "Mean Temperature (2000-01)" }
                     }),
+                    isBaseLayer: false
+                }),
+                new SimpleLayer({
+                    title: "Cazorla",
+                    olLayer: createCazorlaLayer(),
+                    isBaseLayer: false
+                }),
+                new SimpleLayer({
+                    title: "Los Pedroches",
+                    olLayer: createLosPedrochesLayer(),
                     isBaseLayer: false
                 })
             ]
