@@ -1,26 +1,27 @@
 // SPDX-FileCopyrightText: 2023 Open Pioneer project (https://github.com/open-pioneer)
 // SPDX-License-Identifier: Apache-2.0
-import { Box, HStack, Select } from "@chakra-ui/react";
-import { useReactiveSnapshot } from "@open-pioneer/reactivity";
-import { useService } from "open-pioneer:react-hooks";
-import { ChangeEvent } from "react";
-import {useEffect} from "react";
-import { enumKeys } from "../components/utils/helper";
-import { PrecipitationLayerHandler, Variable } from "../services/PrecipitationLayerHandler";
+import {Box, HStack, Select} from "@chakra-ui/react";
+import {useReactiveSnapshot} from "@open-pioneer/reactivity";
+import {useService} from "open-pioneer:react-hooks";
+import {ChangeEvent, useEffect} from "react";
+import {enumKeys} from "../components/utils/helper";
+import {PrecipitationLayerHandler, Variable} from "../services/PrecipitationLayerHandler";
+
 
 export function ChangeVariable() {
     const prepSrvc = useService<PrecipitationLayerHandler>("app.PrecipitationLayerHandler");
     const def = 'pc50';
 
-    useEffect(() => {
-        if (!prepSrvc.currentVariable) {
-            prepSrvc.setVariable(def); 
-        }
-    }, [prepSrvc]);
+    // useEffect(() => {
+    //     if (!prepSrvc.currentVariable) {
+    //         prepSrvc.setVariable(Variable.pc50); 
+    //     }
+    // }, [prepSrvc]);
     
     const { currentVariable = def} = useReactiveSnapshot(
         () => ({
             currentVariable: prepSrvc.currentVariable ?? def
+           
         }),
         [prepSrvc]
     );

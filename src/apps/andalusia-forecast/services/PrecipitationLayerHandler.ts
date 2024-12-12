@@ -3,8 +3,11 @@ import { MapRegistry, SimpleLayer } from "@open-pioneer/map";
 import { DeclaredService, ServiceOptions } from "@open-pioneer/runtime";
 import WebGLTileLayer from "ol/layer/WebGLTile";
 import { GeoTIFF } from "ol/source";
+import {useService} from "open-pioneer:react-hooks";
 
 import { MAP_ID } from "./MidtermForecastMapProvider";
+import {types} from "sass";
+import List = types.List;
 
 interface References {
     mapRegistry: MapRegistry;
@@ -56,6 +59,9 @@ export class PrecipitationLayerHandlerImpl implements PrecipitationLayerHandler 
     #currentMonth: Reactive<Month> = reactive(Month.february);
     #currentVariable: Reactive<Variable> = reactive(Variable.pc50);
 
+    
+    
+
     constructor(options: ServiceOptions<References>) {
         const { mapRegistry } = options.references;
         this.mapRegistry = mapRegistry;
@@ -65,32 +71,10 @@ export class PrecipitationLayerHandlerImpl implements PrecipitationLayerHandler 
                 source: this.createSource(),
                 zIndex: 0, // Order of the Layers
                 style: {
-                    color: [
-                        "case",
-                        ["all", ["==", ["*", ["band", 1], 150], 0], ["==", ["*", ["band", 2], 150], 0]],
-                        [0, 0, 0, 0], // Transparent for 0 values outside the area of interest
-                        ["<=", ["band", 1], 5],
-                        p_01, // Red for actual 0 values within the area of interest
-                        ["<=", ["band", 1], 15],
-                        p_02,
-                        ["<=", ["band", 1], 30],
-                        p_03,
-                        ["<=", ["band", 1], 50],
-                        p_04,
-                        ["<=", ["band", 1], 75],
-                        p_05,
-                        ["<=", ["band", 1], 100],
-                        p_06,
-                        ["<=", ["band", 1], 150],
-                        p_07,
-                        ["<=", ["band", 1], 200],
-                        p_08,
-                        p_09
-                    ]
-                }
+                        color: this.getColorStyle()       
+                       }
             });
-            console.log(this.layer.getData([1200, 700]));
-            console.log(this.layer.getExtent());
+
             model?.layers.addLayer(
                 new SimpleLayer({
                     title: "Precipitation Forecast",
@@ -115,15 +99,57 @@ export class PrecipitationLayerHandlerImpl implements PrecipitationLayerHandler 
 
     setVariable(variable: Variable): void {
         this.#currentVariable.value = variable;
-        this.layer?.setSource(this.createSource());
+        const newSource = this.createSource();
+        this.layer?.setSource(newSource);
+        this.layer?.setStyle({ color: this.getColorStyle() }); // Ensure style is updated
     }
-
+    
+    getColorStyle(): any {
+        if (this.#currentVariable.value === Variable.pc50) {
+            return [
+                "case",
+                ["all", ["==", ["*", ["band", 1], 150], 0], ["==", ["*", ["band", 2], 150], 0]],
+                [0, 0, 0, 0], // Transparent for 0 values outside the area of interest
+                ["<=", ["band", 1], 5],
+                p_01, // Red for actual 0 values within the area of interest
+                ["<=", ["band", 1], 15],
+                p_02,
+                ["<=", ["band", 1], 30],
+                p_03,
+                ["<=", ["band", 1], 50],
+                p_04,
+                ["<=", ["band", 1], 75],
+                p_05,
+                ["<=", ["band", 1], 100],
+                p_06,
+                ["<=", ["band", 1], 150],
+                p_07,
+                ["<=", ["band", 1], 200],
+                p_08,
+                p_09
+            ];
+        } if (this.#currentVariable.value === Variable.uncertainty){
+            return[
+                "case",
+                ["all", ["==", ["*", ["band", 1], 150], 0], ["==", ["*", ["band", 2], 150], 0]],
+                [0, 0, 0, 0], // Transparent for 0 values outside the area of interest
+                ["==", ["band", 1], 1],
+                'red', // Red for actual 0 values within the area of interest
+                ["==", ["band", 1], 2],
+                'yellow',
+                ["<=", ["band", 1], 3],
+                'green',
+                'blue'
+            ];
+        }
+    }
+    
     private createSource() {
         const year = 2024;
         const precipitationUrl = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/precip_forecats/cog_PLforecast_${this.currentMonth}_${year}_${this.currentVariable}_NoNDVI_RegMult_E3_MAP_Corrected.tif`;
         const maskUrl = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/precip_forecats/cog_PLforecast_${Month.february}_${year}_${Variable.pc50}_NoNDVI_RegMult_E3_MAP_Corrected.tif`;
 
-        return new GeoTIFF({
+        return new GeoTIFF({            
             normalize: false,
             sources: [
                 {

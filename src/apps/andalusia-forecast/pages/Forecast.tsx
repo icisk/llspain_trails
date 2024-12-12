@@ -33,11 +33,14 @@ export function Forecast() {
 
     
     const currentVariable = precipitationService?.currentVariable;
+    console.log(currentVariable);
+    
+    
 
     // State for managing chart options
     const [chartOptions, setChartOptions] = useState({
         title: { text: intl.formatMessage({ id: "global.plot.header_precip" }) },
-        xAxis: { categories: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto"] },
+        xAxis: { categories: ["Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto"] },
         yAxis: { title: { text: "Precipitation (mm)" }, min: 0, max: 350 },
         series: []
     });
@@ -55,6 +58,18 @@ export function Forecast() {
             }));
         }
     }, [data]);
+    
+    useEffect(() => {
+        if (precipitationService) {
+            mapState?.map?.olMap?.getLayers().forEach((layer) => {
+                if (layer === precipitationService.layer) {
+                    layer.setStyle({
+                        color: precipitationService.getColorStyle(),
+                    });
+                }
+            });
+        }
+    }, [currentVariable, mapState, precipitationService]);
     
     useEffect(() => {
         if (mapState?.map?.olMap) {
