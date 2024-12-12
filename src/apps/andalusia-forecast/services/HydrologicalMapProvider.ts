@@ -5,6 +5,7 @@ import TileLayer from "ol/layer/Tile";
 import { register } from "ol/proj/proj4";
 import OSM from "ol/source/OSM";
 import proj4 from "proj4";
+import { createCazorlaLayer, createLosPedrochesLayer } from "../components/utils/regionLayers";
 
 proj4.defs(
     "EPSG:25830",
@@ -33,6 +34,16 @@ export class HydrologicalMapProvider implements MapConfigProvider {
                         properties: { title: "OSM" }
                     }),
                     isBaseLayer: true
+                }),
+                new SimpleLayer({
+                    title: "Cazorla",
+                    olLayer: createCazorlaLayer(),
+                    isBaseLayer: false
+                }),
+                new SimpleLayer({
+                    title: "Los Pedroches",
+                    olLayer: createLosPedrochesLayer(),
+                    isBaseLayer: false
                 })
             ]
         };

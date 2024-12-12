@@ -69,7 +69,7 @@ export class PrecipitationLayerHandlerImpl implements PrecipitationLayerHandler 
         this.mapRegistry.getMapModel(MAP_ID).then((model) => {
             this.layer = new WebGLTileLayer({
                 source: this.createSource(),
-                zIndex: 0, // Order of the Layers
+                zIndex: 5, // Order of the Layers
                 style: {
                         color: this.getColorStyle()       
                        }
@@ -78,7 +78,7 @@ export class PrecipitationLayerHandlerImpl implements PrecipitationLayerHandler 
             model?.layers.addLayer(
                 new SimpleLayer({
                     title: "Precipitation Forecast",
-                    olLayer: this.layer
+                    olLayer: this.layer,
                 })
             );
         });

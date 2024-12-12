@@ -63,7 +63,7 @@ const HistoricClimateData1 = () => {
                         </VStack>
                     </RadioGroup>
                 </div>
-                <Box width="100%" height="500px" position="relative">
+                <Box width="100%" height="600px" position="relative">
                     <MainMap MAP_ID={MAP_ID}/>
                     <DynamicPrecipitationLegend />
                 </Box>

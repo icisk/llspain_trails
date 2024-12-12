@@ -7,7 +7,8 @@ import {
     MapContainer, SimpleLayer,
     useMapModel
 } from "@open-pioneer/map";
-import {MAP_ID, MapProvider} from "../services/MidtermForecastMapProvider";
+import { MainMap } from "../components/MainComponents/MainMap";
+import {MAP_ID} from "../services/HydrologicalMapProvider";
 import {Container, Flex, Box} from "@open-pioneer/chakra-integration";
 import {ZoomIn, ZoomOut} from "@open-pioneer/map-navigation";
 import {InfoBoxComponent} from "info-box";
@@ -42,12 +43,8 @@ export function HydrologicalService(){
             ></InfoBoxComponent>
             <p>blabla</p>
             <Box height={"500px"}>
-                <MapContainer mapId={'hydrological-forecast'} role="main"/>
+                <MainMap MAP_ID={MAP_ID}/>
             </Box>
-            
-            <RegionZoom MAP_ID={'hydrological-forecast'} />
-            
-
         </Container>
 
 
