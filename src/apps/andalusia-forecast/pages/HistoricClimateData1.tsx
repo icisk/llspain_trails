@@ -29,6 +29,9 @@ const HistoricClimateData1 = () => {
     const [stationsVisibleMap2, setStationsVisibleMap2] = useState(true);
 
     const [selectedFeatureId, setSelectedFeatureId] = useState(null);
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     // Add interaction to map for MAP_ID
     useEffect(() => {
@@ -57,11 +60,38 @@ const HistoricClimateData1 = () => {
         }
     }, [mapState]);
 
+
     useEffect(() => {
         if (selectedFeatureId !== null) {
-            console.log("Selected Feature ID (from state):", selectedFeatureId);
+            const fetchData = async (id: any, limit: number) => {
+                const url = `https://i-cisk.dev.52north.org/data/collections/AEMET_stations_precip/items?f=json&lang=en-US&limit=${limit}&skipGeometry=false&offset=0&CODI_INM=${id}`;
+                try {
+                    setLoading(true);
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error("Network response was not ok");
+    
+                    const jsonData = await response.json();
+                    console.log("Fetched data:", jsonData);
+    
+                    if (jsonData.numberMatched > jsonData.numberReturned) {
+                        console.log(`Re-fetching with updated limit: ${jsonData.numberMatched}`);
+                        fetchData(id, jsonData.numberMatched);
+                    } else {
+                        setData(jsonData);
+                    }
+                } catch (err: any) {
+                    setError(err.message);
+                } finally {
+                    setLoading(false);
+                }
+            };
+    
+            const id = selectedFeatureId;
+            const initialLimit = 500;
+            fetchData(id, initialLimit);
         }
     }, [selectedFeatureId]);
+    
 
     useEffect(() => {
         if (mapState?.map?.olMap) {
