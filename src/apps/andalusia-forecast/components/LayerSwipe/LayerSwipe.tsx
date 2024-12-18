@@ -15,9 +15,13 @@ export interface LayerSwipeProps extends CommonComponentProps{
     leftLayer: Layer
     rightLayer: Layer
     /**
-     * number between 0 (left) and 100 (right)
+     * the value of the slider, number between 0 (left) and 100 (right)
      */
     sliderValue: number
+    /**
+     * function that is called after the slider value has been changed
+     * @param value new slider value
+     */
     onSliderValueChanged: (value: number) => void;
 }
 
@@ -25,7 +29,6 @@ export const LayerSwipe = (props: LayerSwipeProps) => {
     const intl = useIntl();
     const {map, leftLayer, rightLayer, sliderValue, onSliderValueChanged} = props;
     const eventKeys = useRef<EventsKey[]>([]);
-    
     
     let sliderValueValidated = (sliderValue <= 100) ? sliderValue : 100; 
     sliderValueValidated = (sliderValueValidated >= 0 ) ? sliderValueValidated : 0;
