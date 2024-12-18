@@ -26,6 +26,7 @@ const HistoricClimateData1 = () => {
     const mapRef = useRef<HTMLDivElement>(null);
     const [leftLayer, setLeftLayer]= useState<SimpleLayer>();
     const [rightLayer, setRightLayer]= useState<SimpleLayer>();
+    const [sliderValue, setSliderValue] = useState<number>(50);
 
     const mapModel = useMapModel(MAP_ID);
 
@@ -85,7 +86,9 @@ const HistoricClimateData1 = () => {
                     <DynamicPrecipitationLegend />           
                 </Box>
                 
-                {(leftLayer && rightLayer) && <LayerSwipe map={mapModel.map!} leftLayer={leftLayer?.olLayer as Layer}  rightLayer={rightLayer?.olLayer as Layer}></LayerSwipe>}
+                {(leftLayer && rightLayer && mapModel.map) && 
+                    <LayerSwipe map={mapModel.map} sliderValue={sliderValue} onSliderValueChanged={(newValue) => {setSliderValue(newValue)}} leftLayer={leftLayer?.olLayer as Layer}  rightLayer={rightLayer?.olLayer as Layer}></LayerSwipe>
+                }
             </Container>
             
             <Box margin={50}></Box>

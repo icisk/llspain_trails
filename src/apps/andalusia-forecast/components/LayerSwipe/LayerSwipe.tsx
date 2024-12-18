@@ -8,55 +8,45 @@ import RenderEvent from "ol/render/Event";
 import { EventsKey } from "ol/events";
 import { unByKey } from "ol/Observable";
 import { getRenderPixel } from "ol/render";
-import { Pixel } from "ol/pixel";
 import { Size } from "ol/size";
 
 export interface LayerSwipeProps extends CommonComponentProps{
     map: MapModel
     leftLayer: Layer
     rightLayer: Layer
+    /**
+     * number between 0 (left) and 100 (right)
+     */
+    sliderValue: number
+    onSliderValueChanged: (value: number) => void;
 }
 
 export const LayerSwipe = (props: LayerSwipeProps) => {
     const intl = useIntl();
-    const {map, leftLayer, rightLayer} = props;
-    const leftPrerenderKey = useRef<EventsKey>();
-    const leftPostrenderKey = useRef<EventsKey>();
-    const rightPrerenderKey = useRef<EventsKey>();
-    const rightPostrenderKey = useRef<EventsKey>();
-    const sliderValue = useRef(50);
+    const {map, leftLayer, rightLayer, sliderValue, onSliderValueChanged} = props;
+    const eventKeys = useRef<EventsKey[]>([]);
+    
+    
+    let sliderValueValidated = (sliderValue <= 100) ? sliderValue : 100; 
+    sliderValueValidated = (sliderValueValidated >= 0 ) ? sliderValueValidated : 0;
+    const sliderValueRef = useRef(sliderValueValidated);
 
     useEffect(() => {
-        leftPrerenderKey.current = leftLayer.on("prerender", handlePrerender)
-        leftPostrenderKey.current = leftLayer.on("postrender", handlePostrender)
-        rightPrerenderKey.current = rightLayer.on("prerender", handlePrerender)
-        rightPostrenderKey.current = rightLayer.on("postrender", handlePostrender)
+        eventKeys.current.push(leftLayer.on("prerender", handlePrerender));
+        eventKeys.current.push(leftLayer.on("postrender", handlePostrender));
+        eventKeys.current.push(rightLayer.on("prerender", handlePrerender));
+        eventKeys.current.push(rightLayer.on("postrender", handlePostrender));
         
         return () => {
-            if(leftPrerenderKey.current){
-                unByKey(leftPrerenderKey.current)
-                leftPrerenderKey.current = undefined;
-            }
-            if(leftPostrenderKey.current){
-                unByKey(leftPostrenderKey.current)
-                leftPostrenderKey.current = undefined;
-            }
-            if(rightPrerenderKey.current){
-                unByKey(rightPrerenderKey.current)
-                rightPrerenderKey.current = undefined;
-            }
-            if(rightPostrenderKey.current){
-                unByKey(rightPostrenderKey.current)
-                rightPostrenderKey.current = undefined;
-            }
+            eventKeys.current.forEach(key => unByKey(key));
+            eventKeys.current = [];
         };
     }, [leftLayer, rightLayer, map])
-
 
     function handlePrerender(event: RenderEvent){
         const renderContext = event.context;
         const olMap =map.olMap;
-        if(!renderContext || !olMap){
+        if(!renderContext){
             return;
         }
 
@@ -87,33 +77,31 @@ export const LayerSwipe = (props: LayerSwipeProps) => {
      }
      
      function clipWebGLLayer(event: RenderEvent, renderContext: WebGLRenderingContext, mapSize: Size){
-        renderContext.enable(renderContext.SCISSOR_TEST);
-
         const bottomLeft = getRenderPixel(event, [0, mapSize[1]!]);
         const topRight = getRenderPixel(event, [mapSize[0]!, 0]);
-      
-        const width = Math.round((topRight[0]! - bottomLeft[0]!) * (sliderValue.current/ 100));
+        const width = Math.round((topRight[0]! - bottomLeft[0]!) * (sliderValueRef.current / 100));
         const height = topRight[1]! - bottomLeft[1]!;
 
         const isRightLayer = event.target === rightLayer;
 
+        let x, y, w, h;
         if(isRightLayer){
-            const x = width;
-            const y = bottomLeft[1]!;
-            const w = mapSize[0]! - width;
-            const h = height;
-            renderContext.scissor(x, y, w, h);
+            x = width;
+            y = bottomLeft[1]!;
+            w = mapSize[0]! - width;
+            h = height;
         }else{
-            const x = bottomLeft[0]!;
-            const y =  bottomLeft[1]!;
-            const w = width;
-            const h = height;
-            renderContext.scissor(x, y, w, h);
+            x = bottomLeft[0]!;
+            y =  bottomLeft[1]!;
+            w = width;
+            h = height;
         }
+        renderContext.enable(renderContext.SCISSOR_TEST);
+        renderContext.scissor(x, y, w, h);
      }
      
      function clipCanvasLayer(event: RenderEvent, renderContext: CanvasRenderingContext2D, mapSize: Size){
-        const width = mapSize[0]! * (sliderValue.current / 100);
+        const width = Math.round(mapSize[0]! * (sliderValueRef.current / 100));
         const topLeft = getRenderPixel(event, [width, 0]);
         const topRight = getRenderPixel(event, [mapSize[0]!, 0]);
         const bottomLeft = getRenderPixel(event, [width, mapSize[1]!]);
@@ -140,16 +128,15 @@ export const LayerSwipe = (props: LayerSwipeProps) => {
      }
      
      function handleSliderValueChanged(value: number){
-        sliderValue.current = value;
-        const olMap = map.olMap;
+        onSliderValueChanged(value);
+        sliderValueRef.current = value;
 
-        if(olMap){
-            olMap.render(); //trigger re-render when slider values is changed
-        }
+        map.olMap.render(); //trigger re-render of the map if slider is changed
     }
+
     return (
         <Box>
-            <Slider aria-label='slider-ex-1'  onChange={(value) => {handleSliderValueChanged(value)}}>
+            <Slider aria-label='slider-ex-1'  value={sliderValueRef.current}  onChange={(value) => {handleSliderValueChanged(value)}} min={0} max={100}>
             <SliderTrack>
                 <SliderFilledTrack />
             </SliderTrack>
@@ -157,6 +144,4 @@ export const LayerSwipe = (props: LayerSwipeProps) => {
             </Slider>
         </Box>
     );
-
-
 };
