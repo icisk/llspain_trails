@@ -11,7 +11,7 @@ import { InfoTooltip } from "../components/InfoTooltip/InfoTooltip";
 import { RegionZoom } from "../components/RegionZoom/RegionZoom";
 import { Header } from "../components/MainComponents/Header";
 import { MainMap } from "../components/MainComponents/MainMap";
-import { HistoricClimateHook1, HistoricClimateHook2 }  from '../hooks/HistoricClimatehook';
+//import { HistoricClimateHook1, HistoricClimateHook2 }  from '../hooks/HistoricClimatehook';
 
 import { MAP_ID } from '../services/HistoricClimateMapProvider';
 import { MAP_ID2 } from '../services/HistoricClimateMapProvider2';
@@ -23,7 +23,7 @@ const HistoricClimateData1 = () => {
     const mapRef = useRef<HTMLDivElement>(null);
 
     //HistoricClimateHook1(mapRef);
-    HistoricClimateHook2(mapRef);
+    //HistoricClimateHook2(mapRef);
     
     return (
 <Box>

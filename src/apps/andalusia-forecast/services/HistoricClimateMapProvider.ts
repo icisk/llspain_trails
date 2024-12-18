@@ -104,7 +104,7 @@ export class HistoricClimateMapProvider implements MapConfigProvider {
                     title: "Stations",
                     olLayer: new VectorLayer({
                         source: new VectorSource({
-                            url: 'https://i-cisk.dev.52north.org/data/collections/ll_spain_creaf_in_boundary/items?f=json',
+                            url: 'https://i-cisk.dev.52north.org/data/collections/ll_spain_creaf_in_boundary/items?f=json&limit=1000',
                             format: new GeoJSON(),
                             projection: 'EPSG:4326'
                         }),
