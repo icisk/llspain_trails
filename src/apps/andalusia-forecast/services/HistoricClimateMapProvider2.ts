@@ -13,6 +13,7 @@ import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import GeoJSON from "ol/format/GeoJSON";
 import { Style, Fill, Stroke, Circle } from 'ol/style';
+import { createCazorlaLayer, createLosPedrochesLayer } from "../components/utils/regionLayers";
 
 
 // Registrierung von EPSG:25830
@@ -130,6 +131,16 @@ export class HistoricClimateMapProvider2 implements MapConfigProvider {
                     olLayer: this.stationsLayer,
                     isBaseLayer: false
                 }),
+                new SimpleLayer({
+                    title: "Cazorla",
+                    olLayer: createCazorlaLayer(),
+                    isBaseLayer: false
+                }),
+                new SimpleLayer({
+                    title: "Los Pedroches",
+                    olLayer: createLosPedrochesLayer(),
+                    isBaseLayer: false
+                })
             ]
         };
     }
