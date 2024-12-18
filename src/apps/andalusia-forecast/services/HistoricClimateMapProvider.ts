@@ -1,6 +1,3 @@
-// SPDX-FileCopyrightText: 2023 Open Pioneer project (https://github.com/open-pioneer)
-// SPDX-License-Identifier: Apache-2.0
-
 import { MapConfig, MapConfigProvider, SimpleLayer } from "@open-pioneer/map";
 import TileLayer from "ol/layer/Tile";
 import WebGLTileLayer from "ol/layer/WebGLTile";
@@ -14,7 +11,6 @@ import { register } from "ol/proj/proj4";
 import proj4 from "proj4";
 import { get as getProjection } from "ol/proj";
 import { createCazorlaLayer, createLosPedrochesLayer } from "../components/utils/regionLayers";
-
 
 // Registrierung von EPSG:25830
 proj4.defs(
@@ -41,17 +37,44 @@ const dark_red = '#53050aBC'
 
 export class HistoricClimateMapProvider implements MapConfigProvider {
     mapId = MAP_ID;
+    stationsLayer: VectorLayer;
+
+    constructor() {
+        this.stationsLayer = new VectorLayer({
+            source: new VectorSource({
+                url: 'https://i-cisk.dev.52north.org/data/collections/ll_spain_creaf_in_boundary/items?f=json&limit=1000',
+                format: new GeoJSON(),
+                projection: 'EPSG:4326'
+            }),
+            style: (feature) => {
+                return new Style({
+                    image: new Circle({
+                        radius: 5, 
+                        fill: new Fill({
+                            color: 'grey'
+                        }),
+                        stroke: new Stroke({
+                            color: 'black',
+                            width: 1
+                        })
+                    })
+                });
+            },
+            zIndex: 200
+        });
+        this.stationsLayer.set('title', 'Stations');
+    }
 
     async getMapConfig(): Promise<MapConfig> {
         return {
             initialView: {
                 kind: "position",
-                center: { x: -460000, y: 4540000 }, // Übernommene initialView-Einstellungen
+                center: { x: -460000, y: 4540000 }, 
                 zoom: 8
             },
-            projection: "EPSG:3857", // Karte wird in EPSG:25830 projiziert
+            projection: "EPSG:3857", 
             layers: [
-                // OpenStreetMap als Hintergrund
+                // OpenStreetMap as background
                 new SimpleLayer({
                     title: "OpenStreetMap",
                     olLayer: new TileLayer({
@@ -60,7 +83,7 @@ export class HistoricClimateMapProvider implements MapConfigProvider {
                     }),
                     isBaseLayer: true
                 }),
-                // GeoTIFF-Rasterlayer für Temperaturdaten
+                // GeoTIFF raster layer for temperature data
                 new SimpleLayer({
                     title: "Mean Temperature (2000-01)",
                     olLayer: new WebGLTileLayer({
@@ -77,8 +100,8 @@ export class HistoricClimateMapProvider implements MapConfigProvider {
                         style: {
                             color: [
                                 "case",
-                                ["==", ["*", ["band", 1], 50], 0], //, ["==", ["*", ["band", 2], 50], 0]
-                                [0, 0, 0, 0], // Transparent for 0 values outside the area of interest
+                                ["==", ["*", ["band", 1], 50], 0],
+                                [0, 0, 0, 0], 
                                 ["<", ["band", 1], -10],
                                 pink,
                                 ["<=", ["band", 1], 0],
@@ -102,33 +125,9 @@ export class HistoricClimateMapProvider implements MapConfigProvider {
                 }),
                 new SimpleLayer({
                     title: "Stations",
-                    olLayer: new VectorLayer({
-                        source: new VectorSource({
-                            url: 'https://i-cisk.dev.52north.org/data/collections/ll_spain_creaf_in_boundary/items?f=json&limit=1000',
-                            format: new GeoJSON(),
-                            projection: 'EPSG:4326'
-                        }),
-                        style: (feature) => {
-                            return new Style({
-                                image: new Circle({
-                                    radius: 5, 
-                                    fill: new Fill({
-                                        color: 'grey'
-                                    }),
-                                    stroke: new Stroke({
-                                        color: 'black',
-                                        width: 1
-                                    })
-                                })
-                            });
-                        },
-                        zIndex: 200
-                    }),
+                    olLayer: this.stationsLayer,
                     isBaseLayer: false
                 }),
-
-
-
                 new SimpleLayer({
                     title: "Cazorla",
                     olLayer: createCazorlaLayer(),

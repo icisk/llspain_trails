@@ -18,6 +18,7 @@ messages:
       sel_month: Seleccione el mes 
       sel_year: Seleccione el año
       sel_var: Seleccione el variable
+      toggle_stations: alternar estaciones
     map:
       coord_clicked: coordenadas clicadas {x} & {y} #bsp mit dynamischen inputs
       no_coord_clicked: Aún no hay coordenadas clicadas
