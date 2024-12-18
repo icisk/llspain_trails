@@ -9,6 +9,11 @@ import OSM from "ol/source/OSM";
 import { register } from "ol/proj/proj4";
 import proj4 from "proj4";
 import { get as getProjection } from "ol/proj";
+import VectorLayer from "ol/layer/Vector";
+import VectorSource from "ol/source/Vector";
+import GeoJSON from "ol/format/GeoJSON";
+import { Style, Fill, Stroke, Circle } from 'ol/style';
+
 
 // Registrierung von EPSG:25830
 proj4.defs(
@@ -31,6 +36,34 @@ const dark_red = '#53050aBC'
 
 export class HistoricClimateMapProvider2 implements MapConfigProvider {
     mapId = MAP_ID2;
+
+    stationsLayer: VectorLayer;
+
+    constructor() {
+        this.stationsLayer = new VectorLayer({
+            source: new VectorSource({
+                url: 'https://i-cisk.dev.52north.org/data/collections/ll_spain_creaf_in_boundary/items?f=json&limit=1000',
+                format: new GeoJSON(),
+                projection: 'EPSG:4326'
+            }),
+            style: (feature) => {
+                return new Style({
+                    image: new Circle({
+                        radius: 5, 
+                        fill: new Fill({
+                            color: 'grey'
+                        }),
+                        stroke: new Stroke({
+                            color: 'black',
+                            width: 1
+                        })
+                    })
+                });
+            },
+            zIndex: 200
+        });
+        this.stationsLayer.set('title', 'Stations');
+    }
 
     async getMapConfig(): Promise<MapConfig> {
         return {
@@ -91,7 +124,12 @@ export class HistoricClimateMapProvider2 implements MapConfigProvider {
                         properties: { title: "Mean Temperature (2000-01)" }
                     }),
                     isBaseLayer: false
-                })
+                }),
+                new SimpleLayer({
+                    title: "Stations",
+                    olLayer: this.stationsLayer,
+                    isBaseLayer: false
+                }),
             ]
         };
     }
