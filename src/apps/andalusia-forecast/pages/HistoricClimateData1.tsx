@@ -16,6 +16,10 @@ import { MAP_ID } from '../services/HistoricClimateMapProvider';
 import { MAP_ID2 } from '../services/HistoricClimateMapProvider2';
 import { DynamicPrecipitationLegend } from "../components/Legends/DynamicLegend";
 
+import SelectInteraction from "ol/interaction/Select";
+import { click } from "ol/events/condition";
+
+
 const HistoricClimateData1 = () => {
     const intl = useIntl();
     const mapRef = useRef<HTMLDivElement>(null);
@@ -23,6 +27,33 @@ const HistoricClimateData1 = () => {
     const mapState2 = useMapModel(MAP_ID2);
     const [stationsVisibleMap1, setStationsVisibleMap1] = useState(true);
     const [stationsVisibleMap2, setStationsVisibleMap2] = useState(true);
+
+    // Add interaction to map for MAP_ID
+    useEffect(() => {
+        if (mapState?.map?.olMap) {
+            const olMap = mapState.map.olMap;
+
+            const selectInteraction = new SelectInteraction({
+                condition: click,
+                layers: (layer) => layer.get("title") === "Stations",
+            });
+
+            olMap.addInteraction(selectInteraction);
+
+            selectInteraction.on("select", (event) => {
+                const selectedFeatures = event.selected;
+                if (selectedFeatures.length > 0) {
+                    const feature = selectedFeatures[0];
+                    const properties = feature.getProperties();
+                    console.log("Selected feature properties:", properties);
+                }
+            });
+
+            return () => {
+                olMap.removeInteraction(selectInteraction);
+            };
+        }
+    }, [mapState]);
 
     useEffect(() => {
         if (mapState?.map?.olMap) {
