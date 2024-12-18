@@ -28,6 +28,8 @@ const HistoricClimateData1 = () => {
     const [stationsVisibleMap1, setStationsVisibleMap1] = useState(true);
     const [stationsVisibleMap2, setStationsVisibleMap2] = useState(true);
 
+    const [selectedFeatureId, setSelectedFeatureId] = useState(null);
+
     // Add interaction to map for MAP_ID
     useEffect(() => {
         if (mapState?.map?.olMap) {
@@ -45,7 +47,7 @@ const HistoricClimateData1 = () => {
                 if (selectedFeatures.length > 0) {
                     const feature = selectedFeatures[0];
                     const properties = feature.getProperties();
-                    console.log("Selected feature properties:", properties);
+                    setSelectedFeatureId(properties.ID);
                 }
             });
 
@@ -54,6 +56,12 @@ const HistoricClimateData1 = () => {
             };
         }
     }, [mapState]);
+
+    useEffect(() => {
+        if (selectedFeatureId !== null) {
+            console.log("Selected Feature ID (from state):", selectedFeatureId);
+        }
+    }, [selectedFeatureId]);
 
     useEffect(() => {
         if (mapState?.map?.olMap) {
