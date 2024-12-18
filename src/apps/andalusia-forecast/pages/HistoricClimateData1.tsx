@@ -15,10 +15,11 @@ import { useMapModel } from "@open-pioneer/map";
 import { MAP_ID } from '../services/HistoricClimateMapProvider';
 import { MAP_ID2 } from '../services/HistoricClimateMapProvider2';
 import { DynamicPrecipitationLegend } from "../components/Legends/DynamicLegend";
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
 
 import SelectInteraction from "ol/interaction/Select";
 import { click } from "ol/events/condition";
-
 
 const HistoricClimateData1 = () => {
     const intl = useIntl();
@@ -32,6 +33,14 @@ const HistoricClimateData1 = () => {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+
+    const [chartOptions, setChartOptions] = useState({
+        chart: { type: 'column' },
+        title: { text: intl.formatMessage({ id: "global.plot.header_precip" }) },
+        xAxis: { categories: [] },
+        yAxis: { title: { text: "Precipitation (mm)" }, min: 0 },
+        series: []
+    });
 
     // Add interaction to map for MAP_ID
     useEffect(() => {
@@ -59,7 +68,6 @@ const HistoricClimateData1 = () => {
             };
         }
     }, [mapState]);
-
 
     useEffect(() => {
         if (selectedFeatureId !== null) {
@@ -91,7 +99,25 @@ const HistoricClimateData1 = () => {
             fetchData(id, initialLimit);
         }
     }, [selectedFeatureId]);
+
+    useEffect(() => {
+        if (data) {
+            // Sort data by year
+            const sortedData = data.features.sort((a, b) => a.properties.YEAR - b.properties.YEAR);
     
+            // Prepare data for plotting
+            const categories = sortedData.map(feature => feature.properties.YEAR);
+            const seriesData = sortedData.map(feature => feature.properties.PL_monthly);
+    
+            setChartOptions({
+                chart: { type: 'column' },
+                title: { text: intl.formatMessage({ id: "global.plot.header_precip" }) },
+                xAxis: { categories },
+                yAxis: { title: { text: "Precipitation (mm)" }, min: 0 },
+                series: [{ name: 'Precipitation', data: seriesData }]
+            });
+        }
+    }, [data, intl]);
 
     useEffect(() => {
         if (mapState?.map?.olMap) {
@@ -114,114 +140,116 @@ const HistoricClimateData1 = () => {
     }, [stationsVisibleMap2, mapState2]);
 
     return (
-        <Box>
+        <Container minWidth={"container.xl"}>
             <Header subpage={'historic_compare'} />
-            <Box>
-                <VStack>
-                    <Container flex={2} minWidth={"container.xl"}>
-                        {/* First map section */}
-                        <div style={{ flex: 1 }}>
-                            {/* Year and month selection */}
-                            <div style={{ margin: 20 }}>
-                                <HStack>
-                                    <>
-                                        {intl.formatMessage({ id: "global.controls.sel_year" })}
-                                    </>
-                                    <Select placeholder={intl.formatMessage({ id: "global.vars.year" })}>
-                                        {[...Array(20)].map((_, i) => 2000 + i).map((year) => (
-                                            <option key={year} value={year}>
-                                                {year}
-                                            </option>
-                                        ))}
-                                    </Select>
-                                </HStack>
-                                <ChangeMonth />
-                            </div>
-                            {/* Variable selection */}
-                            <RadioGroup defaultValue="1">
-                                <p>{intl.formatMessage({ id: "global.controls.sel_var" })}:</p>
-                                <VStack gap="1">
-                                    <HStack>
-                                        <Radio
-                                            value="1">{intl.formatMessage({ id: "global.vars.temp" })}</Radio>
-                                        <InfoTooltip i18n_path="historic_compare.info.temp" />
-                                    </HStack>
-                                    <HStack>
-                                        <Radio
-                                            value="2">{intl.formatMessage({ id: "global.vars.precip" })}</Radio>
-                                        <InfoTooltip i18n_path="historic_compare.info.precip" />
-                                    </HStack>
-                                </VStack>
-                            </RadioGroup>
+            <VStack>
+                <Container flex={2} minWidth={"container.xl"}>
+                    {/* First map section */}
+                    <div style={{ flex: 1 }}>
+                        {/* Year and month selection */}
+                        <div style={{ margin: 20 }}>
+                            <HStack>
+                                <>
+                                    {intl.formatMessage({ id: "global.controls.sel_year" })}
+                                </>
+                                <Select placeholder={intl.formatMessage({ id: "global.vars.year" })}>
+                                    {[...Array(20)].map((_, i) => 2000 + i).map((year) => (
+                                        <option key={year} value={year}>
+                                            {year}
+                                        </option>
+                                    ))}
+                                </Select>
+                            </HStack>
+                            <ChangeMonth />
                         </div>
-                        <Box width="100%" height="500px" position="relative">
-                            <MainMap MAP_ID={MAP_ID} />
-                            <DynamicPrecipitationLegend />
-                            <Box position="absolute" bottom="10px" left="10px">
-                                <Switch
-                                    isChecked={stationsVisibleMap1}
-                                    onChange={() => setStationsVisibleMap1(!stationsVisibleMap1)}
-                                >
-                                    {intl.formatMessage({ id: "global.controls.toggle_stations" })}
-                                </Switch>
-                            </Box>
-                        </Box>
-                    </Container>
-
-                    <Box margin={50}></Box>
-
-                    {/* Second map section (similar to first) */}
-                    <Container flex={2} minWidth={"container.xl"}>
-                        {/* Similar structure to first map section */}
-                        <div style={{ flex: 1 }}>
-                            <div style={{ margin: 20 }}>
+                        {/* Variable selection */}
+                        <RadioGroup defaultValue="1">
+                            <p>{intl.formatMessage({ id: "global.controls.sel_var" })}:</p>
+                            <VStack gap="1">
                                 <HStack>
-                                    <>
-                                        {intl.formatMessage({ id: "global.controls.sel_year" })}
-                                    </>
-                                    <Select placeholder={intl.formatMessage({ id: "global.vars.year" })}>
-                                        {[...Array(20)].map((_, i) => 2000 + i).map((year) => (
-                                            <option key={year} value={year}>
-                                                {year}
-                                            </option>
-                                        ))}
-                                    </Select>
+                                    <Radio
+                                        value="1">{intl.formatMessage({ id: "global.vars.temp" })}</Radio>
+                                    <InfoTooltip i18n_path="historic_compare.info.temp" />
                                 </HStack>
-                                <ChangeMonth />
-                            </div>
-                            <RadioGroup defaultValue="1">
-                                <p>{intl.formatMessage({ id: "global.controls.sel_var" })}:</p>
-                                <VStack gap="1">
-                                    <HStack>
-                                        <Radio
-                                            value="1">{intl.formatMessage({ id: "global.vars.temp" })}</Radio>
-                                        <InfoTooltip i18n_path="historic_compare.info.temp" />
-                                    </HStack>
-                                    <HStack>
-                                        <Radio
-                                            value="2">{intl.formatMessage({ id: "global.vars.precip" })}</Radio>
-                                        <InfoTooltip i18n_path="historic_compare.info.precip" />
-                                    </HStack>
-                                </VStack>
-                            </RadioGroup>
-                        </div>
-
-                        <Box width="100%" height="500px" position="relative">
-                            <MainMap MAP_ID={MAP_ID2} />
-                            <DynamicPrecipitationLegend />
-                            <Box position="absolute" bottom="10px" left="10px">
-                                <Switch
-                                    isChecked={stationsVisibleMap2}
-                                    onChange={() => setStationsVisibleMap2(!stationsVisibleMap2)}
-                                >
-                                    {intl.formatMessage({ id: "global.controls.toggle_stations" })}
-                                </Switch>
-                            </Box>
+                                <HStack>
+                                    <Radio
+                                        value="2">{intl.formatMessage({ id: "global.vars.precip" })}</Radio>
+                                    <InfoTooltip i18n_path="historic_compare.info.precip" />
+                                </HStack>
+                            </VStack>
+                        </RadioGroup>
+                    </div>
+                    <Box width="100%" height="500px" position="relative">
+                        <MainMap MAP_ID={MAP_ID} />
+                        <DynamicPrecipitationLegend />
+                        <Box position="absolute" bottom="10px" left="10px">
+                            <Switch
+                                isChecked={stationsVisibleMap1}
+                                onChange={() => setStationsVisibleMap1(!stationsVisibleMap1)}
+                            >
+                                {intl.formatMessage({ id: "global.controls.toggle_stations" })}
+                            </Switch>
                         </Box>
-                    </Container>
-                </VStack>
-            </Box>
-        </Box>
+                    </Box>
+                </Container>
+
+                <Box margin={50}></Box>
+
+                {/* Second map section (similar to first) */}
+                <Container flex={2} minWidth={"container.xl"}>
+                    {/* Similar structure to first map section */}
+                    <div style={{ flex: 1 }}>
+                        <div style={{ margin: 20 }}>
+                            <HStack>
+                                <>
+                                    {intl.formatMessage({ id: "global.controls.sel_year" })}
+                                </>
+                                <Select placeholder={intl.formatMessage({ id: "global.vars.year" })}>
+                                    {[...Array(20)].map((_, i) => 2000 + i).map((year) => (
+                                        <option key={year} value={year}>
+                                            {year}
+                                        </option>
+                                    ))}
+                                </Select>
+                            </HStack>
+                            <ChangeMonth />
+                        </div>
+                        <RadioGroup defaultValue="1">
+                            <p>{intl.formatMessage({ id: "global.controls.sel_var" })}:</p>
+                            <VStack gap="1">
+                                <HStack>
+                                    <Radio
+                                        value="1">{intl.formatMessage({ id: "global.vars.temp" })}</Radio>
+                                    <InfoTooltip i18n_path="historic_compare.info.temp" />
+                                </HStack>
+                                <HStack>
+                                    <Radio
+                                        value="2">{intl.formatMessage({ id: "global.vars.precip" })}</Radio>
+                                    <InfoTooltip i18n_path="historic_compare.info.precip" />
+                                </HStack>
+                            </VStack>
+                        </RadioGroup>
+                    </div>
+
+                    <Box width="100%" height="500px" position="relative">
+                        <MainMap MAP_ID={MAP_ID2} />
+                        <DynamicPrecipitationLegend />
+                        <Box position="absolute" bottom="10px" left="10px">
+                            <Switch
+                                isChecked={stationsVisibleMap2}
+                                onChange={() => setStationsVisibleMap2(!stationsVisibleMap2)}
+                            >
+                                {intl.formatMessage({ id: "global.controls.toggle_stations" })}
+                            </Switch>
+                        </Box>
+                    </Box>
+                </Container>
+
+                <Box width="100%" height="300px" position="relative" mt={4}>
+                    <HighchartsReact highcharts={Highcharts} options={chartOptions} />
+                </Box>
+            </VStack>
+        </Container>
     );
 };
 
