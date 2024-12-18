@@ -1,6 +1,6 @@
 import { Box, Slider, SliderFilledTrack, SliderThumb, SliderTrack } from "@open-pioneer/chakra-integration";
 import { useIntl } from "open-pioneer:react-hooks";
-import { useMapModel } from "@open-pioneer/map";
+import { MapModel, useMapModel } from "@open-pioneer/map";
 import { CommonComponentProps, useCommonComponentProps } from "@open-pioneer/react-utils";
 import { useEffect, useRef, useState } from "react";
 import Layer from "ol/layer/Layer";
@@ -9,64 +9,69 @@ import { EventsKey } from "ol/events";
 import { unByKey } from "ol/Observable";
 import { getRenderPixel } from "ol/render";
 import { Pixel } from "ol/pixel";
+import { Size } from "ol/size";
 
 export interface LayerSwipeProps extends CommonComponentProps{
-    mapId: string
-    swipableLayer: Layer
+    map: MapModel
+    leftLayer: Layer
+    rightLayer: Layer
 }
 
 export const LayerSwipe = (props: LayerSwipeProps) => {
     const intl = useIntl();
-    const {mapId, swipableLayer} = props;
-    const mapModel = useMapModel(mapId);
-    const prerenderKey = useRef<EventsKey>();
-    const postrenderKey = useRef<EventsKey>();
-    const [sliderValue, setSliderValue] = useState(50)
+    const {map, leftLayer, rightLayer} = props;
+    const leftPrerenderKey = useRef<EventsKey>();
+    const leftPostrenderKey = useRef<EventsKey>();
+    const rightPrerenderKey = useRef<EventsKey>();
+    const rightPostrenderKey = useRef<EventsKey>();
+    const sliderValue = useRef(50);
 
     useEffect(() => {
-        prerenderKey.current = swipableLayer.on("prerender", handlePrerender)
-        postrenderKey.current = swipableLayer.on("postrender", handlePostrender)
+        leftPrerenderKey.current = leftLayer.on("prerender", handlePrerender)
+        leftPostrenderKey.current = leftLayer.on("postrender", handlePostrender)
+        rightPrerenderKey.current = rightLayer.on("prerender", handlePrerender)
+        rightPostrenderKey.current = rightLayer.on("postrender", handlePostrender)
         
         return () => {
-            if(prerenderKey.current){
-                unByKey(prerenderKey.current)
-                prerenderKey.current = undefined;
+            if(leftPrerenderKey.current){
+                unByKey(leftPrerenderKey.current)
+                leftPrerenderKey.current = undefined;
             }
-            if(postrenderKey.current){
-                unByKey(postrenderKey.current)
-                postrenderKey.current = undefined;
+            if(leftPostrenderKey.current){
+                unByKey(leftPostrenderKey.current)
+                leftPostrenderKey.current = undefined;
+            }
+            if(rightPrerenderKey.current){
+                unByKey(rightPrerenderKey.current)
+                rightPrerenderKey.current = undefined;
+            }
+            if(rightPostrenderKey.current){
+                unByKey(rightPostrenderKey.current)
+                rightPostrenderKey.current = undefined;
             }
         };
-    }, [swipableLayer, mapModel])
+    }, [leftLayer, rightLayer, map])
 
 
     function handlePrerender(event: RenderEvent){
         const renderContext = event.context;
-        const olMap = mapModel.map?.olMap;
+        const olMap =map.olMap;
         if(!renderContext || !olMap){
             return;
         }
 
         const mapSize = olMap.getSize();
 
-        if(!mapSize || !mapSize[0] || !mapSize[1]){
+        if(!mapSize || mapSize[0] == undefined || mapSize[1] == undefined){
             return;
         }
 
-        const width = mapSize[0] * (sliderValue / 100);
-        const swipableLayerRect: ClippingRectangle = {
-            topLeft: getRenderPixel(event, [width, 0]),
-            topRight: getRenderPixel(event, [mapSize[0], 0]),
-            bottomLeft: getRenderPixel(event, [width, mapSize[1]]),
-            bottomRight: getRenderPixel(event, mapSize)
-        }
-        
         if(renderContext instanceof WebGLRenderingContext){
             const contextWebGL = renderContext as WebGLRenderingContext;
-            clipWebGLLayer(contextWebGL, swipableLayerRect);
+            clipWebGLLayer(event, contextWebGL, mapSize);
         }else if(renderContext instanceof CanvasRenderingContext2D){
             const contextCanvas = renderContext as CanvasRenderingContext2D;
-            clipCanvasLayer(contextCanvas, swipableLayerRect);
+            clipCanvasLayer(event, contextCanvas, mapSize);
         }
      }
      
@@ -81,39 +86,70 @@ export const LayerSwipe = (props: LayerSwipeProps) => {
         }
      }
      
-     function clipWebGLLayer(renderContext: WebGLRenderingContext, visibleArea: ClippingRectangle){
-        const bottomLeft = visibleArea.bottomLeft;
-        const topRight = visibleArea.bottomRight;
+     function clipWebGLLayer(event: RenderEvent, renderContext: WebGLRenderingContext, mapSize: Size){
+        renderContext.enable(renderContext.SCISSOR_TEST);
+
+        const bottomLeft = getRenderPixel(event, [0, mapSize[1]!]);
+        const topRight = getRenderPixel(event, [mapSize[0]!, 0]);
       
-        const width = Math.round((topRight[0]! - bottomLeft[0]!) * (sliderValue / 100));
+        const width = Math.round((topRight[0]! - bottomLeft[0]!) * (sliderValue.current/ 100));
         const height = topRight[1]! - bottomLeft[1]!;
 
-        renderContext.enable(renderContext.SCISSOR_TEST);
-        renderContext.scissor(bottomLeft[0]!, bottomLeft[1]!, width, height);
+        const isRightLayer = event.target === rightLayer;
+
+        if(isRightLayer){
+            const x = width;
+            const y = bottomLeft[1]!;
+            const w = mapSize[0]! - width;
+            const h = height;
+            renderContext.scissor(x, y, w, h);
+        }else{
+            const x = bottomLeft[0]!;
+            const y =  bottomLeft[1]!;
+            const w = width;
+            const h = height;
+            renderContext.scissor(x, y, w, h);
+        }
      }
      
-     function clipCanvasLayer(renderContext: CanvasRenderingContext2D, visibleArea: ClippingRectangle){
+     function clipCanvasLayer(event: RenderEvent, renderContext: CanvasRenderingContext2D, mapSize: Size){
+        const width = mapSize[0]! * (sliderValue.current / 100);
+        const topLeft = getRenderPixel(event, [width, 0]);
+        const topRight = getRenderPixel(event, [mapSize[0]!, 0]);
+        const bottomLeft = getRenderPixel(event, [width, mapSize[1]!]);
+        const bottomRight = getRenderPixel(event, mapSize);
+
+        const isRightLayer = event.target === rightLayer;
+
         renderContext.save();
         renderContext.beginPath();
-        renderContext.moveTo(visibleArea.topLeft[0]!, visibleArea.topLeft[1]!);
-        renderContext.lineTo(visibleArea.bottomLeft[0]!, visibleArea.bottomLeft[1]!);
-        renderContext.lineTo(visibleArea.bottomRight[0]!, visibleArea.bottomRight[1]!);
-        renderContext.lineTo(visibleArea.topRight[0]!, visibleArea.topRight[1]!);
+        if(isRightLayer){
+            renderContext.moveTo(topLeft[0]!, topLeft[1]!);
+            renderContext.lineTo(bottomLeft[0]!, bottomLeft[1]!);
+            renderContext.lineTo(bottomRight[0]!, bottomRight[1]!);
+            renderContext.lineTo(topRight[0]!, topRight[1]!);
+
+        }else{
+            renderContext.moveTo(topLeft[0]!, topLeft[1]!);
+            renderContext.lineTo(bottomLeft[0]!, bottomLeft[1]!);
+            renderContext.lineTo(0, bottomLeft[1]!);
+            renderContext.lineTo(0, 0);
+        }
         renderContext.closePath();
         renderContext.clip();
      }
      
      function handleSliderValueChanged(value: number){
-        const olMap = mapModel.map?.olMap;
-        setSliderValue(value);
+        sliderValue.current = value;
+        const olMap = map.olMap;
 
         if(olMap){
             olMap.render(); //trigger re-render when slider values is changed
         }
     }
     return (
-        <Box position="absolute" top="10px" right="10px" bg="white" p={2} borderRadius="md" boxShadow="md">
-            <Slider aria-label='slider-ex-1'  onChange={(value) => handleSliderValueChanged(value)}>
+        <Box>
+            <Slider aria-label='slider-ex-1'  onChange={(value) => {handleSliderValueChanged(value)}}>
             <SliderTrack>
                 <SliderFilledTrack />
             </SliderTrack>
@@ -124,11 +160,3 @@ export const LayerSwipe = (props: LayerSwipeProps) => {
 
 
 };
-
-export interface ClippingRectangle{
-    topLeft: Pixel
-    topRight: Pixel
-    bottomLeft: Pixel
-    bottomRight: Pixel
-}
-

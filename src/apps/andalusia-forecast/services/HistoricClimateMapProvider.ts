@@ -1,6 +1,6 @@
+
 // SPDX-FileCopyrightText: 2023 Open Pioneer project (https://github.com/open-pioneer)
 // SPDX-License-Identifier: Apache-2.0
-
 import { MapConfig, MapConfigProvider, SimpleLayer } from "@open-pioneer/map";
 import TileLayer from "ol/layer/Tile";
 import WebGLTileLayer from "ol/layer/WebGLTile";
@@ -46,7 +46,8 @@ export class HistoricClimateMapProvider implements MapConfigProvider {
                 // OpenStreetMap als Hintergrund
                 new SimpleLayer({
                     title: "OpenStreetMap",
-                    olLayer: new TileLayer({
+                    id: "osm",
+                    olLayer: new WebGLTileLayer({
                         source: new OSM(),
                         properties: { title: "OSM" }
                     }),
@@ -54,6 +55,7 @@ export class HistoricClimateMapProvider implements MapConfigProvider {
                 }),
                 // GeoTIFF-Rasterlayer für Temperaturdaten
                 new SimpleLayer({
+                    id: "mean_temp_1", 
                     title: "Mean Temperature (2000-01)",
                     olLayer: new WebGLTileLayer({
                         source: new GeoTIFF({
@@ -93,11 +95,55 @@ export class HistoricClimateMapProvider implements MapConfigProvider {
                     isBaseLayer: false
                 }),
                 new SimpleLayer({
+                    id: "mean_temp_2",
+                    title: "Mean Temperature (2000-01)",
+                    olLayer: new WebGLTileLayer({
+                        source: new GeoTIFF({
+                            normalize: false,
+                            sources: [
+                                {
+                                    url: "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_2000_02_MeanTemperature_v0.tif",
+                                    max: 50,
+                                    min: 0
+                                }
+                            ]
+                        }),
+                        style: {
+                            color: 
+
+                                [
+                                "case",
+                                    ["all", ["==", ["*", ["band", 1], 50], 0], ["==", ["*", ["band", 2], 50], 0]],
+                                    [0, 0, 0, 0], // Transparent for 0 values outside the area of interest
+                                    ["<", ["band", 1], -10],
+                                    pink,
+                                    ["<=", ["band", 1], 0],
+                                    cold_blue,
+                                    ["<=", ["band", 1], 10],
+                                    ice_blue,
+                                    ["<=", ["band", 1], 20],
+                                    green,
+                                    ["<=", ["band", 1], 30],
+                                    yellow,
+                                    ["<=", ["band", 1], 40],
+                                    orange,
+                                    ["<=", ["band", 1], 50],
+                                    red,
+                                    dark_red
+                                ]
+                        },
+                        properties: { title: "Mean Temperature (2000-01)" }
+                    }),
+                    isBaseLayer: false
+                }),
+                new SimpleLayer({
+                    id: "cazorla",
                     title: "Cazorla",
                     olLayer: createCazorlaLayer(),
                     isBaseLayer: false
                 }),
                 new SimpleLayer({
+                    id: "los_pedroches",
                     title: "Los Pedroches",
                     olLayer: createLosPedrochesLayer(),
                     isBaseLayer: false
