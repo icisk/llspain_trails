@@ -38,6 +38,9 @@ messages:
       oct: Octubre
       nov: Noviembre
       dec: Diciembre
+    layerswipe:
+      slider:
+        title: Mueva el control deslizante para ajustar la comparación de capas del mapa.
 
   home:
     nav: Home

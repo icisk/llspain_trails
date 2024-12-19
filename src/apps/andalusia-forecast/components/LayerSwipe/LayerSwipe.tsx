@@ -145,11 +145,11 @@ export const LayerSwipe = (props: LayerSwipeProps) => {
 
     return (
         <Box>
-            <Slider aria-label='slider-ex-1'  value={sliderValueRef.current}  onChange={(value) => {handleSliderValueChanged(value)}} min={0} max={100}>
-            <SliderTrack>
-                <SliderFilledTrack />
-            </SliderTrack>
-            <SliderThumb />
+            <Slider aria-label={intl.formatMessage({ id: "global.layerswipe.slider.title" })}  value={sliderValueRef.current}  onChange={(value) => {handleSliderValueChanged(value)}} min={0} max={100}>
+                <SliderTrack>
+                    <SliderFilledTrack />
+                </SliderTrack>
+                <SliderThumb />
             </Slider>
         </Box>
     );
