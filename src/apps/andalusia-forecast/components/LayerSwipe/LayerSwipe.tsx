@@ -12,8 +12,14 @@ import { Size } from "ol/size";
 
 export interface LayerSwipeProps extends CommonComponentProps{
     map: MapModel
-    leftLayer: Layer
-    rightLayer: Layer
+    /**
+     * immutable list of swipable layers displayed on the left side of the map
+     */
+    leftLayers: ReadonlyArray<Layer>
+    /**
+     * immutable list of swipable layers displayed on the right side of the map
+     */
+    rightLayers: ReadonlyArray<Layer>
     /**
      * the value of the slider, number between 0 (left) and 100 (right)
      */
@@ -27,7 +33,7 @@ export interface LayerSwipeProps extends CommonComponentProps{
 
 export const LayerSwipe = (props: LayerSwipeProps) => {
     const intl = useIntl();
-    const {map, leftLayer, rightLayer, sliderValue, onSliderValueChanged} = props;
+    const {map, leftLayers, rightLayers, sliderValue, onSliderValueChanged} = props;
     const eventKeys = useRef<EventsKey[]>([]);
     
     let sliderValueValidated = (sliderValue <= 100) ? sliderValue : 100; 
@@ -35,16 +41,16 @@ export const LayerSwipe = (props: LayerSwipeProps) => {
     const sliderValueRef = useRef(sliderValueValidated);
 
     useEffect(() => {
-        eventKeys.current.push(leftLayer.on("prerender", handlePrerender));
-        eventKeys.current.push(leftLayer.on("postrender", handlePostrender));
-        eventKeys.current.push(rightLayer.on("prerender", handlePrerender));
-        eventKeys.current.push(rightLayer.on("postrender", handlePostrender));
+        leftLayers.concat(rightLayers).forEach((layer) => {
+            eventKeys.current.push(layer.on("prerender", handlePrerender));
+            eventKeys.current.push(layer.on("postrender", handlePostrender));
+        });
         
         return () => {
             eventKeys.current.forEach(key => unByKey(key));
             eventKeys.current = [];
         };
-    }, [leftLayer, rightLayer, map])
+    }, [leftLayers, rightLayers, map])
 
     function handlePrerender(event: RenderEvent){
         const renderContext = event.context;
@@ -85,7 +91,7 @@ export const LayerSwipe = (props: LayerSwipeProps) => {
         const width = Math.round((topRight[0]! - bottomLeft[0]!) * (sliderValueRef.current / 100));
         const height = topRight[1]! - bottomLeft[1]!;
 
-        const isRightLayer = event.target === rightLayer;
+        const isRightLayer = rightLayers.includes(event.target);
 
         let x, y, w, h;
         if(isRightLayer){
@@ -110,7 +116,7 @@ export const LayerSwipe = (props: LayerSwipeProps) => {
         const bottomLeft = getRenderPixel(event, [width, mapSize[1]!]);
         const bottomRight = getRenderPixel(event, mapSize);
 
-        const isRightLayer = event.target === rightLayer;
+        const isRightLayer = rightLayers.includes(event.target);
 
         renderContext.save();
         renderContext.beginPath();
