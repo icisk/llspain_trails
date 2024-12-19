@@ -19,6 +19,7 @@ import {DynamicPrecipitationLegend} from "../components/Legends/DynamicLegend";
 import { LayerSwipe } from '../components/LayerSwipe/LayerSwipe';
 import { isFormElement } from 'react-router-dom/dist/dom';
 import { map } from 'highcharts';
+import {HistoricPicker} from "../components/VariablePicker/HistoricPicker";
 
 const HistoricClimateData1 = () => {
     const intl = useIntl();
@@ -28,6 +29,11 @@ const HistoricClimateData1 = () => {
     const [rightLayers, setRightLayers]= useState<Layer[]>();
     const [sliderValue, setSliderValue] = useState<number>(50);
 
+    const [variableValue, setVariableValue] = useState<{ [key: string]: string }>({
+        left: '',  
+        right: '',  
+    });
+    
     const mapModel = useMapModel(MAP_ID);
 
     useEffect(() => {
@@ -40,101 +46,44 @@ const HistoricClimateData1 = () => {
         }
     }, [mapModel])
 
+
+
+    type VariableValues = {
+        [key: string]: string;
+    };
+
+    function variableChange(groupName: string) {
+        return (e: any) => {
+            setVariableValue((prevValues: VariableValues) => ({
+                ...prevValues,
+                [groupName]: e,
+            }));
+            console.log(e, groupName)
+        };
+    }
+    
     //HistoricClimateHook1(mapRef);
     HistoricClimateHook2(mapRef);
-    
+    console.log(variableValue)
     return (
 <Box>
     <Header subpage={'historic_compare'} />
     <Box>
-        <VStack>
+        <HStack>
+            <HistoricPicker variableChange={variableChange('left')} selectedVar={variableValue['left']}/>
+            <HistoricPicker variableChange={variableChange('right')} selectedVar={variableValue['right']}/>
+        </HStack>
             <Container flex={2} minWidth={"container.xl"}>
-                <div style={{flex: 1}}>
-                    <div style={{margin: 20}}>
-                        <HStack>
-                            <>
-                                {intl.formatMessage({id: "global.controls.sel_year"})}
-                            </>
-                            <Select placeholder={intl.formatMessage({id: "global.vars.year"})}>
-                                {[...Array(20)].map((_, i) => 2000 + i).map((year) => (
-                                    <option key={year} value={year}>
-                                        {year}
-                                    </option>
-                                ))}
-                            </Select>
-                        </HStack>
-                        <ChangeMonth/>
-                    </div>
-                    <RadioGroup defaultValue="1">
-                        <p>{intl.formatMessage({id: "global.controls.sel_var"})}:</p>
-                        <VStack gap="1">
-                            <HStack>
-                                <Radio
-                                    value="1">{intl.formatMessage({id: "global.vars.temp"})}</Radio>
-                                <InfoTooltip i18n_path="historic_compare.info.temp"/>
-                            </HStack>
-                            <HStack>
-                                <Radio
-                                    value="2">{intl.formatMessage({id: "global.vars.precip"})}</Radio>
-                                <InfoTooltip i18n_path="historic_compare.info.precip"/>
-                            </HStack>
-                        </VStack>
-                    </RadioGroup>
-                </div>
                 <Box width="100%" height="600px" position="relative">
                     <MainMap MAP_ID={MAP_ID}/>
-                    <DynamicPrecipitationLegend />           
-                </Box>
-                
-                {(leftLayers && rightLayers && mapModel.map) && 
-                    <LayerSwipe map={mapModel.map} sliderValue={sliderValue} onSliderValueChanged={(newValue) => {setSliderValue(newValue)}} leftLayers={leftLayers} rightLayers={rightLayers}></LayerSwipe>
-                }
-            </Container>
-            
-            <Box margin={50}></Box>
-            
-            <Container flex={2} minWidth={"container.xl"}>
-                <div style={{flex: 1}}>
-                    <div style={{margin: 20}}>
-                        <HStack>
-                            <>
-                                {intl.formatMessage({id: "global.controls.sel_year"})}
-                            </>
-                            <Select placeholder={intl.formatMessage({id: "global.vars.year"})}>
-                                {[...Array(20)].map((_, i) => 2000 + i).map((year) => (
-                                    <option key={year} value={year}>
-                                        {year}
-                                    </option>
-                                ))}
-                            </Select>
-                        </HStack>
-                        <ChangeMonth/>
-                    </div>
-                    <RadioGroup defaultValue="1">
-                        <p>{intl.formatMessage({id: "global.controls.sel_var"})}:</p>
-                        <VStack gap="1">
-                            <HStack>
-                                <Radio
-                                    value="1">{intl.formatMessage({id: "global.vars.temp"})}</Radio>
-                                <InfoTooltip i18n_path="historic_compare.info.temp"/>
-                            </HStack>
-                            <HStack>
-                                <Radio
-                                    value="2">{intl.formatMessage({id: "global.vars.precip"})}</Radio>
-                                <InfoTooltip i18n_path="historic_compare.info.precip"/>
-                            </HStack>
-                        </VStack>
-                    </RadioGroup>
-                </div>
-
-                <Box width="100%" height="500px" position="relative">
-                    <MainMap MAP_ID={MAP_ID2}/>
                     <DynamicPrecipitationLegend />
                 </Box>
-            </Container>
-           
-        </VStack>
 
+                {(leftLayers && rightLayers && mapModel.map) &&
+                    <LayerSwipe map={mapModel.map} sliderValue={sliderValue} onSliderValueChanged={(newValue) => {setSliderValue(newValue)}} leftLayers={leftLayers} rightLayers={rightLayers} />
+                }
+            </Container>     
+   
     </Box>
 </Box>
 
