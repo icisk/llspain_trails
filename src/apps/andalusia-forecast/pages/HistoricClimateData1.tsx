@@ -30,9 +30,18 @@ const HistoricClimateData1 = () => {
     const [stationsVisibleMap2, setStationsVisibleMap2] = useState(true);
 
     const [selectedFeatureId, setSelectedFeatureId] = useState(null);
-    const [data, setData] = useState(null);
+    
+    // State for managing data
+    interface DataState {
+        precip?: any;
+        t_mean?: any;
+        t_max?: any;
+        t_min?: any;
+    }
+    
+    const [data, setData] = useState<DataState>({});
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
 
     const [chartOptions, setChartOptions] = useState({
         chart: { type: 'column' },
@@ -63,8 +72,8 @@ const HistoricClimateData1 = () => {
                 const selectedFeatures = event.selected;
                 if (selectedFeatures.length > 0) {
                     const feature = selectedFeatures[0];
-                    const properties = feature.getProperties();
-                    setSelectedFeatureId(properties.ID);
+                    const properties = feature?.getProperties();
+                    setSelectedFeatureId(properties?.ID);
                 }
             });
 
@@ -74,108 +83,194 @@ const HistoricClimateData1 = () => {
         }
     }, [mapState]);
 
+
     useEffect(() => {
         if (selectedFeatureId !== null) {
-            const fetchData = async (id: any, limit: number) => {
-                const url = `https://i-cisk.dev.52north.org/data/collections/AEMET_stations_precip/items?f=json&lang=en-US&limit=${limit}&skipGeometry=false&offset=0&CODI_INM=${id}`;
-                try {
-                    setLoading(true);
-                    const response = await fetch(url);
-                    if (!response.ok) throw new Error("Network response was not ok");
+            const fetchData = async (type: string, id: any, initialLimit: number) => {
+                let currentLimit = initialLimit;
+                let fetchedData = null;
     
-                    const jsonData = await response.json();
-                    console.log("Fetched data:", jsonData);
+                while (true) {
+                    const url = `https://i-cisk.dev.52north.org/data/collections/AEMET_stations_${type}/items?f=json&lang=en-US&limit=${currentLimit}&skipGeometry=false&offset=0&CODI_INM=${id}`;
+                    try {
+                        setLoading(true);
+                        const response = await fetch(url);
+                        if (!response.ok) throw new Error("Network response was not ok");
     
-                    if (jsonData.numberMatched > jsonData.numberReturned) {
-                        console.log(`Re-fetching with updated limit: ${jsonData.numberMatched}`);
-                        fetchData(id, jsonData.numberMatched);
-                    } else {
-                        setData(jsonData);
+                        const jsonData = await response.json();
+                        console.log(`Fetched ${type} data (limit=${currentLimit}):`, jsonData);
+    
+                        if (jsonData.numberMatched > jsonData.numberReturned) {
+                            console.log(`Increasing limit for ${type} to ${jsonData.numberMatched}`);
+                            currentLimit = jsonData.numberMatched; // Set the limit to the total number of features
+                        } else {
+                            fetchedData = jsonData;
+                            break;
+                        }
+                    } catch (err: any) {
+                        setError(err.message);
+                        break;
+                    } finally {
+                        setLoading(false);
                     }
-                } catch (err: any) {
-                    setError(err.message);
-                } finally {
-                    setLoading(false);
+                }
+    
+                // Save the fetched data to the state
+                if (fetchedData) {
+                    setData((prevData) => ({
+                        ...prevData,
+                        [type]: fetchedData,
+                    }));
                 }
             };
     
             const id = selectedFeatureId;
             const initialLimit = 500;
-            fetchData(id, initialLimit);
+            const types = ["precip", "t_mean", "t_max", "t_min"]; // Datatypes to fetch
+    
+            types.forEach((type) => fetchData(type, id, initialLimit));
         }
     }, [selectedFeatureId]);
 
+
     useEffect(() => {
-        if (data) {
-            // Sort data by year and month
-            const sortedData = data.features.sort((a, b) => {
+        console.log('Current data:', data);
+    }, [data]); 
+
+    useEffect(() => {
+        if (data.precip && data.t_mean && data.t_max && data.t_min) {
+            // Initialize a common time interval based on all data types
+            const allFeatures = [
+                ...(data.precip?.features || []),
+                ...(data.t_mean?.features || []),
+                ...(data.t_max?.features || []),
+                ...(data.t_min?.features || []),
+            ];
+    
+            // Sort all features by date and find the earliest and latest date
+            const sortedAllFeatures = allFeatures.sort((a, b) => {
                 const dateA = new Date(a.properties.DATE);
                 const dateB = new Date(b.properties.DATE);
                 return dateA - dateB;
             });
     
-            // Determine the time range
-            const firstDate = new Date(sortedData[0].properties.DATE);
-            const lastDate = new Date(sortedData[sortedData.length - 1].properties.DATE);
+            if (sortedAllFeatures.length === 0) return; // No data available
     
-            // Build a consistent time scale
+            const firstDate = new Date(sortedAllFeatures[0].properties.DATE);
+            const lastDate = new Date(sortedAllFeatures[sortedAllFeatures.length - 1].properties.DATE);
+    
+            // Create the categories (time axis) for the x-axis (months)
             const categories = [];
-            for (let year = firstDate.getFullYear(); year <= lastDate.getFullYear(); year++) {
-                for (let month = 0; month < 12; month++) {
-                    categories.push(`${year}-${String(month + 1).padStart(2, '0')}`);
+            const currentDate = new Date(firstDate);
+            while (currentDate <= lastDate) {
+                const month = currentDate.toISOString().split("T")[0].slice(0, 7); // Format: YYYY-MM
+                if (!categories.includes(month)) {
+                    categories.push(month);
                 }
+                currentDate.setMonth(currentDate.getMonth() + 1);
             }
     
-            // Map data points to the time scale
-            const seriesData = new Array(categories.length).fill(null);
-            sortedData.forEach(feature => {
-                const date = new Date(feature.properties.DATE);
-                const category = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-                const index = categories.indexOf(category);
-                seriesData[index] = feature.properties.PL_monthly;
-            });
+            // Log the categories to debug
+            console.log("Categories:", categories);
     
-            // Identify gaps and create zones
-            const zones = [];
-            let inGap = false;
-            let gapStart = null;
-            for (let i = 0; i < seriesData.length; i++) {
-                if (seriesData[i] === null && !inGap) {
-                    inGap = true;
-                    gapStart = i;
-                } else if (seriesData[i] !== null && inGap) {
-                    inGap = false;
-                    zones.push({
-                        value: gapStart,
-                        color: 'rgba(255, 0, 0, 0.3)'
-                    });
-                    zones.push({
-                        value: i,
-                        color: 'rgba(0, 0, 0, 0)'
-                    });
-                }
-            }
-            if (inGap) {
-                zones.push({
-                    value: seriesData.length,
-                    color: 'rgba(255, 0, 0, 0.3)'
-                });
-            }
+            // Initialize series data
+            const precipSeriesData = new Array(categories.length).fill(null);
+            const meanTempSeriesData = new Array(categories.length).fill(null);
+            const maxTempSeriesData = new Array(categories.length).fill(null);
+            const minTempSeriesData = new Array(categories.length).fill(null);
     
-            setChartOptions({
-                chart: { type: 'column' },
-                title: { text: intl.formatMessage({ id: "global.plot.header_precip" }) },
-                xAxis: { categories },
-                yAxis: { title: { text: "Precipitation (mm)" }, min: 0 },
-                series: [{ name: 'Precipitation', data: seriesData }],
-                plotOptions: {
-                    series: {
-                        zones
+            // Fill the series with the respective data
+            const mapFeaturesToSeries = (features, property, seriesData) => {
+                features.forEach((feature) => {
+                    const date = new Date(feature.properties.DATE).toISOString().split("T")[0].slice(0, 7); // Format: YYYY-MM
+                    const index = categories.indexOf(date);
+                    if (index !== -1) {
+                        seriesData[index] = feature.properties[property];
+                    } else {
+                        console.log(`Date ${date} not found in categories`);
                     }
-                }
+                });
+            };
+    
+            // Process the different data types
+            if (data.precip?.features) {
+                console.log("Mapping Precipitation Data:", data.precip.features);
+                mapFeaturesToSeries(data.precip.features, "PL_monthly", precipSeriesData);
+            }
+            if (data.t_mean?.features) {
+                console.log("Mapping Mean Temperature Data:", data.t_mean.features);
+                mapFeaturesToSeries(data.t_mean.features, "MT_MONTHLY", meanTempSeriesData);
+            }
+            if (data.t_max?.features) {
+                console.log("Mapping Max Temperature Data:", data.t_max.features);
+                mapFeaturesToSeries(data.t_max.features, "MX_MONTHLY", maxTempSeriesData);
+            }
+            if (data.t_min?.features) {
+                console.log("Mapping Min Temperature Data:", data.t_min.features);
+                mapFeaturesToSeries(data.t_min.features, "MN_MONTHLY", minTempSeriesData);
+            }
+    
+            // Log the series data to debug
+            console.log("Precipitation Series Data:", precipSeriesData);
+            console.log("Mean Temperature Series Data:", meanTempSeriesData);
+            console.log("Max Temperature Series Data:", maxTempSeriesData);
+            console.log("Min Temperature Series Data:", minTempSeriesData);
+    
+            // Update the chart options
+            setChartOptions({
+                chart: { type: "column" },
+                title: { text: intl.formatMessage({ id: "global.plot.header_precip" }) },
+                xAxis: { categories, title: { text: "Date" } },
+                yAxis: [
+                    {
+                        // Left axis for precipitation
+                        title: { text: "Precipitation (mm)" },
+                        min: 0,
+                        opposite: false, // Default: left
+                    },
+                    {
+                        // Right axis for temperature
+                        title: { text: "Temperature (°C)" },
+                        min: 0,
+                        opposite: true, // Display on the right
+                    },
+                ],
+                series: [
+                    {
+                        name: "Precipitation",
+                        data: precipSeriesData?.length ? precipSeriesData : [],
+                        type: "column",
+                        color: "blue",
+                        yAxis: 0, // Left axis
+                    },
+                    {
+                        name: "Mean Temperature",
+                        data: meanTempSeriesData?.length ? meanTempSeriesData : [],
+                        type: "scatter",
+                        color: "orange",
+                        yAxis: 1, // Right axis
+                    },
+                    {
+                        name: "Max Temperature",
+                        data: maxTempSeriesData?.length ? maxTempSeriesData : [],
+                        type: "scatter",
+                        color: "red",
+                        yAxis: 1, // Right axis
+                    },
+                    {
+                        name: "Min Temperature",
+                        data: minTempSeriesData?.length ? minTempSeriesData : [],
+                        type: "scatter",
+                        color: "green",
+                        yAxis: 1, // Right axis
+                    },
+                ],
             });
+            
         }
     }, [data, intl]);
+    
+    
 
     useEffect(() => {
         if (mapState?.map?.olMap) {
