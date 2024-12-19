@@ -13,14 +13,14 @@ interface HistoricPickerProps {
 
 export function HistoricPicker({variableChange, selectedVar}: HistoricPickerProps) {
     const intl = useIntl();
-    //const mapProv = useService<HistoricClimateMapProvider>("map.HistoricMapProvider");
-    //console.log(mapProv);
+    // const mapProv = useService<HistoricClimateMapProvider>("app.HistoricLayerHandler");
+    // console.log(mapProv);
     const [years, setYears] = useState<number[]>([]);
     const [months, setMonths] = useState<number[]>([]);
     const [selectedYear, setSelectedYear] = useState<number | undefined>(undefined);
     const [yearMonthMap, setYearMonthMap] = useState<Record<number, Set<number>>>({});
     const meta_precip: string = 'https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/creaf_historic_precip_metrics.zarr/.zmetadata'
-    const meta_temp:string = 'https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/creaf_historic_temperature_metrics.zarr/.zmetadata'
+    const meta_temp: string = 'https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/creaf_historic_temperature_metrics.zarr/.zmetadata'
 
     useEffect(() => {
         const link = selectedVar === 'temp' ? meta_temp : meta_precip;

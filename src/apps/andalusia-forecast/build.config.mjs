@@ -7,7 +7,10 @@ export default defineBuildConfig({
             "es"
     ],
     ui: {
-        references: ["app.PrecipitationLayerHandler"]
+        references: [
+            "app.PrecipitationLayerHandler", 
+            // "app.HistoricLayerHandler"
+                    ]
     },
     services: {
         MidtermForecastMapProvider: {
@@ -31,6 +34,12 @@ export default defineBuildConfig({
                 mapRegistry: "map.MapRegistry"
             }
         },
+        // HistoricLayerHandlerImpl: {
+        //     provides: ["app.HistoricLayerHandler"],
+        //     references: {
+        //         mapRegistry: "map.MapRegistry"
+        //     }
+        // },
         HistoricClimateMapProvider: {
             provides: ["map.MapConfigProvider"]
         },
