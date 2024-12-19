@@ -39,7 +39,12 @@ const HistoricClimateData1 = () => {
         title: { text: intl.formatMessage({ id: "global.plot.header_precip" }) },
         xAxis: { categories: [] },
         yAxis: { title: { text: "Precipitation (mm)" }, min: 0 },
-        series: []
+        series: [],
+        plotOptions: {
+            series: {
+                zones: []
+            }
+        }
     });
 
     // Add interaction to map for MAP_ID
@@ -102,19 +107,72 @@ const HistoricClimateData1 = () => {
 
     useEffect(() => {
         if (data) {
-            // Sort data by year
-            const sortedData = data.features.sort((a, b) => a.properties.YEAR - b.properties.YEAR);
+            // Sort data by year and month
+            const sortedData = data.features.sort((a, b) => {
+                const dateA = new Date(a.properties.DATE);
+                const dateB = new Date(b.properties.DATE);
+                return dateA - dateB;
+            });
     
-            // Prepare data for plotting
-            const categories = sortedData.map(feature => feature.properties.YEAR);
-            const seriesData = sortedData.map(feature => feature.properties.PL_monthly);
+            // Determine the time range
+            const firstDate = new Date(sortedData[0].properties.DATE);
+            const lastDate = new Date(sortedData[sortedData.length - 1].properties.DATE);
+    
+            // Build a consistent time scale
+            const categories = [];
+            for (let year = firstDate.getFullYear(); year <= lastDate.getFullYear(); year++) {
+                for (let month = 0; month < 12; month++) {
+                    categories.push(`${year}-${String(month + 1).padStart(2, '0')}`);
+                }
+            }
+    
+            // Map data points to the time scale
+            const seriesData = new Array(categories.length).fill(null);
+            sortedData.forEach(feature => {
+                const date = new Date(feature.properties.DATE);
+                const category = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                const index = categories.indexOf(category);
+                seriesData[index] = feature.properties.PL_monthly;
+            });
+    
+            // Identify gaps and create zones
+            const zones = [];
+            let inGap = false;
+            let gapStart = null;
+            for (let i = 0; i < seriesData.length; i++) {
+                if (seriesData[i] === null && !inGap) {
+                    inGap = true;
+                    gapStart = i;
+                } else if (seriesData[i] !== null && inGap) {
+                    inGap = false;
+                    zones.push({
+                        value: gapStart,
+                        color: 'rgba(255, 0, 0, 0.3)'
+                    });
+                    zones.push({
+                        value: i,
+                        color: 'rgba(0, 0, 0, 0)'
+                    });
+                }
+            }
+            if (inGap) {
+                zones.push({
+                    value: seriesData.length,
+                    color: 'rgba(255, 0, 0, 0.3)'
+                });
+            }
     
             setChartOptions({
                 chart: { type: 'column' },
                 title: { text: intl.formatMessage({ id: "global.plot.header_precip" }) },
                 xAxis: { categories },
                 yAxis: { title: { text: "Precipitation (mm)" }, min: 0 },
-                series: [{ name: 'Precipitation', data: seriesData }]
+                series: [{ name: 'Precipitation', data: seriesData }],
+                plotOptions: {
+                    series: {
+                        zones
+                    }
+                }
             });
         }
     }, [data, intl]);
@@ -230,7 +288,6 @@ const HistoricClimateData1 = () => {
                             </VStack>
                         </RadioGroup>
                     </div>
-
                     <Box width="100%" height="500px" position="relative">
                         <MainMap MAP_ID={MAP_ID2} />
                         <DynamicPrecipitationLegend />
