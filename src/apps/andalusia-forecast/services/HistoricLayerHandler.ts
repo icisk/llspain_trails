@@ -145,7 +145,7 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
     }
     setYearRight(year: number): void {
         this.#currentYearRight.value = year;
-        this.layerLeft?.setSource(this.createSourceRight());
+        this.layerRight?.setSource(this.createSourceRight());
     }
 
 
