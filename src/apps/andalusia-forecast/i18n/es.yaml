@@ -14,6 +14,7 @@ messages:
       precip: Precipitación 
       precip_cum:  Precipitación acumulada mensual 
       year: año
+      month: mes
     controls:
       sel_month: Seleccione el mes 
       sel_year: Seleccione el año
@@ -38,6 +39,9 @@ messages:
       oct: Octubre
       nov: Noviembre
       dec: Diciembre
+    layerswipe:
+      slider:
+        title: Mueva el control deslizante para ajustar la comparación de capas del mapa.
 
   home:
     nav: Home

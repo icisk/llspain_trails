@@ -38,6 +38,9 @@ messages:
       oct: October
       nov: November
       dec: December
+    layerswipe:
+      slider:
+        title: Move the slider to adjust the layer comparison.
 
   home:
     nav: Home
