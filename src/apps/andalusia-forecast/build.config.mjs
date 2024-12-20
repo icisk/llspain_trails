@@ -9,7 +9,7 @@ export default defineBuildConfig({
     ui: {
         references: [
             "app.PrecipitationLayerHandler", 
-            // "app.HistoricLayerHandler"
+            "app.HistoricLayerHandler"
                     ]
     },
     services: {
@@ -34,12 +34,12 @@ export default defineBuildConfig({
                 mapRegistry: "map.MapRegistry"
             }
         },
-        // HistoricLayerHandlerImpl: {
-        //     provides: ["app.HistoricLayerHandler"],
-        //     references: {
-        //         mapRegistry: "map.MapRegistry"
-        //     }
-        // },
+        HistoricLayerHandlerImpl: {
+            provides: ["app.HistoricLayerHandler"],
+            references: {
+                mapRegistry: "map.MapRegistry"
+            }
+        },
         HistoricClimateMapProvider: {
             provides: ["map.MapConfigProvider"]
         },

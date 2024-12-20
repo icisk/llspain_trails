@@ -24,7 +24,7 @@ export enum Month {
     December = "12",
 }
 
-export type Year = string;
+export type Year = number;
 
 export enum Variable {
     Precipitation = "precip",
@@ -53,12 +53,18 @@ export const getLocalizedMonthName = (month: Month): string => {
 
 // PrecipitationLayerHandler interface
 export interface HistoricLayerHandler extends DeclaredService<"app.HistoricLayerHandler"> {
-    setMonth(month: Month): void;
-    setYear(year: number): void;
-    setVariable(variable: Variable): void;
-    currentMonth: Month;
-    currentYear: Year;
-    currentVariable: Variable;
+    setMonthLeft(month: Month): void;
+    setYearLeft(year: number): void;
+    setVarLeft(variable: Variable): void;
+    setMonthRight(month: Month): void;
+    setYearRight(year: number): void;
+    setVarRight(variable: Variable): void;
+    currentMonthLeft: Month;
+    currentYearLeft: Year;
+    currentVarLeft: Variable;
+    currentMonthRight: Month;
+    currentYearRight: Year;
+    currentVarRight: Variable;
     
 }
 
@@ -69,11 +75,15 @@ interface References {
 // Example handler class
 export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
     private mapRegistry: MapRegistry;
-    private layer: WebGLTileLayer | undefined;
-
-    #currentMonth: Reactive<Month> = reactive(Month.January);
-    #currentYear: Reactive<Year> = reactive('2015');
-    #currentVariable: Reactive<Variable> = reactive("temp");
+    private layerLeft: WebGLTileLayer | undefined;
+    private layerRight: WebGLTileLayer | undefined;
+    #currentMonthLeft: Reactive<Month> = reactive(Month.January);
+    #currentYearLeft: Reactive<Year> = reactive();
+    #currentVarLeft: Reactive<Variable> = reactive("temp");
+    #currentMonthRight: Reactive<Month> = reactive(Month.January);
+    #currentYearRight: Reactive<Year> = reactive();
+    #currentVarRight: Reactive<Variable> = reactive("temp");
+   
 
 
     constructor(options: ServiceOptions<References>) {
@@ -81,78 +91,102 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
         this.mapRegistry = mapRegistry;
 
         this.mapRegistry.getMapModel(MAP_ID).then((model) => {
-            this.layer = new WebGLTileLayer({
-                source: this.createSource(),
-                zIndex: 5, // Order of the Layers
-                style: {
-                    color: this.getColorStyle()
-                }
-            });
+            this.layerLeft = (model?.layers.getLayerById('left') as SimpleLayer).olLayer as WebGLTileLayer
+            this.layerRight = (model?.layers.getLayerById('right') as SimpleLayer).olLayer as WebGLTileLayer
 
-            model?.layers.addLayer(
-                new SimpleLayer({
-                    title: "Precipitation Forecast",
-                    olLayer: this.layer,
-                })
-            );
         });
     }
 
-    get currentMonth(): Month {
-        return this.#currentMonth.value;
+    get currentVarLeft(): Variable {
+        return this.#currentVarLeft.value;
+    }
+    get currentVarRight(): Variable {
+        return this.#currentVarRight.value;
+    }
+    setVarLeft(variable: Variable): void {
+        this.#currentVarLeft.value = variable;
+        const newSource = this.createSourceLeft();
+        this.layerLeft?.setSource(newSource);
+        this.layerLeft?.setStyle({ color: this.getColorStyleLeft() }); // Ensure style is updated
+    }
+    setVarRight(variable: Variable): void {
+        this.#currentVarRight.value = variable;
+        const newSource = this.createSourceRight();
+        this.layerRight?.setSource(newSource);
+        this.layerRight?.setStyle({ color: this.getColorStyleRight() }); // Ensure style is updated
+    }
+    
+    
+    get currentMonthLeft(): Month {
+        return this.#currentMonthLeft.value;
+    }
+    get currentMonthRight(): Month {
+        return this.#currentMonthRight.value;
+    }
+    setMonthLeft(month: Month): void {
+        this.#currentMonthLeft.value = month;        
+        this.layerLeft?.setSource(this.createSourceLeft());
+    }
+    setMonthRight(month: Month): void {
+        this.#currentMonthRight.value = month;
+        this.layerRight?.setSource(this.createSourceRight());
     }
 
-    setMonth(month: Month): void {
-        this.#currentMonth.value = month;
-        this.layer?.setSource(this.createSource());
+    
+    get currentYearLeft(): Year {
+        return this.#currentYearLeft.value;
+    }
+    get currentYearRight(): Year {
+        return this.#currentYearRight.value;
+    }
+    setYearLeft(year: number): void {
+        this.#currentYearLeft.value = year;
+        this.layerLeft?.setSource(this.createSourceLeft());
+    }
+    setYearRight(year: number): void {
+        this.#currentYearRight.value = year;
+        this.layerLeft?.setSource(this.createSourceRight());
     }
 
-    get currentVariable(): Variable {
-        return this.#currentVariable.value;
-    }
 
-    get currentYear(): Month {
-        return this.#currentYear.value;
-    }
-
-    setYear(month: Month): void {
-        this.#currentYear.value = month;
-        this.layer?.setSource(this.createSource());
-    }
-
-    setVariable(variable: Variable): void {
-        this.#currentVariable.value = variable;
-        const newSource = this.createSource();
-        this.layer?.setSource(newSource);
-        this.layer?.setStyle({ color: this.getColorStyle() }); // Ensure style is updated
-    }
-
-    getColorStyle() {
-        if (this.#currentVariable.value === "temp") {
+    getColorStyleLeft() {
+        if (this.#currentVarLeft.value === "temp") {
             return tempColorCase;
-        }  if (this.#currentVariable.value === "precip") {
+        }  if (this.#currentVarLeft.value === "precip") {
+            return precipColorCase;
+        }        
+    }
+    getColorStyleRight() {
+        if (this.#currentVarRight.value === "temp") {
+            return tempColorCase;
+        }  if (this.#currentVarRight.value === "precip") {
             return precipColorCase;
         }
-        
     }
 
 
-    private createSource() {
+    private createSourceLeft() {
         let historicLayer: string;
-        if (this.#currentVariable.value === "temp") {
-             historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_${this.currentYear}_${this.currentMonth}_MeanTemperature_v0.tif`;
-        }  if (this.#currentVariable.value === "precip") {
-             historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/precip/COG_${this.currentYear}_${this.currentMonth}_precipitation_v1.tif`;
+        if (this.#currentVarLeft.value === "temp") {
+             historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}_MeanTemperature_v0.tif`;
+        }  if (this.#currentVarLeft.value === "precip") {
+             historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/precip/COG_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}_precipitation_v1.tif`;
         }
-
-
         return new GeoTIFF({
             normalize: false,
-            sources: [
-                {
-                    url: historicLayer,
-                },
-            ],
+            sources: [{url: historicLayer}]
+        });
+    }
+    private createSourceRight() {
+        let historicLayer: string;
+        if (this.#currentVarRight.value === "temp") {
+            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}_MeanTemperature_v0.tif`;
+        }  if (this.#currentVarRight.value === "precip") {
+            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/precip/COG_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}_precipitation_v1.tif`;
+        }
+        return new GeoTIFF({
+            normalize: false,
+            sources: [{url: historicLayer}]
         });
     }
     

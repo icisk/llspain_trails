@@ -55,7 +55,7 @@ export class HistoricClimateMapProvider implements MapConfigProvider {
                 }),
                 // GeoTIFF-Rasterlayer für Temperaturdaten
                 new SimpleLayer({
-                    id: "mean_temp_1", 
+                    id: "left", 
                     title: "Mean Temperature (2000-01)",
                     olLayer: new WebGLTileLayer({
                         source: new GeoTIFF({
@@ -95,7 +95,7 @@ export class HistoricClimateMapProvider implements MapConfigProvider {
                     isBaseLayer: false
                 }),
                 new SimpleLayer({
-                    id: "mean_temp_2",
+                    id: "right",
                     title: "Mean Temperature (2000-01)",
                     olLayer: new WebGLTileLayer({
                         source: new GeoTIFF({

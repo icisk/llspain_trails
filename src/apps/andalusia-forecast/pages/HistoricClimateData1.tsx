@@ -19,32 +19,35 @@ import {DynamicPrecipitationLegend} from "../components/Legends/DynamicLegend";
 import { LayerSwipe } from '../components/LayerSwipe/LayerSwipe';
 import { isFormElement } from 'react-router-dom/dist/dom';
 import { map } from 'highcharts';
-import {HistoricPicker} from "../components/VariablePicker/HistoricPicker";
+import {HistoricPickerLeft} from "../components/VariablePicker/HistoricPickerLeft";
+import {HistoricPickerRight} from "../components/VariablePicker/HistoricPickerRight";
+import {useService} from "open-pioneer:react-hooks";
+import {Selection} from "../components/VariablePicker/HistoricPickerLeft";
+import {Knecht} from "../components/Legends/Knecht";
 
 const HistoricClimateData1 = () => {
     const intl = useIntl();
-
+    const histLayerHandler = useService<HistoricLayerHandler>("app.HistoricLayerHandler");
+    
     const mapRef = useRef<HTMLDivElement>(null);
     const [leftLayers, setLeftLayers]= useState<Layer[]>();
     const [rightLayers, setRightLayers]= useState<Layer[]>();
     const [sliderValue, setSliderValue] = useState<number>(50);
 
-    const [variableValue, setVariableValue] = useState<{ [key: string]: string }>({
-        left: '',  
-        right: '',  
-    });
+
     
     const mapModel = useMapModel(MAP_ID);
 
     useEffect(() => {
         if(mapModel.map){
             const map = mapModel.map;
-            const leftLayer1 = map.layers.getLayerById("mean_temp_1") as SimpleLayer;
+            const leftLayer1 = map.layers.getLayerById("left") as SimpleLayer;
             setLeftLayers([leftLayer1.olLayer as Layer])
-            const rightLayer1 = map.layers.getLayerById("mean_temp_2") as SimpleLayer;
+            const rightLayer1 = map.layers.getLayerById("right") as SimpleLayer;
             setRightLayers([rightLayer1.olLayer as Layer])
         }
     }, [mapModel])
+
 
 
 
@@ -52,35 +55,52 @@ const HistoricClimateData1 = () => {
         [key: string]: string;
     };
 
-    function variableChange(groupName: string) {
-        return (e: any) => {
-            setVariableValue((prevValues: VariableValues) => ({
-                ...prevValues,
-                [groupName]: e,
-            }));
-            console.log(e, groupName)
-        };
+
+    
+    function onLeftPickerChange(field: keyof Selection,value:string | number ) {
+        if (field === 'year') {
+            histLayerHandler.setYearLeft(value as number);
+        } else if (field === 'month') {
+            histLayerHandler.setMonthLeft(value as number);
+        } else if (field === 'var') {
+            histLayerHandler.setVarLeft(value as string);
+        }
+    }
+
+    function onRightPickerChange(field: keyof Selection,value:string | number ) {
+        if (field === 'year') {
+            histLayerHandler.setYearRight(value as number);
+        } else if (field === 'month') {
+            histLayerHandler.setMonthRight(value as number);
+        } else if (field === 'var') {
+            histLayerHandler.setVarRight(value as string);
+        }
     }
     
     //HistoricClimateHook1(mapRef);
     HistoricClimateHook2(mapRef);
-    console.log(variableValue)
+    
     return (
 <Box>
     <Header subpage={'historic_compare'} />
     <Box>
         <HStack>
-            <HistoricPicker variableChange={variableChange('left')} selectedVar={variableValue['left']}/>
-            <HistoricPicker variableChange={variableChange('right')} selectedVar={variableValue['right']}/>
+            <HistoricPickerLeft onChange={onLeftPickerChange}/>
+            <HistoricPickerRight onChange={onRightPickerChange}/>
         </HStack>
             <Container flex={2} minWidth={"container.xl"}>
                 <Box width="100%" height="600px" position="relative">
                     <MainMap MAP_ID={MAP_ID}/>
                     <DynamicPrecipitationLegend />
+                    <Knecht />
                 </Box>
 
                 {(leftLayers && rightLayers && mapModel.map) &&
-                    <LayerSwipe map={mapModel.map} sliderValue={sliderValue} onSliderValueChanged={(newValue) => {setSliderValue(newValue)}} leftLayers={leftLayers} rightLayers={rightLayers} />
+                    <LayerSwipe map={mapModel.map} 
+                                sliderValue={sliderValue} 
+                                onSliderValueChanged={(newValue) => {setSliderValue(newValue)}} 
+                                leftLayers={leftLayers} 
+                                rightLayers={rightLayers} />
                 }
             </Container>     
    
