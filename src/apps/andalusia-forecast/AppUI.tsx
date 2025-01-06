@@ -14,7 +14,7 @@ import { ApplicationContext } from "@open-pioneer/runtime";
 const AppUI = () => {
 //living-labs/guadalquivir--es/
     return (
-        <Router basename="https://i-cisk.dev.52north.org/living-labs/guadalquivir--es/">
+        <Router basename="/">
             <Navbar/>
             <Routes>
                 <Route path="/" element={<Home />} />
