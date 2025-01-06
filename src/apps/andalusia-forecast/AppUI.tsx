@@ -12,9 +12,9 @@ import {useIntl, useService} from "open-pioneer:react-hooks";
 import { ApplicationContext } from "@open-pioneer/runtime";
 
 const AppUI = () => {
-
+//living-labs/guadalquivir--es/
     return (
-        <Router>
+        <Router basename="https://i-cisk.dev.52north.org/living-labs/guadalquivir--es/">
             <Navbar/>
             <Routes>
                 <Route path="/" element={<Home />} />

@@ -10,6 +10,8 @@ import { register } from "ol/proj/proj4";
 import proj4 from "proj4";
 import { get as getProjection } from "ol/proj";
 import { createCazorlaLayer, createLosPedrochesLayer } from "../components/utils/regionLayers";
+import {DeclaredService} from "@open-pioneer/runtime";
+import {Month, Variable} from "./PrecipitationLayerHandler";
 
 // Registrierung von EPSG:25830
 proj4.defs(
@@ -30,7 +32,17 @@ const orange = '#ec8647BC'
 const red = '#832525BC'
 const dark_red = '#53050aBC'
 
-export class HistoricClimateMapProvider2 implements MapConfigProvider {
+
+export interface HistoricMapProviderFace
+    extends DeclaredService<"app.HistoricMapProvider"> {
+    currentMonth: Month;
+    currentVariable: Variable;
+    setMonth(month: Month): void;
+    setVariable(variable: Variable): void;
+}
+
+
+export class HistoricClimateMapProvider2 implements HistoricMapProviderFace {
     mapId = MAP_ID2;
 
     async getMapConfig(): Promise<MapConfig> {

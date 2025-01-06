@@ -14,7 +14,7 @@ RUN pnpm install
 # option disabled as build is failing atm
 # should be enabled in production deployment image build
 # RUN pnpm install --frozen-lockfile
-RUN pnpm build
+RUN pnpm build 
 
 FROM nginxinc/nginx-unprivileged:stable-alpine-slim
 

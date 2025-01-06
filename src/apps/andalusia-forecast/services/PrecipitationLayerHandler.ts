@@ -6,8 +6,8 @@ import { GeoTIFF } from "ol/source";
 import {useService} from "open-pioneer:react-hooks";
 
 import { MAP_ID } from "./MidtermForecastMapProvider";
-import {types} from "sass";
-import List = types.List;
+
+
 
 interface References {
     mapRegistry: MapRegistry;

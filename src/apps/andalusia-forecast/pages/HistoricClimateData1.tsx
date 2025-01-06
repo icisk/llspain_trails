@@ -71,7 +71,10 @@ const HistoricClimateData1 = () => {
         if (field === 'year') {
             histLayerHandler.setYearRight(value as number);
         } else if (field === 'month') {
+            histLayerHandler.setYearRight(histLayerHandler.currentYearRight)
+            histLayerHandler.setVarRight(histLayerHandler.currentVarRight)
             histLayerHandler.setMonthRight(value as number);
+            
         } else if (field === 'var') {
             histLayerHandler.setVarRight(value as string);
         }

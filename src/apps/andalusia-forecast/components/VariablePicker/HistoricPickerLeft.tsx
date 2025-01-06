@@ -79,7 +79,7 @@ export function HistoricPickerLeft(props: HistoricPickerProps) {
                             {intl.formatMessage({ id: "global.controls.sel_year" })}
                         </>                        
                         <Select
-                            placeholder={intl.formatMessage({ id: "global.vars.year" })}
+                            // placeholder={intl.formatMessage({ id: "global.vars.year" })}
                             value={currentYear}
                             onChange={(e) => props.onChange('year', parseInt(e.target.value))}
                         >
@@ -98,7 +98,8 @@ export function HistoricPickerLeft(props: HistoricPickerProps) {
                             {intl.formatMessage({ id: "global.controls.sel_month" })}
 
                         </>
-                        <Select placeholder={intl.formatMessage({ id: "global.vars.month" })}
+                        <Select 
+                        // placeholder={intl.formatMessage({ id: "global.vars.month" })}
                         value={currentMonth}
                         onChange={(e) => props.onChange('month', parseInt(e.target.value))}>
                             {months.map((month) => (

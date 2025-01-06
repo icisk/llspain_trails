@@ -24,7 +24,9 @@ export enum Month {
     December = "12",
 }
 
-export type Year = number;
+export enum Year  { "dummy" = 2000, 
+                    "dummy2" = 2005
+};
 
 export enum Variable {
     Precipitation = "precip",
@@ -78,10 +80,10 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
     private layerLeft: WebGLTileLayer | undefined;
     private layerRight: WebGLTileLayer | undefined;
     #currentMonthLeft: Reactive<Month> = reactive(Month.January);
-    #currentYearLeft: Reactive<Year> = reactive();
+    #currentYearLeft: Reactive<Year> = reactive(Year.dummy);
     #currentVarLeft: Reactive<Variable> = reactive("temp");
-    #currentMonthRight: Reactive<Month> = reactive(Month.January);
-    #currentYearRight: Reactive<Year> = reactive();
+    #currentMonthRight: Reactive<Month> = reactive(Month.August);
+    #currentYearRight: Reactive<Year> = reactive(Year.dummy2);
     #currentVarRight: Reactive<Variable> = reactive("temp");
    
 
@@ -129,6 +131,7 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
     }
     setMonthRight(month: Month): void {
         this.#currentMonthRight.value = month;
+        console.log()
         this.layerRight?.setSource(this.createSourceRight());
     }
 
