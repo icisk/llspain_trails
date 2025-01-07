@@ -4,7 +4,7 @@ import OSM from "ol/source/OSM";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import GeoJSON from "ol/format/GeoJSON";
-import { Style, Fill, Stroke, Circle } from 'ol/style';
+import { Style, Stroke, Circle, Fill } from 'ol/style';
 import { register } from "ol/proj/proj4";
 import proj4 from "proj4";
 import { createCazorlaLayer, createLosPedrochesLayer } from "../components/utils/regionLayers";
@@ -54,13 +54,13 @@ export class HistoricClimateStationsMapProvider implements MapConfigProvider {
 
         this.studyAreaOutlineLayer = new VectorLayer({
             source: new VectorSource({
-                url: 'path/to/study_area_outline.geojson', // Replace with the actual path to your GeoJSON file
+                url: 'https://i-cisk.dev.52north.org/data/collections/ll_spain_ll_area/items?f=json',
                 format: new GeoJSON(),
                 projection: 'EPSG:4326'
             }),
             style: new Style({
                 stroke: new Stroke({
-                    color: '#ffcc33',
+                    color: 'black',
                     width: 2
                 })
             }),
@@ -88,16 +88,6 @@ export class HistoricClimateStationsMapProvider implements MapConfigProvider {
                     isBaseLayer: true
                 }),
                 new SimpleLayer({
-                    title: "Study Area Outline",
-                    olLayer: this.studyAreaOutlineLayer,
-                    isBaseLayer: false
-                }),
-                new SimpleLayer({
-                    title: "Stations",
-                    olLayer: this.stationsLayer,
-                    isBaseLayer: false
-                }),
-                new SimpleLayer({
                     title: "Cazorla",
                     olLayer: createCazorlaLayer(),
                     isBaseLayer: false
@@ -106,7 +96,18 @@ export class HistoricClimateStationsMapProvider implements MapConfigProvider {
                     title: "Los Pedroches",
                     olLayer: createLosPedrochesLayer(),
                     isBaseLayer: false
+                }),
+                new SimpleLayer({
+                    title: "Study Area Outline",
+                    olLayer: this.studyAreaOutlineLayer,
+                    isBaseLayer: false
+                }),
+                new SimpleLayer({
+                    title: "Stations",
+                    olLayer: this.stationsLayer,
+                    isBaseLayer: false
                 })
+                
             ]
         };
     }

@@ -20,11 +20,11 @@ const AppUI = () => {
                 <Route path="/" element={<Home />} />
                 <Route path="/forecast" element={<Forecast />} />
                 <Route path="/historicclimatedata1" element={<HistoricClimateData1 />} />
+                <Route path="/historicclimatestations" element={<HistoricClimateStations />} />
                 <Route path="/historicclimatedata2" element={<HistoricClimateData2 />} />
                 <Route path="/projections" element={<Projections />} />
                 <Route path="/phenology" element={<Phenology />} />
                 <Route path="/hydrologicalservice" element={<HydrologicalService />} />
-                <Route path="/historicclimatestations" element={<HistoricClimateStations />} />
             </Routes>
         </Router>
     );
