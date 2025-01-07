@@ -9,6 +9,7 @@ import { useMapModel } from "@open-pioneer/map";
 import { MAP_ID } from '../services/HistoricClimateStationsMapProvider';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import { RegionZoom } from "../components/RegionZoom/RegionZoom"; // Import RegionZoom
 
 import SelectInteraction from "ol/interaction/Select";
 import { click } from "ol/events/condition";
@@ -238,6 +239,9 @@ const HistoricClimateStations = () => {
                                 {intl.formatMessage({ id: "global.controls.toggle_stations" })}
                             </Switch>
                         </Box>
+                    </Box>
+                    <Box width="100000%" pt={6}> {/* no idea why, but when i dont move it out of view the buttons are rendered twice */}
+                        <RegionZoom MAP_ID={MAP_ID} /> {/* Added RegionZoom below the map */}
                     </Box>
                 </Container>
 

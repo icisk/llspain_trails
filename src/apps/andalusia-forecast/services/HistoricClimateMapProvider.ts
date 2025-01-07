@@ -39,31 +39,6 @@ export class HistoricClimateMapProvider implements MapConfigProvider {
     mapId = MAP_ID;
     stationsLayer: VectorLayer;
 
-    constructor() {
-        this.stationsLayer = new VectorLayer({
-            source: new VectorSource({
-                url: 'https://i-cisk.dev.52north.org/data/collections/ll_spain_creaf_in_boundary/items?f=json&limit=1000',
-                format: new GeoJSON(),
-                projection: 'EPSG:4326'
-            }),
-            style: (feature) => {
-                return new Style({
-                    image: new Circle({
-                        radius: 5, 
-                        fill: new Fill({
-                            color: 'grey'
-                        }),
-                        stroke: new Stroke({
-                            color: 'black',
-                            width: 1
-                        })
-                    })
-                });
-            },
-            zIndex: 200
-        });
-        this.stationsLayer.set('title', 'Stations');
-    }
 
     async getMapConfig(): Promise<MapConfig> {
         return {
@@ -121,11 +96,6 @@ export class HistoricClimateMapProvider implements MapConfigProvider {
                         },
                         properties: { title: "Mean Temperature (2000-01)" }
                     }),
-                    isBaseLayer: false
-                }),
-                new SimpleLayer({
-                    title: "Stations",
-                    olLayer: this.stationsLayer,
                     isBaseLayer: false
                 }),
                 new SimpleLayer({
