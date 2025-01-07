@@ -63,6 +63,10 @@ messages:
     nav: Historic Climate Stations
     heading: Historic Climate Stations
     heading_descr: Historic climate station data
+    radio_buttons:
+      temp: Temperature
+      precip: Precipitation
+      temp_precip: Temperature and Precipitation
   projections:
     nav: Climate Projections (pending)
     heading: Climate Projections
