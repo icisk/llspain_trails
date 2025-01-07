@@ -59,16 +59,33 @@ const HistoricClimateData1 = () => {
     const [longestTimeSeries, setLongestTimeSeries] = useState<String>(null)
 
     const [chartOptions, setChartOptions] = useState({
-        chart: { type: 'column' },
+        chart: {
+            type: "column",
+            zoomType: "x"
+        },
         title: { text: intl.formatMessage({ id: "global.plot.header_precip" }) },
-        xAxis: { categories: [] },
-        yAxis: { title: { text: "Precipitation (mm)" }, min: 0 },
-        series: [],
-        plotOptions: {
-            series: {
-                zones: []
+        xAxis: { categories: tempTimeSeries ? tempTimeSeries : null , 
+                 title: {text: "Date"} },
+        yAxis:  [
+            {title: { text: "Precipitation (mm)" }, min: 0, max: 400, opposite: false},
+            {title: {text: "Temperatura (ºC)" }, min: -20, max: 50, opposite: true}
+        ],
+        series: [
+            {
+                name: "Precipitation",
+                data: precipData ? precipData?.ranges?.historic_precip?.values : null,
+                type: "column",
+                color: "blue",
+                yAxis: 0
+            },
+            {
+                name: "Temperatura",
+                data: tempData ? tempData?.ranges?.historic_precip?.values : null,
+                type: "spline",
+                color: "orange",
+                yAxis: 1
             }
-        }
+        ]
     });
 
     const mapModel = useMapModel(MAP_ID);
@@ -158,7 +175,7 @@ const HistoricClimateData1 = () => {
                 zoomType: "x"
             },
             title: { text: intl.formatMessage({ id: "global.plot.header_precip" }) },
-            xAxis: { longestTimeSeries, title: {text: "Date"} },
+            xAxis: { categories: tempTimeSeries, title: {text: "Date"} },
             yAxis:  [
                 {title: { text: "Precipitation (mm)" }, min: 0, max: 400, opposite: false},
                 {title: {text: "Temperatura (ºC)" }, min: -20, max: 50, opposite: true}
