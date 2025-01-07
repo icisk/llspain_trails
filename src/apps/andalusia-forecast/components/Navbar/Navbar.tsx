@@ -1,11 +1,9 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './Navbar.css';
-import {Box, HStack, Button} from "@chakra-ui/react";
-import {useIntl} from "open-pioneer:react-hooks";
+import { Box, HStack, Button } from "@chakra-ui/react";
+import { useIntl } from "open-pioneer:react-hooks";
 import NavButton from "./NavButton";
-
-
 
 const Navbar: React.FC = () => {
     const intl = useIntl();
@@ -19,10 +17,10 @@ const Navbar: React.FC = () => {
                 <NavButton to="/projections" id="projections.nav" />
                 <NavButton to="/phenology" id="phenology.nav" />
                 <NavButton to="/hydrologicalservice" id="hydro_service.nav" />
+                <NavButton to="/historicclimatestations" id="historic_stations.nav" /> {/* Add the new link */}
             </HStack>
         </Box>
-
-);
+    );
 };
 
 export default Navbar;

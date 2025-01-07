@@ -36,6 +36,9 @@ export default defineBuildConfig({
         },
         HistoricClimateMapProvider2: {
             provides: ["map.MapConfigProvider"]
+        },
+        HistoricClimateStationsMapProvider: { // Added new map provider
+            provides: ["map.MapConfigProvider"]
         }
     }
 });
