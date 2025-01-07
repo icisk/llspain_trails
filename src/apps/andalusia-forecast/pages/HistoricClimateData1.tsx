@@ -355,54 +355,7 @@ const HistoricClimateData1 = () => {
 
                 <Box margin={50}></Box>
 
-                {/* Second map section (similar to first) */}
-                <Container flex={2} minWidth={"container.xl"}>
-                    {/* Similar structure to first map section */}
-                    <div style={{ flex: 1 }}>
-                        <div style={{ margin: 20 }}>
-                            <HStack>
-                                <>
-                                    {intl.formatMessage({ id: "global.controls.sel_year" })}
-                                </>
-                                <Select placeholder={intl.formatMessage({ id: "global.vars.year" })}>
-                                    {[...Array(20)].map((_, i) => 2000 + i).map((year) => (
-                                        <option key={year} value={year}>
-                                            {year}
-                                        </option>
-                                    ))}
-                                </Select>
-                            </HStack>
-                            <ChangeMonth />
-                        </div>
-                        <RadioGroup defaultValue="1">
-                            <p>{intl.formatMessage({ id: "global.controls.sel_var" })}:</p>
-                            <VStack gap="1">
-                                <HStack>
-                                    <Radio
-                                        value="1">{intl.formatMessage({ id: "global.vars.temp" })}</Radio>
-                                    <InfoTooltip i18n_path="historic_compare.info.temp" />
-                                </HStack>
-                                <HStack>
-                                    <Radio
-                                        value="2">{intl.formatMessage({ id: "global.vars.precip" })}</Radio>
-                                    <InfoTooltip i18n_path="historic_compare.info.precip" />
-                                </HStack>
-                            </VStack>
-                        </RadioGroup>
-                    </div>
-                    <Box width="100%" height="500px" position="relative">
-                        <MainMap MAP_ID={MAP_ID2} />
-                        <DynamicPrecipitationLegend />
-                        <Box position="absolute" bottom="10px" left="10px">
-                            <Switch
-                                isChecked={stationsVisibleMap2}
-                                onChange={() => setStationsVisibleMap2(!stationsVisibleMap2)}
-                            >
-                                {intl.formatMessage({ id: "global.controls.toggle_stations" })}
-                            </Switch>
-                        </Box>
-                    </Box>
-                </Container>
+
 
                 <Box width="100%" height="300px" position="relative" mt={4}>
                     <HighchartsReact highcharts={Highcharts} options={chartOptions} />
