@@ -20,6 +20,7 @@ import HighchartsReact from 'highcharts-react-official';
 
 import SelectInteraction from "ol/interaction/Select";
 import { click } from "ol/events/condition";
+import { connect } from 'http2';
 
 const HistoricClimateData1 = () => {
     const intl = useIntl();
@@ -199,15 +200,15 @@ const HistoricClimateData1 = () => {
             }
             if (data.t_mean?.features) {
                 console.log("Mapping Mean Temperature Data:", data.t_mean.features);
-                mapFeaturesToSeries(data.t_mean.features, "MT_MONTHLY", meanTempSeriesData);
+                mapFeaturesToSeries(data.t_mean.features, "MT_monthly", meanTempSeriesData);
             }
             if (data.t_max?.features) {
                 console.log("Mapping Max Temperature Data:", data.t_max.features);
-                mapFeaturesToSeries(data.t_max.features, "MX_MONTHLY", maxTempSeriesData);
+                mapFeaturesToSeries(data.t_max.features, "MX_monthly", maxTempSeriesData);
             }
             if (data.t_min?.features) {
                 console.log("Mapping Min Temperature Data:", data.t_min.features);
-                mapFeaturesToSeries(data.t_min.features, "MN_MONTHLY", minTempSeriesData);
+                mapFeaturesToSeries(data.t_min.features, "MN_monthly", minTempSeriesData);
             }
     
             // Log the series data to debug
@@ -218,20 +219,23 @@ const HistoricClimateData1 = () => {
     
             // Update the chart options
             setChartOptions({
-                chart: { type: "column" },
+                chart: {
+                    type: "column",
+                    zoomType: "x"
+                },
                 title: { text: intl.formatMessage({ id: "global.plot.header_precip" }) },
                 xAxis: { categories, title: { text: "Date" } },
                 yAxis: [
                     {
                         // Left axis for precipitation
                         title: { text: "Precipitation (mm)" },
-                        min: 0,
+                        //min: 0,
                         opposite: false, // Default: left
                     },
                     {
                         // Right axis for temperature
                         title: { text: "Temperature (°C)" },
-                        min: 0,
+                        //min: 0,
                         opposite: true, // Display on the right
                     },
                 ],
@@ -241,26 +245,29 @@ const HistoricClimateData1 = () => {
                         data: precipSeriesData?.length ? precipSeriesData : [],
                         type: "column",
                         color: "blue",
-                        yAxis: 0, // Left axis
+                        yAxis: 0, // Left axis,
                     },
                     {
                         name: "Mean Temperature",
                         data: meanTempSeriesData?.length ? meanTempSeriesData : [],
-                        type: "scatter",
+                        //connectNulls: true,
+                        type: "spline",
                         color: "orange",
                         yAxis: 1, // Right axis
                     },
                     {
                         name: "Max Temperature",
                         data: maxTempSeriesData?.length ? maxTempSeriesData : [],
-                        type: "scatter",
+                        //connectNulls: true,
+                        type: "spline",
                         color: "red",
                         yAxis: 1, // Right axis
                     },
                     {
                         name: "Min Temperature",
                         data: minTempSeriesData?.length ? minTempSeriesData : [],
-                        type: "scatter",
+                        //connectNulls: true,
+                        type: "spline",
                         color: "green",
                         yAxis: 1, // Right axis
                     },
