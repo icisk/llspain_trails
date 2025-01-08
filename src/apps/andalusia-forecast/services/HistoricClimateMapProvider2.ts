@@ -12,7 +12,6 @@ import { get as getProjection } from "ol/proj";
 import { createCazorlaLayer, createLosPedrochesLayer } from "../components/utils/regionLayers";
 import {DeclaredService} from "@open-pioneer/runtime";
 import {Month, Variable} from "./PrecipitationLayerHandler";
-
 // Registrierung von EPSG:25830
 proj4.defs(
     "EPSG:25830",

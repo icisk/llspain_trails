@@ -18,6 +18,7 @@ messages:
       sel_month: Select Month
       sel_year: Select Year
       sel_var: Select Variable
+      toggle_stations: toggle stations
     map:
       coord_clicked: Clicked Coordinates at {x} & {y} #bsp mit dynamischen inputs
       no_coord_clicked: No clicked coordinates yet
