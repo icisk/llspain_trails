@@ -68,7 +68,7 @@ const HistoricClimateData1 = () => {
                  title: {text: "Date"} },
         yAxis:  [
             {title: { text: "Precipitation (mm)" }, min: 0, max: 400, opposite: false},
-            {title: {text: "Temperatura (ºC)" }, min: -20, max: 50, opposite: true}
+            {title: {text: "Temperatura (ºC)" }, min: -10, max: 40, opposite: true}
         ],
         series: [
             {
@@ -115,7 +115,7 @@ const HistoricClimateData1 = () => {
                 const response = await fetch(url);
                 if (!response.ok) throw new Error("Network response was not ok");
                 const jsonData = await response.json();
-                setPrecipData(jsonData);
+                setTempData(jsonData);
             } catch (err :any) {
                 setError(err.message);
             } finally {
@@ -129,8 +129,10 @@ const HistoricClimateData1 = () => {
             const timeSeries = [];
 
             while (startDate <= stopDate) {
-                timeSeries.push(new Date(startDate).toISOString());
-                startDate.setMonth(startDate.getMonth() + 1); // Increment by 1 month
+                timeSeries.push(new Date(startDate).toISOString().split("T")[0].slice(0, 7));
+                
+                startDate.setMonth(startDate.getMonth() + 1);
+                
             }
             return timeSeries;
         }
@@ -149,8 +151,7 @@ const HistoricClimateData1 = () => {
         if (precipTimeSeries != null && tempTimeSeries != null) {
             setLongestTimeSeries(precipTimeSeries.length > tempTimeSeries.length ? precipTimeSeries : tempTimeSeries);
         }
-        
-        console.log(longestTimeSeries);
+
     }, [clickedCoordinates]);
 
 
@@ -164,9 +165,7 @@ const HistoricClimateData1 = () => {
         }
     }, [mapModel])
 
-    
-
-
+   
 
     useEffect(() => {
         setChartOptions({
@@ -178,7 +177,7 @@ const HistoricClimateData1 = () => {
             xAxis: { categories: tempTimeSeries, title: {text: "Date"} },
             yAxis:  [
                 {title: { text: "Precipitation (mm)" }, min: 0, max: 400, opposite: false},
-                {title: {text: "Temperatura (ºC)" }, min: -20, max: 50, opposite: true}
+                {title: {text: "Temperatura (ºC)" }, min: -10, max: 40, opposite: true}
             ],
             series: [
                 {
@@ -190,7 +189,7 @@ const HistoricClimateData1 = () => {
                 },
                 {
                     name: "Temperatura",
-                    data: tempData ? tempData?.ranges?.historic_precip?.values : null,
+                    data: tempData ? tempData?.ranges?.historic_temperature?.values : null,
                     type: "spline",
                     color: "orange",
                     yAxis: 1

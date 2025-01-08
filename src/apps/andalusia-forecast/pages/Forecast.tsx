@@ -30,13 +30,9 @@ export function Forecast() {
     const { data, loading, error } = useFetchData(clickedCoordinates);
     const mapState = useMapModel(MAP_ID);
     const precipitationService = useService<PrecipitationLayerHandler>("app.PrecipitationLayerHandler");
-
     
     const currentVariable = precipitationService?.currentVariable;
-    console.log(currentVariable);
     
-    
-
     // State for managing chart options
     const [chartOptions, setChartOptions] = useState({
         title: { text: intl.formatMessage({ id: "global.plot.header_precip" }) },
