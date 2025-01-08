@@ -51,7 +51,7 @@ const HistoricClimateData1 = () => {
             type: "column",
             zoomType: "x"
         },
-        title: { text: intl.formatMessage({ id: "global.plot.header_precip" }) },
+        title: { text: intl.formatMessage({ id: "global.plot.header_temp_precip" }) },
         xAxis: { categories: tempTimeSeries ? tempTimeSeries : null , 
                  title: {text: "Date"} },
         yAxis:  [
@@ -157,7 +157,7 @@ const HistoricClimateData1 = () => {
                 type: "column",
                 zoomType: "x"
             },
-            title: { text: intl.formatMessage({ id: "global.plot.header_precip" }) },
+            title: { text: intl.formatMessage({ id: "global.plot.header_temp_precip" }) },
             xAxis: { categories: tempTimeSeries, title: {text: "Date"} },
             yAxis:  [
                 {title: { text: "Precipitation (mm)" }, min: 0, max: 400, opposite: false},

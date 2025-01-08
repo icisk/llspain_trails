@@ -41,7 +41,7 @@ const HistoricClimateStations = () => {
     
     const [chartOptions, setChartOptions] = useState<Highcharts.Options>({
         chart: { type: 'column' },
-        title: { text: intl.formatMessage({ id: "global.plot.header_precip" }) },
+        title: { text: intl.formatMessage({ id: "global.plot.header_temp_precip" }) },
         xAxis: { categories: [] },
         yAxis: { title: { text: "Precipitation (mm)" }, min: 0 },
         series: [] as SeriesOptions[],
@@ -237,7 +237,7 @@ const HistoricClimateStations = () => {
                         type: "column",
                         zoomType: "x"
                     },
-                    title: { text: intl.formatMessage({ id: "global.plot.header_precip" }) },
+                    title: { text: intl.formatMessage({ id: "global.plot.header_temp_precip" }) },
                     xAxis: { categories, title: { text: "Date" } },
                     yAxis: [
                         {
