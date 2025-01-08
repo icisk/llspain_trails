@@ -62,6 +62,14 @@ messages:
     nav: Station Data
     heading: Historic station Data
     heading_descr: historic station data by METEO
+  historic_climate_stations:
+    nav: Historic Climate Stations
+    heading: Historic Climate Stations
+    heading_descr: Historic climate station data
+    radio_buttons:
+      temp: Temperature
+      precip: Precipitation
+      temp_precip: Temperature and Precipitation
   projections:
     nav: Climate Projections (pending)
     heading: Climate Projections
@@ -74,3 +82,13 @@ messages:
     nav: Hydrological Service (DATA BY DEZ)
     heading: Hydrological Service
     heading_descr: This is a story map about hydrological facts
+  historic_stations:
+    nav: Historic Climate Stations
+    heading: Historic Climate Stations
+    heading_descr: This map shows time series of climate stations
+overrides:
+  '@open-pioneer/map-navigation':
+    zoom-out:
+      title: zoom out
+    zoom-in:
+      title: zoom in
