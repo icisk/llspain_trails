@@ -1,24 +1,22 @@
-import React, { useState, useEffect } from "react";
-import { Box, Center, Container, Flex, HStack, Spacer } from "@open-pioneer/chakra-integration";
-import { useIntl } from "open-pioneer:react-hooks";
-import { ChangeMonth } from "../controls/ChangeMonth";
-import { MAP_ID } from "../services/MidtermForecastMapProvider";
-import { ChangeVariable } from "../controls/ChangeVariable";
-import { useFetchData } from "../hooks/useFetchData";
+import React, {useEffect, useState} from "react";
+import {Box, Center, Container, HStack} from "@open-pioneer/chakra-integration";
+import {useIntl, useService} from "open-pioneer:react-hooks";
+import {ChangeMonth} from "../controls/ChangeMonth";
+import {MAP_ID} from "../services/MidtermForecastMapProvider";
+import {ChangeVariable} from "../controls/ChangeVariable";
+import {useFetchData} from "../hooks/useFetchData";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import { useMapModel } from "@open-pioneer/map";
+import {useMapModel} from "@open-pioneer/map";
 import MapBrowserEvent from "ol/MapBrowserEvent";
-import { transform } from "ol/proj";
-import { Vector as VectorLayer } from "ol/layer";
-import { Vector as VectorSource } from "ol/source";
-import { useService } from "open-pioneer:react-hooks";
-import { PrecipitationLayerHandler } from "../services/PrecipitationLayerHandler";
-import { createMarker, markerStyle } from "../components/utils/marker";
-import { getMonthArray } from "../components/utils/globals";
-import { Header } from "../components/MainComponents/Header";
-import { MainMap } from "../components/MainComponents/MainMap";
-import { StaticPrecipitationLegend } from "../components/Legends/StaticPrecipitationLegend"; // Correct import statement
+import {transform} from "ol/proj";
+import {Vector as VectorLayer} from "ol/layer";
+import {Vector as VectorSource} from "ol/source";
+import {PrecipitationLayerHandler} from "../services/PrecipitationLayerHandler";
+import {createMarker, markerStyle} from "../components/utils/marker";
+import {Header} from "../components/MainComponents/Header";
+import {MainMap} from "../components/MainComponents/MainMap";
+import {StaticPrecipitationLegend} from "../components/Legends/StaticPrecipitationLegend"; // Correct import statement
 
 // Marker layer for displaying clicks
 const markerSource = new VectorSource();
@@ -40,7 +38,6 @@ export function Forecast() {
         yAxis: { title: { text: "Precipitation (mm)" }, min: 0, max: 350 },
         series: []
     });
-    
 
     useEffect(() => {
         if (data) {
@@ -82,7 +79,6 @@ export function Forecast() {
         }
     }, [mapState]);
     
-    
     // Handle map clicks to set clicked coordinates and add marker
     const handleMapClick = (event: MapBrowserEvent<MouseEvent>) => {
         const coordinatesEPSG3857 = event.coordinate;
@@ -95,7 +91,6 @@ export function Forecast() {
         const marker = createMarker(coordinatesEPSG3857, markerStyle)
         markerSource.addFeature(marker);
     };
-
 
     //console.log(getMonthArray())
     return (
@@ -113,7 +108,6 @@ export function Forecast() {
                 <MainMap MAP_ID={MAP_ID} />
                 <StaticPrecipitationLegend /> 
             </Box>
-
             <Box p={4}>
                 {/*<div style={{ marginBottom: "10px", fontSize: "16px" }}>*/}
                 {/*    {clickedCoordinates*/}

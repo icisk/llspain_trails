@@ -1,19 +1,16 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { Box, Switch } from "@open-pioneer/chakra-integration";
-import { VStack, Stack } from "@chakra-ui/react";
-import { Radio, RadioGroup } from '@chakra-ui/react'
-import { Container } from "@open-pioneer/chakra-integration";
-import { useIntl } from "open-pioneer:react-hooks";
-import { Header } from "../components/MainComponents/Header";
-import { MainMap } from "../components/MainComponents/MainMap";
-import { useMapModel } from "@open-pioneer/map";
-import { MAP_ID } from '../services/HistoricClimateStationsMapProvider';
+import React, {useEffect, useRef, useState} from 'react';
+import {Box, Container, Switch} from "@open-pioneer/chakra-integration";
+import {Radio, RadioGroup, Stack, VStack} from "@chakra-ui/react";
+import {useIntl} from "open-pioneer:react-hooks";
+import {Header} from "../components/MainComponents/Header";
+import {MainMap} from "../components/MainComponents/MainMap";
+import {useMapModel} from "@open-pioneer/map";
+import {MAP_ID} from '../services/HistoricClimateStationsMapProvider';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { RegionZoom } from "../components/RegionZoom/RegionZoom"; // Import RegionZoom
-
+import {RegionZoom} from "../components/RegionZoom/RegionZoom"; // Import RegionZoom
 import SelectInteraction from "ol/interaction/Select";
-import { click } from "ol/events/condition";
+import {click} from "ol/events/condition";
 
 const HistoricClimateStations = () => {
     const intl = useIntl();
@@ -64,9 +61,7 @@ const HistoricClimateStations = () => {
                 condition: click,
                 layers: (layer) => layer.get("title") === "Stations",
             });
-
             olMap.addInteraction(selectInteraction);
-
             selectInteraction.on("select", (event) => {
                 const selectedFeatures = event.selected;
                 if (selectedFeatures.length > 0) {
@@ -75,7 +70,6 @@ const HistoricClimateStations = () => {
                     setSelectedFeatureId(properties?.ID);
                 }
             });
-
             return () => {
                 olMap.removeInteraction(selectInteraction);
             };
@@ -87,19 +81,16 @@ const HistoricClimateStations = () => {
                 const fetchData = async (type: string, id: any, initialLimit: number) => {
                     let currentLimit = initialLimit;
                     let fetchedData = null;
-        
                     while (true) {
                         const url = `https://i-cisk.dev.52north.org/data/collections/AEMET_stations_${type}/items?f=json&lang=en-US&limit=${currentLimit}&skipGeometry=false&offset=0&CODI_INM=${id}`;
                         try {
                             setLoading(true);
                             const response = await fetch(url);
                             if (!response.ok) throw new Error("Network response was not ok");
-        
                             const jsonData = await response.json();
-                            console.log(`Fetched ${type} data (limit=${currentLimit}):`, jsonData);
-        
+                            //console.log(`Fetched ${type} data (limit=${currentLimit}):`, jsonData);
                             if (jsonData.numberMatched > jsonData.numberReturned) {
-                                console.log(`Increasing limit for ${type} to ${jsonData.numberMatched}`);
+                                //console.log(`Increasing limit for ${type} to ${jsonData.numberMatched}`);
                                 currentLimit = jsonData.numberMatched; // Set the limit to the total number of features
                             } else {
                                 fetchedData = jsonData;
@@ -112,7 +103,6 @@ const HistoricClimateStations = () => {
                             setLoading(false);
                         }
                     }
-        
                     // Save the fetched data to the state
                     if (fetchedData) {
                         setData((prevData) => ({
@@ -121,18 +111,15 @@ const HistoricClimateStations = () => {
                         }));
                     }
                 };
-        
                 const id = selectedFeatureId;
                 const initialLimit = 500;
                 const types = ["precip", "t_mean", "t_max", "t_min"]; // Datatypes to fetch
-        
                 types.forEach((type) => fetchData(type, id, initialLimit));
             }
         }, [selectedFeatureId]);
     
-    
         useEffect(() => {
-            console.log('Current data:', data);
+            //console.log('Current data:', data);
         }, [data]); 
     
         useEffect(() => {
@@ -144,19 +131,16 @@ const HistoricClimateStations = () => {
                     ...(data.t_max?.features || []),
                     ...(data.t_min?.features || []),
                 ];
-        
                 // Sort all features by date and find the earliest and latest date
                 const sortedAllFeatures = allFeatures.sort((a, b) => {
                     const dateA = new Date(a.properties.DATE);
                     const dateB = new Date(b.properties.DATE);
                     return dateA - dateB;
                 });
-        
                 if (sortedAllFeatures.length === 0) return; // No data available
-        
+                
                 const firstDate = new Date(sortedAllFeatures[0].properties.DATE);
                 const lastDate = new Date(sortedAllFeatures[sortedAllFeatures.length - 1].properties.DATE);
-        
                 // Create the categories (time axis) for the x-axis (months)
                 const categories = [];
                 const currentDate = new Date(firstDate);
@@ -167,16 +151,13 @@ const HistoricClimateStations = () => {
                     }
                     currentDate.setMonth(currentDate.getMonth() + 1);
                 }
-        
                 // Log the categories to debug
-                console.log("Categories:", categories);
-        
+                // console.log("Categories:", categories);
                 // Initialize series data
                 const precipSeriesData = new Array(categories.length).fill(null);
                 const meanTempSeriesData = new Array(categories.length).fill(null);
                 const maxTempSeriesData = new Array(categories.length).fill(null);
                 const minTempSeriesData = new Array(categories.length).fill(null);
-        
                 // Fill the series with the respective data
                 const mapFeaturesToSeries = (features, property, seriesData) => {
                     features.forEach((feature) => {
@@ -185,35 +166,32 @@ const HistoricClimateStations = () => {
                         if (index !== -1) {
                             seriesData[index] = feature.properties[property];
                         } else {
-                            console.log(`Date ${date} not found in categories`);
+                            // console.log(`Date ${date} not found in categories`);
                         }
                     });
                 };
-        
                 // Process the different data types
                 if (data.precip?.features) {
-                    console.log("Mapping Precipitation Data:", data.precip.features);
+                    // console.log("Mapping Precipitation Data:", data.precip.features);
                     mapFeaturesToSeries(data.precip.features, "PL_monthly", precipSeriesData);
                 }
                 if (data.t_mean?.features) {
-                    console.log("Mapping Mean Temperature Data:", data.t_mean.features);
+                    // console.log("Mapping Mean Temperature Data:", data.t_mean.features);
                     mapFeaturesToSeries(data.t_mean.features, "MT_monthly", meanTempSeriesData);
                 }
                 if (data.t_max?.features) {
-                    console.log("Mapping Max Temperature Data:", data.t_max.features);
+                    // console.log("Mapping Max Temperature Data:", data.t_max.features);
                     mapFeaturesToSeries(data.t_max.features, "MX_monthly", maxTempSeriesData);
                 }
                 if (data.t_min?.features) {
-                    console.log("Mapping Min Temperature Data:", data.t_min.features);
+                    // console.log("Mapping Min Temperature Data:", data.t_min.features);
                     mapFeaturesToSeries(data.t_min.features, "MN_monthly", minTempSeriesData);
                 }
-        
                 // Log the series data to debug
-                console.log("Precipitation Series Data:", precipSeriesData);
-                console.log("Mean Temperature Series Data:", meanTempSeriesData);
-                console.log("Max Temperature Series Data:", maxTempSeriesData);
-                console.log("Min Temperature Series Data:", minTempSeriesData);
-
+                // console.log("Precipitation Series Data:", precipSeriesData);
+                // console.log("Mean Temperature Series Data:", meanTempSeriesData);
+                // console.log("Max Temperature Series Data:", maxTempSeriesData);
+                // console.log("Min Temperature Series Data:", minTempSeriesData);
                 const allSeries = [
                     {
                         name: "Mean Temperature",
@@ -244,7 +222,6 @@ const HistoricClimateStations = () => {
                         yAxis: 0,
                     }
                 ];
-            
                 const filteredSeries =
                 selectedCategory === "1"
                     ? allSeries
@@ -253,9 +230,7 @@ const HistoricClimateStations = () => {
                     : selectedCategory === "3"
                     ? allSeries.filter((s) => s.name === "Precipitation")
                     : [];
-
-                console.log("Filtered Series:", filteredSeries);
-                    
+                // console.log("Filtered Series:", filteredSeries);
                 // Update the chart options
                 setChartOptions({
                     chart: {

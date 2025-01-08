@@ -1,36 +1,24 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Box, Slider, SliderTrack, SliderFilledTrack, SliderThumb } from "@open-pioneer/chakra-integration";
-import { HStack, Select, VStack } from "@chakra-ui/react";
-import { Container } from "@open-pioneer/chakra-integration";
-import { useIntl } from "open-pioneer:react-hooks";
-import { ChangeMonth } from "../controls/ChangeMonth";
-import { LayerBase, MapAnchor, MapContainer, SimpleLayer, useMapModel } from "@open-pioneer/map";
-import { ZoomIn, ZoomOut } from "@open-pioneer/map-navigation";
-import { RadioGroup, Radio } from "@open-pioneer/chakra-integration";
-import { InfoTooltip } from "../components/InfoTooltip/InfoTooltip";
-import { RegionZoom } from "../components/RegionZoom/RegionZoom";
-import { Header } from "../components/MainComponents/Header";
-import { MainMap } from "../components/MainComponents/MainMap";
-import { HistoricClimateHook1, HistoricClimateHook2 }  from '../hooks/HistoricClimatehook';
+import React, {useEffect, useRef, useState} from 'react';
+import {Box, Container} from "@open-pioneer/chakra-integration";
+import {HStack} from "@chakra-ui/react";
+import {useIntl, useService} from "open-pioneer:react-hooks";
+import {SimpleLayer, useMapModel} from "@open-pioneer/map";
+import {Header} from "../components/MainComponents/Header";
+import {MainMap} from "../components/MainComponents/MainMap";
+import {HistoricClimateHook2} from '../hooks/HistoricClimatehook';
 import Layer from "ol/layer/Layer";
-import { MAP_ID } from '../services/HistoricClimateMapProvider';
-import { MAP_ID2 } from '../services/HistoricClimateMapProvider2';
+import {MAP_ID} from '../services/HistoricClimateMapProvider';
 import {DynamicPrecipitationLegend} from "../components/Legends/DynamicLegend";
-import { LayerSwipe } from '../components/LayerSwipe/LayerSwipe';
-import { isFormElement } from 'react-router-dom/dist/dom';
-import Highcharts, { map } from 'highcharts';
-import {HistoricPickerLeft} from "../components/VariablePicker/HistoricPickerLeft";
+import {LayerSwipe} from '../components/LayerSwipe/LayerSwipe';
+import Highcharts from 'highcharts';
+import {HistoricPickerLeft, Selection} from "../components/VariablePicker/HistoricPickerLeft";
 import {HistoricPickerRight} from "../components/VariablePicker/HistoricPickerRight";
-import {useService} from "open-pioneer:react-hooks";
-import {Selection} from "../components/VariablePicker/HistoricPickerLeft";
 import {Knecht} from "../components/Legends/Knecht";
 import MapBrowserEvent from "ol/MapBrowserEvent";
 import {transform} from "ol/proj";
 import {createMarker, markerStyle} from "../components/utils/marker";
-import {useFetchData} from "../hooks/useFetchData";
-import { Vector as VectorLayer } from "ol/layer";
-import { Vector as VectorSource } from "ol/source";
-import * as domain from "node:domain";
+import {Vector as VectorLayer} from "ol/layer";
+import {Vector as VectorSource} from "ol/source";
 import HighchartsReact from "highcharts-react-official";
 
 
@@ -137,7 +125,6 @@ const HistoricClimateData1 = () => {
             return timeSeries;
         }
 
-
         const [x, y] = clickedCoordinates
         fetchPrecipData(x, y);
         fetchTempData(x, y);
@@ -154,7 +141,6 @@ const HistoricClimateData1 = () => {
 
     }, [clickedCoordinates]);
 
-
     useEffect(() => {
         if(mapModel.map){
             const map = mapModel.map;
@@ -164,8 +150,6 @@ const HistoricClimateData1 = () => {
             setRightLayers([rightLayer1.olLayer as Layer])
         }
     }, [mapModel])
-
-   
 
     useEffect(() => {
         setChartOptions({
@@ -197,7 +181,6 @@ const HistoricClimateData1 = () => {
             ]
         });
     }, [precipData, tempData]);
-    
     
     //click on map
     useEffect(() => {
@@ -234,8 +217,6 @@ const HistoricClimateData1 = () => {
         [key: string]: string;
     };
 
-
-    
     function onLeftPickerChange(field: keyof Selection,value:string | number ) {
         if (field === 'year') {
             histLayerHandler.setYearLeft(value as number);
@@ -292,7 +273,6 @@ const HistoricClimateData1 = () => {
         </div>
     </Box>
 </Box>
-
     );
 };
 

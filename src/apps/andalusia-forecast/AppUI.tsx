@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from './pages/Home';
 import { Forecast } from "./pages/Forecast";
 import HistoricClimateData1 from "./pages/HistoricClimateData1";
-import HistoricClimateData2 from "./pages/HistoricClimateData2";
 import Projections from "./pages/Projections";
 import Phenology from "./pages/Phenology";
 import HydrologicalService from "./pages/HydrologicalService";
@@ -21,7 +20,6 @@ const AppUI = () => {
                 <Route path="/forecast" element={<Forecast />} />
                 <Route path="/historicclimatedata1" element={<HistoricClimateData1 />} />
                 <Route path="/historicclimatestations" element={<HistoricClimateStations />} />
-                <Route path="/historicclimatedata2" element={<HistoricClimateData2 />} />
                 <Route path="/projections" element={<Projections />} />
                 <Route path="/phenology" element={<Phenology />} />
                 <Route path="/hydrologicalservice" element={<HydrologicalService />} />
