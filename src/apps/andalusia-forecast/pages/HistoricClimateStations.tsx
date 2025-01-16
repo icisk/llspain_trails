@@ -11,6 +11,7 @@ import HighchartsReact from 'highcharts-react-official';
 import {RegionZoom} from "../components/RegionZoom/RegionZoom"; // Import RegionZoom
 import SelectInteraction from "ol/interaction/Select";
 import {click} from "ol/events/condition";
+import DataProvider from "../services/StationDataService";
 
 const HistoricClimateStations = () => {
     const intl = useIntl();
@@ -18,6 +19,9 @@ const HistoricClimateStations = () => {
     const mapState = useMapModel(MAP_ID);
     const [stationsVisible, setStationsVisible] = useState(true);
     const [selectedFeatureId, setSelectedFeatureId] = useState(null);
+
+    const { stationData, SationLoading, StationError } = DataProvider();
+    console.log(stationData, SationLoading, StationError);
 
     // State for managing data
     interface DataState {
