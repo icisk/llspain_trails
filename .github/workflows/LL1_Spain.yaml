@@ -60,6 +60,8 @@ jobs:
       uses: docker/build-push-action@v6
       with:
         context: "${{ env.BUILD_CONTEXT }}"
+        build-args:
+          BASE_PATH=/living-labs/guadalquivir--es/
         push: ${{ github.event_name != 'pull_request' }}
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}

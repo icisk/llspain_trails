@@ -1,5 +1,7 @@
 FROM node:20-slim AS build
 
+ARG BASE_PATH=/
+
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 
@@ -14,7 +16,7 @@ RUN pnpm install
 # option disabled as build is failing atm
 # should be enabled in production deployment image build
 # RUN pnpm install --frozen-lockfile
-RUN pnpm build 
+RUN pnpm build --base ${BASE_PATH}
 
 FROM nginxinc/nginx-unprivileged:stable-alpine-slim
 
