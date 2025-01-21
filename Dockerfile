@@ -22,3 +22,5 @@ FROM nginxinc/nginx-unprivileged:stable-alpine-slim
 
 # copy application from build stage to run stage
 COPY --from=build /app/dist/www /usr/share/nginx/html
+
+COPY nginx_default.conf /etc/nginx/conf.d/default.conf
