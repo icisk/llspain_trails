@@ -29,8 +29,8 @@ export default defineConfig(({ mode }) => {
         // Load .env files from this directory instead of `root`.
         envDir: __dirname,
 
-        // Generates relative urls in html etc.
-        base: "./",
+        // Sets base path or use / by default
+        base: process.env["BASE_PATH"] ?? "/",
 
         // Vite's build output is written to dist/www
         build: {

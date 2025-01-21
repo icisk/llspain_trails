@@ -12,8 +12,9 @@ import { useIntl, useService } from "open-pioneer:react-hooks";
 import { ApplicationContext } from "@open-pioneer/runtime";
 
 const AppUI = () => {
+    const baseUrl = import.meta.env['BASE_URL']
     return (
-        <Router basename="/">
+        <Router basename={baseUrl}>
             <Navbar/>
             <Routes>
                 <Route path="/" element={<Home />} />
