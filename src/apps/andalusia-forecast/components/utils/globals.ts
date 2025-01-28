@@ -1,5 +1,6 @@
-import { Point } from "ol/geom";
+import {Point} from "ol/geom";
 import {useIntl} from "open-pioneer:react-hooks";
+import chroma from "chroma-js";
 
 
 export const completeExtent = { geom: new Point([-460000, 4540000]), zoom: 8 };
@@ -35,6 +36,27 @@ export const tempColors = {
      red: '#832525BC',
      dark_red: '#53050aBC', //rgba(83,5,10,0.74)
 }
+
+const boundaries = [0, 5, 10, 15, 20, 25, 30, 40];
+const gradientColors = [
+    tempColors.pink,
+    tempColors.cold_blue,
+    tempColors.ice_blue,
+    tempColors.green,
+    tempColors.yellow,
+    tempColors.orange,
+    tempColors.red,
+    tempColors.dark_red
+];
+const colorScale = chroma.scale(gradientColors).domain(boundaries).mode('lab');
+
+export const tempColorGradient = [
+    "interpolate",
+    ["linear"], // Specify the interpolation type
+    ["band", 1], // The data band
+    ...boundaries.flatMap((boundary) => [boundary, colorScale(boundary).rgba()])
+];
+
 
 
 export const precipColorCase = [

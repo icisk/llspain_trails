@@ -1,6 +1,6 @@
 // components/Legends/StaticPrecipitationLegend.tsx
 import React from "react";
-import { Box, Text } from "@open-pioneer/chakra-integration";
+import {Box, Text} from "@open-pioneer/chakra-integration";
 import {useIntl} from "open-pioneer:react-hooks";
 
 //temperature colors
@@ -28,14 +28,14 @@ const p_09 = '#11011eBC'
 
 
 const colorMapping = [
-    { value: 0, color: pink, label: "<  -10 ºC" },
-    { value: 5, color: cold_blue, label: "-10 - 0 ºC" },
-    { value: 15, color: ice_blue, label: "0 - 10 ºC" },
-    { value: 30, color: green, label: "10 - 20 ºC" },
-    { value: 50, color: yellow, label: "20 - 30 ºC" },
-    { value: 75, color: orange, label: "30 - 40 ºC" },
-    { value: 100, color: red, label: "50 - 60 ºC" },
-    { value: 150, color: dark_red, label: ">  60 ºC" },
+    { value: 0, color: pink, label: "<  0 ºC" },
+    { value: 5, color: cold_blue, label: "0 - 5 ºC" },
+    { value: 15, color: ice_blue, label: "5 - 10 ºC" },
+    { value: 30, color: green, label: "10 - 15 ºC" },
+    { value: 50, color: yellow, label: "15 - 20 ºC" },
+    { value: 75, color: orange, label: "20 - 25 ºC" },
+    { value: 100, color: red, label: "25 - 30 ºC" },
+    { value: 150, color: dark_red, label: ">  30 ºC" },
     //{ value: 300, color: p_09, label: "> 100 ºC" },
 ];
 

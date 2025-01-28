@@ -1,15 +1,13 @@
-
 // SPDX-FileCopyrightText: 2023 Open Pioneer project (https://github.com/open-pioneer)
 // SPDX-License-Identifier: Apache-2.0
-import { MapConfig, MapConfigProvider, SimpleLayer } from "@open-pioneer/map";
-import TileLayer from "ol/layer/Tile";
+import {MapConfig, MapConfigProvider, SimpleLayer} from "@open-pioneer/map";
 import WebGLTileLayer from "ol/layer/WebGLTile";
 import GeoTIFF from "ol/source/GeoTIFF";
 import OSM from "ol/source/OSM";
-import { register } from "ol/proj/proj4";
+import {register} from "ol/proj/proj4";
 import proj4 from "proj4";
-import { get as getProjection } from "ol/proj";
-import { createCazorlaLayer, createLosPedrochesLayer } from "../components/utils/regionLayers";
+import {createCazorlaLayer, createLosPedrochesLayer} from "../components/utils/regionLayers";
+import {tempColorGradient} from "../components/utils/globals";
 
 
 // Registrierung von EPSG:25830
@@ -69,26 +67,7 @@ export class HistoricClimateMapProvider implements MapConfigProvider {
                             ]
                         }),
                         style: {
-                            color: [
-                                "case",
-                                ["==", ["*", ["band", 1], 50], 0], //, ["==", ["*", ["band", 2], 50], 0]
-                                [0, 0, 0, 0], // Transparent for 0 values outside the area of interest
-                                ["<", ["band", 1], -10],
-                                pink,
-                                ["<=", ["band", 1], 0],
-                                cold_blue,
-                                ["<=", ["band", 1], 10],
-                                ice_blue,
-                                ["<=", ["band", 1], 20],
-                                green,
-                                ["<=", ["band", 1], 30],
-                                yellow,
-                                ["<=", ["band", 1], 40],
-                                orange,
-                                ["<=", ["band", 1], 50],
-                                red,
-                                dark_red
-                            ]
+                            color: tempColorGradient
                         },
                         properties: { title: "Mean Temperature (2000-01)" }
                     }),
@@ -109,28 +88,7 @@ export class HistoricClimateMapProvider implements MapConfigProvider {
                             ]
                         }),
                         style: {
-                            color: 
-
-                                [
-                                "case",
-                                    ["all", ["==", ["*", ["band", 1], 50], 0], ["==", ["*", ["band", 2], 50], 0]],
-                                    [0, 0, 0, 0], // Transparent for 0 values outside the area of interest
-                                    ["<", ["band", 1], -10],
-                                    pink,
-                                    ["<=", ["band", 1], 0],
-                                    cold_blue,
-                                    ["<=", ["band", 1], 10],
-                                    ice_blue,
-                                    ["<=", ["band", 1], 20],
-                                    green,
-                                    ["<=", ["band", 1], 30],
-                                    yellow,
-                                    ["<=", ["band", 1], 40],
-                                    orange,
-                                    ["<=", ["band", 1], 50],
-                                    red,
-                                    dark_red
-                                ]
+                            color: tempColorGradient
                         },
                         properties: { title: "Mean Temperature (2000-01)" }
                     }),

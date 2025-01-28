@@ -1,11 +1,10 @@
 import {DeclaredService, ServiceOptions} from "@open-pioneer/runtime";
-import { useIntl } from "open-pioneer:react-hooks";
-import React from "react";
+import {useIntl} from "open-pioneer:react-hooks";
 import {MapRegistry, SimpleLayer} from "@open-pioneer/map";
 import WebGLTileLayer from "ol/layer/WebGLTile";
 import {reactive, Reactive} from "@conterra/reactivity-core";
 import {MAP_ID} from "./HistoricClimateMapProvider";
-import {precipColorCase, tempColorCase} from "../components/utils/globals";
+import {precipColorCase, tempColorGradient} from "../components/utils/globals";
 import {GeoTIFF} from "ol/source";
 
 
@@ -154,14 +153,14 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
 
     getColorStyleLeft() {
         if (this.#currentVarLeft.value === "temp") {
-            return tempColorCase;
+            return tempColorGradient;
         }  if (this.#currentVarLeft.value === "precip") {
             return precipColorCase;
         }        
     }
     getColorStyleRight() {
         if (this.#currentVarRight.value === "temp") {
-            return tempColorCase;
+            return tempColorGradient;
         }  if (this.#currentVarRight.value === "precip") {
             return precipColorCase;
         }
