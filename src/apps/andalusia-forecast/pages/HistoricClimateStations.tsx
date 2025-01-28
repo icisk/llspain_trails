@@ -6,6 +6,7 @@ import {Header} from "../components/MainComponents/Header";
 import {MainMap} from "../components/MainComponents/MainMap";
 import {useMapModel} from "@open-pioneer/map";
 import {MAP_ID} from '../services/HistoricClimateStationsMapProvider';
+import {StationValueLegend} from "../components/Legends/StationValueLegend";
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import {RegionZoom} from "../components/RegionZoom/RegionZoom"; // Import RegionZoom
@@ -281,6 +282,7 @@ const HistoricClimateStations = () => {
                     </div>
                     <Box width="100%" height="500px" position="relative">
                         <MainMap MAP_ID={MAP_ID} />
+                        <StationValueLegend/>
                         {/* Removed DynamicPrecipitationLegend */}
                         <Box position="absolute" bottom="10px" left="10px">
                             <Switch

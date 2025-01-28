@@ -8,7 +8,7 @@ import { Style, Stroke, Circle, Fill } from 'ol/style';
 import { register } from "ol/proj/proj4";
 import proj4 from "proj4";
 import { createCazorlaLayer, createLosPedrochesLayer } from "../components/utils/regionLayers";
-
+import { stationValueColors } from "../components/utils/globals";
 // Registrierung von EPSG:25830
 proj4.defs(
     "EPSG:25830",
@@ -35,11 +35,22 @@ export class HistoricClimateStationsMapProvider implements MapConfigProvider {
                 projection: 'EPSG:4326'
             }),
             style: (feature) => {
+                const val = feature.get('val');
+                let color;
+        
+                if (val === "both") {
+                    color = stationValueColors.purple;
+                } else if (val === "precip") {
+                    color = stationValueColors.blue;
+                } else {
+                    color = stationValueColors.red;
+                }
+        
                 return new Style({
                     image: new Circle({
-                        radius: 5, 
+                        radius: 5,
                         fill: new Fill({
-                            color: 'grey'
+                            color: color
                         }),
                         stroke: new Stroke({
                             color: 'black',
@@ -51,6 +62,7 @@ export class HistoricClimateStationsMapProvider implements MapConfigProvider {
             zIndex: 200
         });
         this.stationsLayer.set('title', 'Stations');
+        
 
         this.studyAreaOutlineLayer = new VectorLayer({
             source: new VectorSource({

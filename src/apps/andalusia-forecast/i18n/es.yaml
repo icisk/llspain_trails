@@ -67,6 +67,7 @@ messages:
     nav: Estaciones Climáticas Históricas
     heading: Estaciones Climáticas Históricas
     heading_descr: Datos históricos de estaciones climáticas
+    heading_legend: Conjuntos de datos disponibles
     radio_buttons:
       temp: Temperatura
       precip: Precipitación

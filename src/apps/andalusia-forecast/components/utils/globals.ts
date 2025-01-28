@@ -33,7 +33,7 @@ export const tempColors = {
      yellow: '#eade57BC',
      orange: '#ec8647BC',
      red: '#832525BC',
-     dark_red: '#53050aBC',
+     dark_red: '#53050aBC', //rgba(83,5,10,0.74)
 }
 
 
@@ -80,3 +80,9 @@ export const tempColorCase = [
     tempColors.red,
     tempColors.dark_red
 ]
+
+export const stationValueColors = {
+    red: "#e01616", //#e01616
+    blue: "#1f1fd6", //#1f1fd6
+    purple: "#800080", //rgba(128,0,128,0.74)
+}
