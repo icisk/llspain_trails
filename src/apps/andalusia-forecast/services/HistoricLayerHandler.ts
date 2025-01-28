@@ -176,7 +176,9 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
         }
         return new GeoTIFF({
             normalize: false,
-            sources: [{url: historicLayer}]
+            sources: [{url: historicLayer,
+                // nodata: -5.3e+37
+            }]
         });
     }
     private createSourceRight() {
@@ -188,7 +190,9 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
         }
         return new GeoTIFF({
             normalize: false,
-            sources: [{url: historicLayer}]
+            sources: [{url: historicLayer,
+                       nodata: -5.3e+37
+            }]
         });
     }
     

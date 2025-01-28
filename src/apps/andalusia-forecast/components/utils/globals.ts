@@ -27,6 +27,7 @@ export const precipColors = {
     p_09: '#11011eBC',
 }
 export const tempColors = {
+     black : '#00000000',
      pink: '#eb7fe9BC',
      cold_blue: '#4f59cdBC',
      ice_blue: '#1ceae1BC',
@@ -37,8 +38,9 @@ export const tempColors = {
      dark_red: '#53050aBC', //rgba(83,5,10,0.74)
 }
 
-const boundaries = [0, 5, 10, 15, 20, 25, 30, 40];
+const boundaries = [-10, 0, 5, 10, 15, 20, 25, 30, 40];
 const gradientColors = [
+    tempColors.black,
     tempColors.pink,
     tempColors.cold_blue,
     tempColors.ice_blue,

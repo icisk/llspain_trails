@@ -61,8 +61,8 @@ export class HistoricClimateMapProvider implements MapConfigProvider {
                             sources: [
                                 {
                                     url: "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_2004_07_MeanTemperature_v0.tif",
-                                    max: 150,
-                                    min: -50,
+                                    nodata: -5.3e+37
+                                    
                                 }
                             ]
                         }),
@@ -82,8 +82,7 @@ export class HistoricClimateMapProvider implements MapConfigProvider {
                             sources: [
                                 {
                                     url: "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_2000_02_MeanTemperature_v0.tif",
-                                    max: 50,
-                                    min: 0
+                                    nodata: -5.3e+37
                                 }
                             ]
                         }),
