@@ -4,7 +4,7 @@ import {MapRegistry, SimpleLayer} from "@open-pioneer/map";
 import WebGLTileLayer from "ol/layer/WebGLTile";
 import {reactive, Reactive} from "@conterra/reactivity-core";
 import {MAP_ID} from "./HistoricClimateMapProvider";
-import {precipColorCase, tempColorGradient} from "../components/utils/globals";
+import {precipColorGradient, tempColorGradient} from "../components/utils/globals";
 import {GeoTIFF} from "ol/source";
 
 
@@ -31,7 +31,8 @@ export enum Variable {
     Precipitation = "precip",
     Temperature = "temp",
 }
-
+// console.log(tempColorGradient)
+// console.log(precipColorGradient)
 // Localized months mapping function
 export const getLocalizedMonthName = (month: Month): string => {
     const intl = useIntl();
@@ -127,6 +128,7 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
     setMonthLeft(month: Month): void {
         this.#currentMonthLeft.value = month;        
         this.layerLeft?.setSource(this.createSourceLeft());
+        console.log(this.layerLeft);
     }
     setMonthRight(month: Month): void {
         this.#currentMonthRight.value = month;
@@ -155,14 +157,14 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
         if (this.#currentVarLeft.value === "temp") {
             return tempColorGradient;
         }  if (this.#currentVarLeft.value === "precip") {
-            return precipColorCase;
+            return precipColorGradient;
         }        
     }
     getColorStyleRight() {
         if (this.#currentVarRight.value === "temp") {
             return tempColorGradient;
         }  if (this.#currentVarRight.value === "precip") {
-            return precipColorCase;
+            return precipColorGradient;
         }
     }
 
@@ -177,7 +179,7 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
         return new GeoTIFF({
             normalize: false,
             sources: [{url: historicLayer,
-                // nodata: -5.3e+37
+                nodata: -5.3e+37
             }]
         });
     }

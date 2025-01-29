@@ -1,7 +1,6 @@
 import React from 'react';
 import {Box, HStack, Spacer} from "@open-pioneer/chakra-integration";
 import {CoordinateViewer} from "@open-pioneer/coordinate-viewer";
-import {MAP_ID} from "../../services/BioindicatorMapProvider";
 import {ScaleBar} from "@open-pioneer/scale-bar";
 import {ScaleViewer} from "@open-pioneer/scale-viewer";
 

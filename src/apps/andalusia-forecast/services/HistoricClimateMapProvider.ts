@@ -8,6 +8,7 @@ import {register} from "ol/proj/proj4";
 import proj4 from "proj4";
 import {createCazorlaLayer, createLosPedrochesLayer} from "../components/utils/regionLayers";
 import {tempColorGradient} from "../components/utils/globals";
+import {transformExtent} from 'ol/proj';
 
 
 // Registrierung von EPSG:25830
@@ -28,6 +29,15 @@ const yellow = '#eade57BC'
 const orange = '#ec8647BC'
 const red = '#832525BC'
 const dark_red = '#53050aBC'
+const ex = [
+    -752185.7477688787,
+    4412572.1318028895,
+    -244344.30302071414,
+    4679055.100963466
+]
+const extent = transformExtent([173000, 4080000, 570000, 4284000], 'EPSG:25830', 'EPSG:3857')
+const extent2 = transformExtent([165066.802, 4065718.615, 572550.337, 4288803.688], 'EPSG:25830', 'EPSG:3857')
+// console.log(extent);
 
 export class HistoricClimateMapProvider implements MapConfigProvider {
     mapId = MAP_ID;
@@ -69,6 +79,7 @@ export class HistoricClimateMapProvider implements MapConfigProvider {
                         style: {
                             color: tempColorGradient
                         },
+                        extent: ex,
                         properties: { title: "Mean Temperature (2000-01)" }
                     }),
                     isBaseLayer: false
@@ -89,6 +100,7 @@ export class HistoricClimateMapProvider implements MapConfigProvider {
                         style: {
                             color: tempColorGradient
                         },
+                        extent: ex,
                         properties: { title: "Mean Temperature (2000-01)" }
                     }),
                     isBaseLayer: false

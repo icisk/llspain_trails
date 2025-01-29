@@ -1,14 +1,20 @@
-import { Box, Slider, SliderFilledTrack, SliderThumb, SliderTrack } from "@open-pioneer/chakra-integration";
-import { useIntl } from "open-pioneer:react-hooks";
-import { MapModel, useMapModel } from "@open-pioneer/map";
-import { CommonComponentProps, useCommonComponentProps } from "@open-pioneer/react-utils";
-import { useEffect, useRef, useState } from "react";
+import {
+    Box,
+    Slider,
+    SliderFilledTrack,
+    SliderThumb,
+    SliderTrack
+} from "@open-pioneer/chakra-integration";
+import {useIntl} from "open-pioneer:react-hooks";
+import {MapModel} from "@open-pioneer/map";
+import {CommonComponentProps} from "@open-pioneer/react-utils";
+import {useEffect, useRef} from "react";
 import Layer from "ol/layer/Layer";
 import RenderEvent from "ol/render/Event";
-import { EventsKey } from "ol/events";
-import { unByKey } from "ol/Observable";
-import { getRenderPixel } from "ol/render";
-import { Size } from "ol/size";
+import {EventsKey} from "ol/events";
+import {unByKey} from "ol/Observable";
+import {getRenderPixel} from "ol/render";
+import {Size} from "ol/size";
 
 export interface LayerSwipeProps extends CommonComponentProps{
     map: MapModel
@@ -113,6 +119,7 @@ export const LayerSwipe = (props: LayerSwipeProps) => {
         const width = Math.round(mapSize[0]! * (sliderValueRef.current / 100));
         const topLeft = getRenderPixel(event, [width, 0]);
         const topRight = getRenderPixel(event, [mapSize[0]!, 0]);
+        console.log(mapSize)
         const bottomLeft = getRenderPixel(event, [width, mapSize[1]!]);
         const bottomRight = getRenderPixel(event, mapSize);
 

@@ -38,8 +38,8 @@ export const tempColors = {
      dark_red: '#53050aBC', //rgba(83,5,10,0.74)
 }
 
-const boundaries = [-10, 0, 5, 10, 15, 20, 25, 30, 40];
-const gradientColors = [
+const boundaries_temp = [ -10, 0, 5, 10, 15, 20, 25, 30, 40];
+const gradientColors_temp = [
     tempColors.black,
     tempColors.pink,
     tempColors.cold_blue,
@@ -48,17 +48,39 @@ const gradientColors = [
     tempColors.yellow,
     tempColors.orange,
     tempColors.red,
-    tempColors.dark_red
+    tempColors.dark_red,
+    
 ];
-const colorScale = chroma.scale(gradientColors).domain(boundaries).mode('lab');
+const colorScale_temp = chroma.scale(gradientColors_temp).domain(boundaries_temp).mode('lab');
 
 export const tempColorGradient = [
     "interpolate",
     ["linear"], // Specify the interpolation type
     ["band", 1], // The data band
-    ...boundaries.flatMap((boundary) => [boundary, colorScale(boundary).rgba()])
+    ...boundaries_temp.flatMap((boundary) => [boundary, colorScale_temp(boundary).hex()])
 ];
 
+const boundaries_precip = [ -100, 0, 5, 15, 30, 50, 75, 100, 150, 200];
+const gradientColors_precip = [
+    tempColors.black,
+    precipColors.p_01,
+    precipColors.p_02,
+    precipColors.p_03,
+    precipColors.p_04,
+    precipColors.p_05,
+    precipColors.p_06,
+    precipColors.p_07,
+    precipColors.p_08,
+    precipColors.p_09
+];
+const colorScale_precip = chroma.scale(gradientColors_precip).domain(boundaries_precip).mode('lab');
+
+export const precipColorGradient = [
+    "interpolate",
+    ["linear"], // Specify the interpolation type
+    ["band", 1], // The data band
+    ...boundaries_precip.flatMap((boundary) => [boundary, colorScale_precip(boundary).hex()])
+];
 
 
 export const precipColorCase = [
