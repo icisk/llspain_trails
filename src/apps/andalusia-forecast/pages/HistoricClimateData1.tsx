@@ -112,34 +112,42 @@ const HistoricClimateData1 = () => {
         };        
 
         function createTimeSeries(start, stop) {
+            console.log(start, stop)
             const startDate = new Date(start);
             const stopDate = new Date(stop);
             const timeSeries = [];
 
             while (startDate <= stopDate) {
-                timeSeries.push(new Date(startDate).toISOString().split("T")[0].slice(0, 7));
-                
+                const year = startDate.getFullYear();
+                const month = String(startDate.getMonth() + 1).padStart(2, "0"); // Ensure two-digit month
+                timeSeries.push(`${year}-${month}`);
+
                 startDate.setMonth(startDate.getMonth() + 1);
-                
             }
             return timeSeries;
         }
+        console.log(createTimeSeries("2023-01-01", "2023-05-01"));
+        const [x, y] = clickedCoordinates;
+        (async () => {
+            await fetchPrecipData(x, y);
+            await fetchTempData(x, y);
+        })();
 
-        const [x, y] = clickedCoordinates
-        fetchPrecipData(x, y);
-        fetchTempData(x, y);
-        const precipStart = precipData?.domain?.axes?.time?.start
-        const precipStop = precipData?.domain?.axes?.time?.stop
-        const tempStart = tempData?.domain?.axes?.time?.start
-        const tempStop = tempData?.domain?.axes?.time?.stop
-        
-        setPrecipTimeSeries(createTimeSeries(precipStart, precipStop));
-        setTempTimeSeries(createTimeSeries(tempStart, tempStop))
-        if (precipTimeSeries != null && tempTimeSeries != null) {
-            setLongestTimeSeries(precipTimeSeries.length > tempTimeSeries.length ? precipTimeSeries : tempTimeSeries);
+        // Ensure we retrieve the start and stop times after data is fetched
+        const precipStart = precipData?.domain?.axes?.time?.start;
+        const precipStop = precipData?.domain?.axes?.time?.stop;
+        const tempStart = tempData?.domain?.axes?.time?.start;
+        const tempStop = tempData?.domain?.axes?.time?.stop;
+
+        if (precipStart && precipStop && tempStart && tempStop) {
+            setPrecipTimeSeries(createTimeSeries(precipStart, precipStop));
+            setTempTimeSeries(createTimeSeries(tempStart, tempStop));
         }
 
-    }, [clickedCoordinates]);
+        if (precipTimeSeries && tempTimeSeries) {
+            setLongestTimeSeries(precipTimeSeries.length > tempTimeSeries.length ? precipTimeSeries : tempTimeSeries);
+        }
+    }, [clickedCoordinates, precipData, tempData]);
 
     useEffect(() => {
         if(mapModel.map){
