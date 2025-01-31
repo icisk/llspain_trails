@@ -204,7 +204,6 @@ const HistoricClimateData1 = () => {
     const handleMapClick = (event: MapBrowserEvent<MouseEvent>) => {
         const coordinatesEPSG3857 = event.coordinate;
         const coordinatesEPSG25830 = transform(coordinatesEPSG3857, "EPSG:3857", "EPSG:25830");
-        console.log("Clicked Coordinates (EPSG:25830):", coordinatesEPSG25830);
         setClickedCoordinates(coordinatesEPSG25830);
 
         //Clear previous markers and add a new one

@@ -79,7 +79,7 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
     private mapRegistry: MapRegistry;
     private layerLeft: WebGLTileLayer | undefined;
     private layerRight: WebGLTileLayer | undefined;
-    #currentMonthLeft: Reactive<Month> = reactive(Month.January);
+    #currentMonthLeft: Reactive<Month> = reactive(Month.March);
     #currentYearLeft: Reactive<Year> = reactive(Year.dummy);
     #currentVarLeft: Reactive<Variable> = reactive("temp");
     #currentMonthRight: Reactive<Month> = reactive(Month.August);
@@ -105,11 +105,13 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
     get currentVarRight(): Variable {
         return this.#currentVarRight.value;
     }
-    setVarLeft(variable: Variable): void {
+    async setVarLeft(variable: Variable): void {
         this.#currentVarLeft.value = variable;
-        const newSource = this.createSourceLeft();
-        this.layerLeft?.setSource(newSource);
-        this.layerLeft?.setStyle({ color: this.getColorStyleLeft() }); // Ensure style is updated
+        const newSource = await this.createSourceLeft();
+        if (newSource) {
+            this.layerLeft?.setSource(newSource);
+            this.layerLeft?.setStyle({ color: this.getColorStyleLeft()});
+        }
     }
     async setVarRight(variable: Variable): Promise<void> {
         this.#currentVarRight.value = variable;
@@ -126,16 +128,20 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
     get currentMonthRight(): Month {
         return this.#currentMonthRight.value;
     }
-    setMonthLeft(month: Month): void {
-        this.#currentMonthLeft.value = month;        
-        this.layerLeft?.setSource(this.createSourceLeft());
-        console.log(this.layerLeft);
+    async setMonthLeft(month: Month): void {
+        this.#currentMonthLeft.value = month;
+        const source = await this.createSourceLeft();
+        if (source) {
+            this.layerLeft?.setSource(source);
+            this.layerLeft?.setStyle({ color: this.getColorStyleLeft()});
+        }
     }
     async setMonthRight(month: Month): void {
         this.#currentMonthRight.value = month;
         const source = await this.createSourceRight()
         if (source) {
             this.layerRight?.setSource(source);
+            this.layerRight?.setStyle({ color: this.getColorStyleRight() });
         }        
     }
 
@@ -146,15 +152,20 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
     get currentYearRight(): Year {
         return this.#currentYearRight.value;
     }
-    setYearLeft(year: number): void {
+    async setYearLeft(year: number): void {
         this.#currentYearLeft.value = year;
-        this.layerLeft?.setSource(this.createSourceLeft());
+        const source = await this.createSourceLeft();
+        if (source) {
+            this.layerLeft?.setSource(source);
+            this.layerLeft?.setStyle({ color: this.getColorStyleLeft()});
+        }
     }
     async setYearRight(year: number): void {
         this.#currentYearRight.value = year;
         const source = await this.createSourceRight();
         if (source) {
             this.layerRight?.setSource(source);
+            this.layerRight?.setStyle({ color: this.getColorStyleRight() });
         }
         
     }
@@ -176,13 +187,28 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
     }
 
 
-    private createSourceLeft() {
+    private async createSourceLeft() {
         let historicLayer: string;
         if (this.#currentVarLeft.value === "temp") {
              historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}_MeanTemperature_v0.tif`;
         }  if (this.#currentVarLeft.value === "precip") {
              historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/precip/COG_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}_precipitation_v1.tif`;
         }
+
+        try {
+            const response = await fetch(historicLayer,
+                {
+                    method: "HEAD",
+                    mode: "cors",
+                    headers: {
+                        "Access-Control-Allow-Origin": "*"
+                    }
+                });
+            if (!response.ok) return undefined;
+        } catch {
+            return undefined;
+        }
+        
         return new GeoTIFF({
             normalize: false,
             sources: [{url: historicLayer,
@@ -199,7 +225,8 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
         }
 
         try {
-            const response = await fetch(historicLayer, {
+            const response = await fetch(historicLayer, 
+                {
                 method: "HEAD",
                 mode: "cors",
                 headers: {

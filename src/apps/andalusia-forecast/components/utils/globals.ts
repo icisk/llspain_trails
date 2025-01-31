@@ -132,3 +132,9 @@ export const stationValueColors = {
     blue: "#1f1fd6", //#1f1fd6
     purple: "#800080", //rgba(128,0,128,0.74)
 }
+
+
+export const mesesEnEspanol = [
+    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+];

@@ -4,6 +4,7 @@ import {InfoTooltip} from "../InfoTooltip/InfoTooltip";
 import React, {useEffect, useState} from "react";
 import {useIntl, useService} from "open-pioneer:react-hooks";
 import {useReactiveSnapshot} from "@open-pioneer/reactivity";
+import {mesesEnEspanol} from "../utils/globals";
 
 
 interface HistoricPickerProps {
@@ -49,24 +50,25 @@ export function HistoricPickerRight(props: HistoricPickerProps) {
                     const year = date.getFullYear();
                     const month = date.getMonth() + 1;
 
-
                     if (!yearMonthMap[year]) {
                         yearMonthMap[year] = new Set<number>();
                     }
                     yearMonthMap[year].add(month);
                 });
+                // console.log(yearMonthMap)
                 const availableYears = Object.keys(yearMonthMap).map(Number);
                 setYears(availableYears);
 
+
                 if (availableYears.length > 0) {
-                    setSelectedYear(availableYears[0]);  // Set default selected year
-                    setMonths(Array.from(yearMonthMap[availableYears[0]]));  // Set months for the selected year
+                    // setSelectedYear(availableYears[0]);  
+                    setMonths(Array.from(yearMonthMap[currentYear]));  // Set months for the selected year
                 }
-                console.log(yearMonthMap)
+                // console.log(yearMonthMap)
                 setYearMonthMap(yearMonthMap); // Store yearMonthMap in state
             })
             .catch((error) => console.error("Error fetching data:", error));
-    }, []);
+    }, [currentYear, currentVar]);
 
     
 
@@ -104,7 +106,7 @@ export function HistoricPickerRight(props: HistoricPickerProps) {
                             onChange={(e) => props.onChange('month', parseInt(e.target.value))}>
                             {months.map((month) => (
                                 <option key={month} value={month}>
-                                    {month}
+                                    {mesesEnEspanol[month-1]}
                                 </option>
                             ))}
                         </Select>
