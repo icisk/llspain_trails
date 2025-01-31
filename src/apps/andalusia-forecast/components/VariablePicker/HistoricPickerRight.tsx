@@ -1,9 +1,8 @@
 import {Container, Radio, RadioGroup} from "@open-pioneer/chakra-integration";
 import {HStack, Select, VStack} from "@chakra-ui/react";
 import {InfoTooltip} from "../InfoTooltip/InfoTooltip";
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {useIntl, useService} from "open-pioneer:react-hooks";
-import {HistoricClimateMapProvider} from "../../services/HistoricClimateMapProvider";
 import {useReactiveSnapshot} from "@open-pioneer/reactivity";
 
 
@@ -63,7 +62,7 @@ export function HistoricPickerRight(props: HistoricPickerProps) {
                     setSelectedYear(availableYears[0]);  // Set default selected year
                     setMonths(Array.from(yearMonthMap[availableYears[0]]));  // Set months for the selected year
                 }
-
+                console.log(yearMonthMap)
                 setYearMonthMap(yearMonthMap); // Store yearMonthMap in state
             })
             .catch((error) => console.error("Error fetching data:", error));

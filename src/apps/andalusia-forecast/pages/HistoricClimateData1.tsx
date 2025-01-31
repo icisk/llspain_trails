@@ -77,77 +77,101 @@ const HistoricClimateData1 = () => {
     });
 
     const mapModel = useMapModel(MAP_ID);
-    
+
     useEffect(() => {
         if (!clickedCoordinates) return;
 
-        const fetchPrecipData = async (x :any, y :any) => {
-            const url = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_precip/position?coords=POINT(${x}%20${y})`;
+        const fetchData = async (x, y) => {
+            const precipUrl = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_precip/position?coords=POINT(${x}%20${y})`;
+            const tempUrl = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_temperature/position?coords=POINT(${x}%20${y})`;
+
             try {
                 setLoading(true);
-                const response = await fetch(url);
-                if (!response.ok) throw new Error("Network response was not ok");
-                const jsonData = await response.json();
-                setPrecipData(jsonData);
-            } catch (err :any) {
+                const [precipResponse, tempResponse] = await Promise.all([
+                    fetch(precipUrl),
+                    fetch(tempUrl)
+                ]);
+                if (!precipResponse.ok || !tempResponse.ok) throw new Error("Network response was not ok");
+
+                const precipJsonData = await precipResponse.json();
+                const tempJsonData = await tempResponse.json();
+                setPrecipData(precipJsonData);
+                setTempData(tempJsonData);
+
+                // Create time series
+                const createTimeSeries = (start, stop) => {
+                    const startDate = new Date(start);
+                    const stopDate = new Date(stop);
+                    const timeSeries = [];
+                    while (startDate <= stopDate) {
+                        const year = startDate.getFullYear();
+                        const month = String(startDate.getMonth() + 1).padStart(2, "0");
+                        timeSeries.push(`${year}-${month}`);
+                        startDate.setMonth(startDate.getMonth() + 1);
+                    }
+                    return timeSeries;
+                };
+
+                const precipStart = precipJsonData?.domain?.axes?.time?.start;
+                const precipStop = precipJsonData?.domain?.axes?.time?.stop;
+                const tempStart = tempJsonData?.domain?.axes?.time?.start;
+                const tempStop = tempJsonData?.domain?.axes?.time?.stop;
+
+                if (precipStart && precipStop && tempStart && tempStop) {
+                    const precipTimeSeries = createTimeSeries(precipStart, precipStop);
+                    const tempTimeSeries = createTimeSeries(tempStart, tempStop);
+
+                    setPrecipTimeSeries(precipTimeSeries);
+                    setTempTimeSeries(tempTimeSeries);
+                }
+            } catch (err) {
                 setError(err.message);
             } finally {
                 setLoading(false);
             }
         };
-        
-        const fetchTempData = async (x :any, y :any) => {
-            const url = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_temperature/position?coords=POINT(${x}%20${y})`;
-            try {
-                setLoading(true);
-                const response = await fetch(url);
-                if (!response.ok) throw new Error("Network response was not ok");
-                const jsonData = await response.json();
-                setTempData(jsonData);
-            } catch (err :any) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };        
 
-        function createTimeSeries(start, stop) {
-            console.log(start, stop)
-            const startDate = new Date(start);
-            const stopDate = new Date(stop);
-            const timeSeries = [];
-
-            while (startDate <= stopDate) {
-                const year = startDate.getFullYear();
-                const month = String(startDate.getMonth() + 1).padStart(2, "0"); // Ensure two-digit month
-                timeSeries.push(`${year}-${month}`);
-
-                startDate.setMonth(startDate.getMonth() + 1);
-            }
-            return timeSeries;
-        }
-        console.log(createTimeSeries("2023-01-01", "2023-05-01"));
         const [x, y] = clickedCoordinates;
-        (async () => {
-            await fetchPrecipData(x, y);
-            await fetchTempData(x, y);
-        })();
+        fetchData(x, y);
 
-        // Ensure we retrieve the start and stop times after data is fetched
-        const precipStart = precipData?.domain?.axes?.time?.start;
-        const precipStop = precipData?.domain?.axes?.time?.stop;
-        const tempStart = tempData?.domain?.axes?.time?.start;
-        const tempStop = tempData?.domain?.axes?.time?.stop;
+            if (precipTimeSeries && tempTimeSeries) {
+                setLongestTimeSeries(precipTimeSeries.length > tempTimeSeries.length ? precipTimeSeries : tempTimeSeries);
+            }
 
-        if (precipStart && precipStop && tempStart && tempStop) {
-            setPrecipTimeSeries(createTimeSeries(precipStart, precipStop));
-            setTempTimeSeries(createTimeSeries(tempStart, tempStop));
-        }
+    }, [clickedCoordinates]);
 
-        if (precipTimeSeries && tempTimeSeries) {
-            setLongestTimeSeries(precipTimeSeries.length > tempTimeSeries.length ? precipTimeSeries : tempTimeSeries);
-        }
-    }, [clickedCoordinates, precipData, tempData]);
+    useEffect(() => {
+        if (!tempTimeSeries || !precipTimeSeries) return;  // Wait until both time series are available
+
+        setChartOptions({
+            chart: { type: "column", zoomType: "x" },
+            title: { text: intl.formatMessage({ id: "global.plot.header_temp_precip" }) },
+            xAxis: { categories: tempTimeSeries, title: {text: "Date"} },
+            yAxis: [
+                {title: { text: "Precipitation (mm)" }, min: 0, max: 400, opposite: false},
+                {title: {text: "Temperatura (ºC)" }, min: -10, max: 40, opposite: true}
+            ],
+            series: [
+                {
+                    name: "Precipitation",
+                    data: precipData?.ranges?.historic_precip?.values || [],
+                    type: "column",
+                    color: "blue",
+                    yAxis: 0
+                },
+                {
+                    name: "Temperatura",
+                    data: tempData?.ranges?.historic_temperature?.values || [],
+                    type: "spline",
+                    color: "orange",
+                    yAxis: 1
+                }
+            ]
+        });
+    }, [longestTimeSeries, precipData, tempData]);
+    
+       
+    
 
     useEffect(() => {
         if(mapModel.map){
@@ -159,36 +183,7 @@ const HistoricClimateData1 = () => {
         }
     }, [mapModel])
 
-    useEffect(() => {
-        setChartOptions({
-            chart: {
-                type: "column",
-                zoomType: "x"
-            },
-            title: { text: intl.formatMessage({ id: "global.plot.header_temp_precip" }) },
-            xAxis: { categories: tempTimeSeries, title: {text: "Date"} },
-            yAxis:  [
-                {title: { text: "Precipitation (mm)" }, min: 0, max: 400, opposite: false},
-                {title: {text: "Temperatura (ºC)" }, min: -10, max: 40, opposite: true}
-            ],
-            series: [
-                {
-                    name: "Precipitation",
-                    data: precipData ? precipData?.ranges?.historic_precip?.values : null,
-                    type: "column",
-                    color: "blue",
-                    yAxis: 0
-                },
-                {
-                    name: "Temperatura",
-                    data: tempData ? tempData?.ranges?.historic_temperature?.values : null,
-                    type: "spline",
-                    color: "orange",
-                    yAxis: 1
-                }
-            ]
-        });
-    }, [precipData, tempData]);
+
     
     //click on map
     useEffect(() => {

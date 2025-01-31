@@ -111,13 +111,14 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
         this.layerLeft?.setSource(newSource);
         this.layerLeft?.setStyle({ color: this.getColorStyleLeft() }); // Ensure style is updated
     }
-    setVarRight(variable: Variable): void {
+    async setVarRight(variable: Variable): Promise<void> {
         this.#currentVarRight.value = variable;
-        const newSource = this.createSourceRight();
-        this.layerRight?.setSource(newSource);
-        this.layerRight?.setStyle({ color: this.getColorStyleRight() }); // Ensure style is updated
+        const newSource = await this.createSourceRight();
+        if (newSource) {
+            this.layerRight?.setSource(newSource);
+            this.layerRight?.setStyle({ color: this.getColorStyleRight() });
+        }
     }
-    
     
     get currentMonthLeft(): Month {
         return this.#currentMonthLeft.value;
@@ -130,10 +131,12 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
         this.layerLeft?.setSource(this.createSourceLeft());
         console.log(this.layerLeft);
     }
-    setMonthRight(month: Month): void {
+    async setMonthRight(month: Month): void {
         this.#currentMonthRight.value = month;
-        console.log()
-        this.layerRight?.setSource(this.createSourceRight());
+        const source = await this.createSourceRight()
+        if (source) {
+            this.layerRight?.setSource(source);
+        }        
     }
 
     
@@ -147,9 +150,13 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
         this.#currentYearLeft.value = year;
         this.layerLeft?.setSource(this.createSourceLeft());
     }
-    setYearRight(year: number): void {
+    async setYearRight(year: number): void {
         this.#currentYearRight.value = year;
-        this.layerRight?.setSource(this.createSourceRight());
+        const source = await this.createSourceRight();
+        if (source) {
+            this.layerRight?.setSource(source);
+        }
+        
     }
 
 
@@ -183,13 +190,27 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
             }]
         });
     }
-    private createSourceRight() {
+    private async createSourceRight() {
         let historicLayer: string;
         if (this.#currentVarRight.value === "temp") {
             historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}_MeanTemperature_v0.tif`;
         }  if (this.#currentVarRight.value === "precip") {
             historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/precip/COG_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}_precipitation_v1.tif`;
         }
+
+        try {
+            const response = await fetch(historicLayer, {
+                method: "HEAD",
+                mode: "cors",
+                headers: {
+                    "Access-Control-Allow-Origin": "*"
+                }
+            });
+            if (!response.ok) return undefined;
+        } catch {
+            return undefined;
+        }
+        
         return new GeoTIFF({
             normalize: false,
             sources: [{url: historicLayer,
