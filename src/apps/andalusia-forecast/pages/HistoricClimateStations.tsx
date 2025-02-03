@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Box, Container, Switch} from "@open-pioneer/chakra-integration";
-import {Radio, RadioGroup, Stack, VStack} from "@chakra-ui/react";
+import {Radio, RadioGroup, Stack, VStack, HStack, FormControl, FormLabel} from "@chakra-ui/react";
 import {useIntl} from "open-pioneer:react-hooks";
 import {Header} from "../components/MainComponents/Header";
 import {MainMap} from "../components/MainComponents/MainMap";
@@ -11,7 +11,8 @@ import HighchartsReact from 'highcharts-react-official';
 import {RegionZoom} from "../components/RegionZoom/RegionZoom"; // Import RegionZoom
 import SelectInteraction from "ol/interaction/Select";
 import {click} from "ol/events/condition";
-import DataProvider from "../services/StationDataService";
+import { useFetchStationData } from "../services/StationDataService";
+import { Select } from "@chakra-ui/react";
 
 const HistoricClimateStations = () => {
     const intl = useIntl();
@@ -20,8 +21,13 @@ const HistoricClimateStations = () => {
     const [stationsVisible, setStationsVisible] = useState(true);
     const [selectedFeatureId, setSelectedFeatureId] = useState(null);
 
-    const { stationData, SationLoading, StationError } = DataProvider();
-    console.log(stationData, SationLoading, StationError);
+    const { data: stationData, loading: stationDataLoading, error: stationDataError } = useFetchStationData();
+    const stationNames = stationData
+    ? stationData.features
+          .filter((feature) => feature.properties.NAME_EST)
+          .map((feature) => feature.properties.NAME_EST)
+          .sort((a, b) => a.localeCompare(b))
+    : [];
 
     // State for managing data
     interface DataState {
@@ -299,6 +305,31 @@ const HistoricClimateStations = () => {
                         <RegionZoom MAP_ID={MAP_ID} /> {/* Added RegionZoom below the map */}
                     </Box>
                 </Container>
+                <Box width="100%" mt={10}>
+                    <HStack spacing={6} align="start">
+                        <FormControl flex={1}>
+                            <FormLabel>Select Station A</FormLabel>
+                            <Select placeholder="Select a station" isDisabled={stationDataLoading || stationDataError}>
+                                {stationNames.map((name, index) => (
+                                    <option key={index} value={name}>
+                                        {name}
+                                    </option>
+                                ))}
+                            </Select>
+                        </FormControl>
+
+                        <FormControl flex={1}>
+                            <FormLabel>Select Station B</FormLabel>
+                            <Select placeholder="Select a station" isDisabled={stationDataLoading || stationDataError}>
+                                {stationNames.map((name, index) => (
+                                    <option key={index} value={name}>
+                                        {name}
+                                    </option>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </HStack>
+                </Box>
                 <Box width="100%" height="300px" position="relative" mt={20}>
                     <RadioGroup value={selectedCategory} onChange={setSelectedCategory}>
                         <Stack direction="row">
