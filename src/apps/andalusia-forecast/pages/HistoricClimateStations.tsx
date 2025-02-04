@@ -195,28 +195,28 @@ const HistoricClimateStations = () => {
                 // console.log("Min Temperature Series Data:", minTempSeriesData);
                 const allSeries = [
                     {
-                        name: "Mean Temperature",
+                        name: intl.formatMessage({ id: "global.vars.temp_mean" }),
                         data: meanTempSeriesData,
                         type: "spline",
                         color: "rgba(255, 179, 71, 1)", // Lighter orange with 50% opacity
                         yAxis: 1,
                     },
                     {
-                        name: "Max Temperature",
+                        name: intl.formatMessage({ id: "global.vars.temp_max" }),
                         data: maxTempSeriesData,
                         type: "spline",
                         color: "rgba(255, 133, 133, 1)", // Lighter red with 50% opacity
                         yAxis: 1,
                     },
                     {
-                        name: "Min Temperature",
+                        name: intl.formatMessage({ id: "global.vars.temp_min" }),
                         data: minTempSeriesData,
                         type: "spline",
                         color: "rgba(153, 255, 153, 1)", // Lighter green with 50% opacity
                         yAxis: 1,
                     },
                     {
-                        name: "Precipitation",
+                        name: intl.formatMessage({ id: "global.vars.precip" }),
                         data: precipSeriesData,
                         type: "column",
                         color: "blue",
@@ -239,7 +239,7 @@ const HistoricClimateStations = () => {
                         zoomType: "x"
                     },
                     title: { text: intl.formatMessage({ id: "global.plot.header_temp_precip" }) },
-                    xAxis: { categories, title: { text: "Date" } },
+                    xAxis: { categories, title: { text: intl.formatMessage({id: "global.vars.date"}) } },
                     yAxis: [
                         {
                             // Left axis for precipitation

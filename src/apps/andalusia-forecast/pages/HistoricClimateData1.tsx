@@ -53,21 +53,38 @@ const HistoricClimateData1 = () => {
         },
         title: { text: intl.formatMessage({ id: "global.plot.header_temp_precip" }) },
         xAxis: { categories: tempTimeSeries ? tempTimeSeries : null , 
-                 title: {text: "Date"} },
-        yAxis:  [
-            {title: { text: "Precipitation (mm)" }, min: 0, max: 400, opposite: false},
-            {title: {text: "Temperatura (ºC)" }, min: -10, max: 40, opposite: true}
+                 title: {text: intl.formatMessage({ id: "global.vars.date" })} },
+        yAxis: [
+            {
+                title: { 
+                    text: intl.formatMessage({ id: "global.vars.precip" }) + " " + intl.formatMessage({ id: "global.units.mm" })
+                }, 
+                min: 0, 
+                max: 400, 
+                opposite: false
+            },
+            {
+                title: { 
+                    text: intl.formatMessage({ id: "global.vars.temp" }) + " " + intl.formatMessage({ id: "global.units.c" }) 
+                }, 
+                min: -10, 
+                max: 40, 
+                opposite: true
+            }
         ],
+        tooltip: {
+            valueDecimals: 1
+        },
         series: [
             {
-                name: "Precipitation",
+                name: intl.formatMessage({ id: "global.vars.precip" }),
                 data: precipData ? precipData?.ranges?.historic_precip?.values : null,
                 type: "column",
                 color: "blue",
                 yAxis: 0
             },
             {
-                name: "Temperatura",
+                name: intl.formatMessage({ id: "global.vars.temp" }),
                 data: tempData ? tempData?.ranges?.historic_precip?.values : null,
                 type: "spline",
                 color: "orange",
@@ -146,21 +163,24 @@ const HistoricClimateData1 = () => {
         setChartOptions({
             chart: { type: "column", zoomType: "x" },
             title: { text: intl.formatMessage({ id: "global.plot.header_temp_precip" }) },
-            xAxis: { categories: tempTimeSeries, title: {text: "Date"} },
+            xAxis: { categories: tempTimeSeries, title: {text: intl.formatMessage({ id: "global.vars.date" })} },
             yAxis: [
                 {title: { text: "Precipitation (mm)" }, min: 0, max: 400, opposite: false},
                 {title: {text: "Temperatura (ºC)" }, min: -10, max: 40, opposite: true}
             ],
+            tooltip: {
+                valueDecimals: 1
+            },
             series: [
                 {
-                    name: "Precipitation",
+                    name: intl.formatMessage({ id: "global.vars.precip" }),
                     data: precipData?.ranges?.historic_precip?.values || [],
                     type: "column",
                     color: "blue",
                     yAxis: 0
                 },
                 {
-                    name: "Temperatura",
+                    name: intl.formatMessage({ id: "global.vars.temp" }),
                     data: tempData?.ranges?.historic_temperature?.values || [],
                     type: "spline",
                     color: "orange",
