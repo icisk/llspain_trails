@@ -12,6 +12,7 @@ import HighchartsReact from 'highcharts-react-official';
 import {RegionZoom} from "../components/RegionZoom/RegionZoom"; // Import RegionZoom
 import SelectInteraction from "ol/interaction/Select";
 import {click} from "ol/events/condition";
+import {CompareTwoStations} from "../components/CompareTwoStations/CompareTwoStations";
 
 const HistoricClimateStations = () => {
     const intl = useIntl();
@@ -87,12 +88,13 @@ const HistoricClimateStations = () => {
                         try {
                             setLoading(true);
                             const response = await fetch(url);
+
                             if (!response.ok) throw new Error("Network response was not ok");
                             const jsonData = await response.json();
                             //console.log(`Fetched ${type} data (limit=${currentLimit}):`, jsonData);
                             if (jsonData.numberMatched > jsonData.numberReturned) {
                                 //console.log(`Increasing limit for ${type} to ${jsonData.numberMatched}`);
-                                currentLimit = jsonData.numberMatched; // Set the limit to the total number of features
+                                currentLimit = jsonData.numberMatched;// Set the limit to the total number of features
                             } else {
                                 fetchedData = jsonData;
                                 break;
@@ -113,6 +115,7 @@ const HistoricClimateStations = () => {
                     }
                 };
                 const id = selectedFeatureId;
+                console.log(selectedFeatureId);
                 const initialLimit = 500;
                 const types = ["precip", "t_mean", "t_max", "t_min"]; // Datatypes to fetch
                 types.forEach((type) => fetchData(type, id, initialLimit));
@@ -297,6 +300,10 @@ const HistoricClimateStations = () => {
                         <RegionZoom MAP_ID={MAP_ID} /> {/* Added RegionZoom below the map */}
                     </Box>
                 </Container>
+                
+                <CompareTwoStations/>
+                    
+                
                 <Box width="100%" height="300px" position="relative" mt={20}>
                     <RadioGroup value={selectedCategory} onChange={setSelectedCategory}>
                         <Stack direction="row">

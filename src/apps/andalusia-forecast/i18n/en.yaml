@@ -68,10 +68,15 @@ messages:
     heading: Historic Climate Stations
     heading_descr: Historic climate station data
     heading_legend: Available datasets
+    select_stations: select two stations from the list below
     radio_buttons:
       temp: Temperature
       precip: Precipitation
       temp_precip: Temperature and Precipitation
+      one_year: compare within a year
+      two_years: compare two years
+      time_range: compare  within a time range
+      month: compare along a month      
   projections:
     nav: Climate Projections (pending)
     heading: Climate Projections

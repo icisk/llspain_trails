@@ -69,10 +69,15 @@ messages:
     heading: Estaciones Climáticas Históricas
     heading_descr: Datos históricos de estaciones climáticas
     heading_legend: Conjuntos de datos disponibles
+    select_stations: Escoja dos estacion a través del listados
     radio_buttons:
       temp: Temperatura
       precip: Precipitación
       temp_precip: Temperatura y Precipitación
+      one_year: Consultar un año
+      two_years: Comparar dos años distintos
+      time_range: Consultar un rango temporal
+      month: Observar evolucion de un mes
   projections:
     nav: Proyecciones climáticas 
     heading: Proyecciones climáticas
