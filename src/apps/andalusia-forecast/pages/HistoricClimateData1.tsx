@@ -20,15 +20,33 @@ import {createMarker, markerStyle} from "../components/utils/marker";
 import {Vector as VectorLayer} from "ol/layer";
 import {Vector as VectorSource} from "ol/source";
 import HighchartsReact from "highcharts-react-official";
+import { set } from 'ol/transform';
 
 
 // Marker layer for displaying clicks
 const markerSource = new VectorSource();
 const markerLayer = new VectorLayer({ source: markerSource, zIndex: 100 });
 
+
+
 const HistoricClimateData1 = () => {
     const intl = useIntl();
     const histLayerHandler = useService<HistoricLayerHandler>("app.HistoricLayerHandler");
+
+    const months = [
+        intl.formatMessage({ id: "global.months.jan" }),
+        intl.formatMessage({ id: "global.months.feb" }),
+        intl.formatMessage({ id: "global.months.mar" }),
+        intl.formatMessage({ id: "global.months.apr" }),
+        intl.formatMessage({ id: "global.months.may" }),
+        intl.formatMessage({ id: "global.months.jun" }),
+        intl.formatMessage({ id: "global.months.jul" }),
+        intl.formatMessage({ id: "global.months.aug" }),
+        intl.formatMessage({ id: "global.months.sep" }),
+        intl.formatMessage({ id: "global.months.oct" }),
+        intl.formatMessage({ id: "global.months.nov" }),
+        intl.formatMessage({ id: "global.months.dec" }),
+    ];
     
     const mapRef = useRef<HTMLDivElement>(null);
     const [leftLayers, setLeftLayers]= useState<Layer[]>();
@@ -36,9 +54,14 @@ const HistoricClimateData1 = () => {
     const [sliderValue, setSliderValue] = useState<number>(50);
     
     const [clickedCoordinates, setClickedCoordinates] = useState<number[] | null>(null);
+    const [yearLeft, setYearLeft] = useState<number>(2000);
+    const [yearRight, setYearRight] = useState<number>(2005);
 
-    const [precipData, setPrecipData] = useState(null);
-    const [tempData, setTempData] = useState(null);
+    const [precipData1, setPrecipData1] = useState(null);
+    const [tempData1, setTempData1] = useState(null);
+    const [precipData2, setPrecipData2] = useState(null);
+    const [tempData2, setTempData2] = useState(null);
+
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     
@@ -47,152 +70,202 @@ const HistoricClimateData1 = () => {
     const [longestTimeSeries, setLongestTimeSeries] = useState<String>(null)
 
     const [chartOptions, setChartOptions] = useState({
-        chart: {
-            type: "column",
-            zoomType: "x"
-        },
+        chart: { type: "column", zoomType: "x" },
         title: { text: intl.formatMessage({ id: "global.plot.header_temp_precip" }) },
-        xAxis: { categories: tempTimeSeries ? tempTimeSeries : null , 
-                 title: {text: intl.formatMessage({ id: "global.vars.date" })} },
+        xAxis: { 
+            categories: months, 
+            title: { text: intl.formatMessage({ id: "global.vars.date" }) }
+        },
         yAxis: [
             {
-                title: { 
-                    text: intl.formatMessage({ id: "global.vars.precip" }) + " " + intl.formatMessage({ id: "global.units.mm" })
-                }, 
-                min: 0, 
-                max: 400, 
-                opposite: false
+                title: { text: intl.formatMessage({ id: "global.vars.precip" }) + " (mm)" },
+                min: 0,
+                max: 400,
+                opposite: false,
             },
             {
-                title: { 
-                    text: intl.formatMessage({ id: "global.vars.temp" }) + " " + intl.formatMessage({ id: "global.units.c" }) 
-                }, 
-                min: -10, 
-                max: 40, 
-                opposite: true
+                title: { text: intl.formatMessage({ id: "global.vars.temp" }) + " (°C)" },
+                min: -10,
+                max: 40,
+                opposite: true,
             }
         ],
-        tooltip: {
-            valueDecimals: 1
-        },
+        tooltip: { valueDecimals: 1 },
         series: [
             {
                 name: intl.formatMessage({ id: "global.vars.precip" }),
-                data: precipData ? precipData?.ranges?.historic_precip?.values : null,
+                data: new Array(12).fill(null),
                 type: "column",
                 color: "blue",
-                yAxis: 0
+                yAxis: 0,
+                showInLegend: false
             },
             {
                 name: intl.formatMessage({ id: "global.vars.temp" }),
-                data: tempData ? tempData?.ranges?.historic_precip?.values : null,
-                type: "spline",
+                data: new Array(12).fill(null),
+                type: "line",
                 color: "orange",
-                yAxis: 1
+                yAxis: 1,
+                marker: { symbol: "circle" },
+                lineWith: 0,
+                showInLegend: false
             }
         ]
     });
+    
 
     const mapModel = useMapModel(MAP_ID);
 
     useEffect(() => {
         if (!clickedCoordinates) return;
 
-        const fetchData = async (x, y) => {
+        const fetchData = async (x: number, y: number, year1: number, year2: number) => {
             const precipUrl = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_precip/position?coords=POINT(${x}%20${y})`;
             const tempUrl = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_temperature/position?coords=POINT(${x}%20${y})`;
-
+            const tempMetadataUrl = "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/creaf_historic_temperature_metrics.zarr/.zmetadata";
+            const precipMetadataUrl = "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/creaf_historic_precip_metrics.zarr/.zmetadata";
+        
             try {
                 setLoading(true);
-                const [precipResponse, tempResponse] = await Promise.all([
-                    fetch(precipUrl),
-                    fetch(tempUrl)
+                const [precipMetadata, tempMetadata] = await Promise.all([
+                    fetch(precipMetadataUrl).then((response) => response.json()),
+                    fetch(tempMetadataUrl).then((response) => response.json())
                 ]);
-                if (!precipResponse.ok || !tempResponse.ok) throw new Error("Network response was not ok");
-
-                const precipJsonData = await precipResponse.json();
-                const tempJsonData = await tempResponse.json();
-                setPrecipData(precipJsonData);
-                setTempData(tempJsonData);
-
-                // Create time series
-                const createTimeSeries = (start, stop) => {
-                    const startDate = new Date(start);
-                    const stopDate = new Date(stop);
-                    const timeSeries = [];
-                    while (startDate <= stopDate) {
-                        const year = startDate.getFullYear();
-                        const month = String(startDate.getMonth() + 1).padStart(2, "0");
-                        timeSeries.push(`${year}-${month}`);
-                        startDate.setMonth(startDate.getMonth() + 1);
-                    }
-                    return timeSeries;
+        
+                // Funktion zur Ermittlung der Indizes für ein bestimmtes Jahr
+                const getIndicesForYear = (metrics: Record<string, any>, year: number): [number, number][] => {
+                    return Object.keys(metrics).reduce((indices: [number, number][], timestamp, index) => {
+                        const match = timestamp.match(/^(\d{4})-(\d{2})/); // Extrahiere Jahr und Monat
+                        if (match && parseInt(match[1]) === year) {
+                            const month = parseInt(match[2]) - 1; // Monat auf 0-basiert umwandeln
+                            indices.push([index, month]);
+                        }
+                        return indices;
+                    }, []);
                 };
+                
+                
+        
+                const tempMetrics = tempMetadata.metadata[".zattrs"].metrics;
+                const precipMetrics = precipMetadata.metadata[".zattrs"].metrics;
+        
+                const tempIndicesYear1 = getIndicesForYear(tempMetrics, year1);
+                const tempIndicesYear2 = getIndicesForYear(tempMetrics, year2);
+                const precipIndicesYear1 = getIndicesForYear(precipMetrics, year1);
+                const precipIndicesYear2 = getIndicesForYear(precipMetrics, year2);
 
-                const precipStart = precipJsonData?.domain?.axes?.time?.start;
-                const precipStop = precipJsonData?.domain?.axes?.time?.stop;
-                const tempStart = tempJsonData?.domain?.axes?.time?.start;
-                const tempStop = tempJsonData?.domain?.axes?.time?.stop;
 
-                if (precipStart && precipStop && tempStart && tempStop) {
-                    const precipTimeSeries = createTimeSeries(precipStart, precipStop);
-                    const tempTimeSeries = createTimeSeries(tempStart, tempStop);
+                console.log(precipIndicesYear1)
+        
+                const precipData = await fetch(precipUrl).then((response) => response.json());
+                const tempData = await fetch(tempUrl).then((response) => response.json());
 
-                    setPrecipTimeSeries(precipTimeSeries);
-                    setTempTimeSeries(tempTimeSeries);
-                }
+                const getValuesByIndices = (data: Record<string, any>, indices: [number, number][]) => {
+                    const values = Array(12).fill(null);
+                
+                    indices.forEach(([index, month]) => {
+                        values[month] = data[index] ?? null;
+                    });
+                
+                    return values;
+                };
+                
+
+                const tempValuesYear1 = getValuesByIndices(tempData.ranges.historic_temperature.values, tempIndicesYear1);
+                const tempValuesYear2 = getValuesByIndices(tempData.ranges.historic_temperature.values, tempIndicesYear2);
+                const precipValuesYear1 = getValuesByIndices(precipData.ranges.historic_precip.values, precipIndicesYear1);
+                const precipValuesYear2 = getValuesByIndices(precipData.ranges.historic_precip.values, precipIndicesYear2);
+
+                setTempData1(tempValuesYear1);
+                setTempData2(tempValuesYear2);
+                setPrecipData1(precipValuesYear1);
+                setPrecipData2(precipValuesYear2);
+        
             } catch (err) {
                 setError(err.message);
             } finally {
                 setLoading(false);
             }
         };
+        
 
         const [x, y] = clickedCoordinates;
-        fetchData(x, y);
+        fetchData(x, y, yearLeft, yearRight);
 
-            if (precipTimeSeries && tempTimeSeries) {
-                setLongestTimeSeries(precipTimeSeries.length > tempTimeSeries.length ? precipTimeSeries : tempTimeSeries);
-            }
+        if (precipTimeSeries && tempTimeSeries) {
+            setLongestTimeSeries(precipTimeSeries.length > tempTimeSeries.length ? precipTimeSeries : tempTimeSeries);
+        }
 
-    }, [clickedCoordinates]);
+    }, [clickedCoordinates, yearLeft, yearRight]);
 
     useEffect(() => {
-        if (!tempTimeSeries || !precipTimeSeries) return;  // Wait until both time series are available
-
+        if (!precipData1 || !precipData2 || !tempData1 || !tempData2) return;
+    
         setChartOptions({
             chart: { type: "column", zoomType: "x" },
             title: { text: intl.formatMessage({ id: "global.plot.header_temp_precip" }) },
-            xAxis: { categories: tempTimeSeries, title: {text: intl.formatMessage({ id: "global.vars.date" })} },
+            xAxis: { categories: months, title: { text: intl.formatMessage({ id: "global.vars.date" }) } },
             yAxis: [
-                {title: { text: "Precipitation (mm)" }, min: 0, max: 400, opposite: false},
-                {title: {text: "Temperatura (ºC)" }, min: -10, max: 40, opposite: true}
-            ],
-            tooltip: {
-                valueDecimals: 1
-            },
-            series: [
                 {
-                    name: intl.formatMessage({ id: "global.vars.precip" }),
-                    data: precipData?.ranges?.historic_precip?.values || [],
-                    type: "column",
-                    color: "blue",
-                    yAxis: 0
+                    title: { text: intl.formatMessage({ id: "global.vars.precip" }) + " (mm)" },
+                    min: 0,
+                    max: 400,
+                    opposite: false,
                 },
                 {
-                    name: intl.formatMessage({ id: "global.vars.temp" }),
-                    data: tempData?.ranges?.historic_temperature?.values || [],
-                    type: "spline",
+                    title: { text: intl.formatMessage({ id: "global.vars.temp" }) + " (°C)" },
+                    min: -10,
+                    max: 40,
+                    opposite: true,
+                }
+            ],
+            tooltip: { valueDecimals: 1,
+                shared: true,
+             },
+            series: [
+                {
+                    name: `${yearLeft} ${intl.formatMessage({ id: "global.vars.precip" })}`,
+                    data: precipData1,
+                    type: "column",
+                    color: "blue",
+                    yAxis: 0,
+                    showInLegend: true
+                },
+                {
+                    name: `${yearRight} ${intl.formatMessage({ id: "global.vars.precip" })}`,
+                    data: precipData2,
+                    type: "column",
+                    color: "lightblue",
+                    yAxis: 0,
+                    showInLegend: true
+                },
+                {
+                    name: `${yearLeft} ${intl.formatMessage({ id: "global.vars.temp" })}`,
+                    data: tempData1,
+                    type: "line",
                     color: "orange",
-                    yAxis: 1
+                    yAxis: 1,
+                    marker: { symbol: "circle" },
+                    lineWith: 0,
+                    showInLegend: true
+                },
+                {
+                    name: `${yearRight} ${intl.formatMessage({ id: "global.vars.temp" })}`,
+                    data: tempData2,
+                    type: "line",
+                    color: "red",
+                    yAxis: 1,
+                    marker: { symbol: "circle" },
+                    lineWith: 0,
+                    showInLegend: true
                 }
             ]
         });
-    }, [longestTimeSeries, precipData, tempData]);
+    }, [precipData1, precipData2, tempData1, tempData2]);
+    
     
        
     
-
     useEffect(() => {
         if(mapModel.map){
             const map = mapModel.map;
@@ -242,6 +315,7 @@ const HistoricClimateData1 = () => {
     function onLeftPickerChange(field: keyof Selection,value:string | number ) {
         if (field === 'year') {
             histLayerHandler.setYearLeft(value as number);
+            setYearLeft(value as number);
         } else if (field === 'month') {
             histLayerHandler.setMonthLeft(value as number);
         } else if (field === 'var') {
@@ -252,6 +326,7 @@ const HistoricClimateData1 = () => {
     function onRightPickerChange(field: keyof Selection,value:string | number ) {
         if (field === 'year') {
             histLayerHandler.setYearRight(value as number);
+            setYearRight(value as number);
         } else if (field === 'month') {
             histLayerHandler.setYearRight(histLayerHandler.currentYearRight)
             histLayerHandler.setVarRight(histLayerHandler.currentVarRight)
