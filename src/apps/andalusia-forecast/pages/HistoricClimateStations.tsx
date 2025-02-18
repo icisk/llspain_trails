@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Box, Container, Switch} from "@open-pioneer/chakra-integration";
 import {Radio, RadioGroup, Stack, VStack} from "@chakra-ui/react";
-import {useIntl} from "open-pioneer:react-hooks";
+import {useIntl, useService} from "open-pioneer:react-hooks";
 import {Header} from "../components/MainComponents/Header";
 import {MainMap} from "../components/MainComponents/MainMap";
 import {useMapModel} from "@open-pioneer/map";
@@ -13,13 +13,21 @@ import {RegionZoom} from "../components/RegionZoom/RegionZoom"; // Import Region
 import SelectInteraction from "ol/interaction/Select";
 import {click} from "ol/events/condition";
 import {CompareTwoStations} from "../components/CompareTwoStations/CompareTwoStations";
+import {StationDataHandler} from "../services/StationDataHandler";
+import {useReactiveSnapshot} from "@open-pioneer/reactivity";
+
 
 const HistoricClimateStations = () => {
     const intl = useIntl();
+    const stationDataService = useService<StationDataHandler>("app.StationDataHandler");
     const mapRef = useRef<HTMLDivElement>(null);
     const mapState = useMapModel(MAP_ID);
     const [stationsVisible, setStationsVisible] = useState(true);
     const [selectedFeatureId, setSelectedFeatureId] = useState(null);
+    const [lastChangedID, setlastChangedID] = useState(null);
+    const [lastChangedElement, setlastChangedElement] = useState(null);
+    // const [selectedStationId, setSelectedStationId] = useState(stationDataService.selectedStationId);
+
 
     // State for managing data
     interface DataState {
@@ -54,11 +62,19 @@ const HistoricClimateStations = () => {
         }
     });
 
+    const [selectedStationId, selectedYear, modus, selectedYears, selectedFromTimeRange, selectedToTimeRange] = useReactiveSnapshot(() => [
+        stationDataService.selectedStationId,
+        stationDataService.selectedYear,
+        stationDataService.modus,
+        stationDataService.selectedYears,
+        stationDataService.selectedFromTimeRange,
+        stationDataService.selectedToTimeRange
+    ], [stationDataService]);
+
     // Add interaction to map for MAP_ID
-    useEffect(() => {
+    useEffect(() => {        
         if (mapState?.map?.olMap) {
             const olMap = mapState.map.olMap;
-
             const selectInteraction = new SelectInteraction({
                 condition: click,
                 layers: (layer) => layer.get("title") === "Stations",
@@ -70,198 +86,254 @@ const HistoricClimateStations = () => {
                     const feature = selectedFeatures[0];
                     const properties = feature?.getProperties();
                     setSelectedFeatureId(properties?.ID);
+                    console.log(properties?.NAME_EST)
+                    stationDataService.setStationLeft(properties?.NAME_EST)
                 }
             });
+            
             return () => {
                 olMap.removeInteraction(selectInteraction);
             };
         }
     }, [mapState]);
-
+  
+    
+    const prevValues = useRef({ selectedFeatureId, selectedStationId });
     useEffect(() => {
-            if (selectedFeatureId !== null) {
-                const fetchData = async (type: string, id: any, initialLimit: number) => {
-                    let currentLimit = initialLimit;
-                    let fetchedData = null;
-                    while (true) {
-                        const url = `https://i-cisk.dev.52north.org/data/collections/AEMET_stations_${type}/items?f=json&lang=en-US&limit=${currentLimit}&skipGeometry=false&offset=0&CODI_INM=${id}`;
-                        try {
-                            setLoading(true);
-                            const response = await fetch(url);
+        if (prevValues.current.selectedFeatureId !== selectedFeatureId) {
+            setlastChangedID(selectedFeatureId);
+            setlastChangedElement('map')
+        }
+        if (prevValues.current.selectedStationId !== selectedStationId) {
+            setlastChangedID(selectedStationId);
+            setlastChangedElement('dropdown')
+        }
+        prevValues.current = { selectedFeatureId, selectedStationId };
+    }, [selectedFeatureId, selectedStationId]);
+    
+    useEffect(() => {
+        if (selectedFeatureId !== null || selectedStationId !== null) {           
+            const fetchData = async (type: string, id: any) => {
+                let fetchedData = null;
+                const url = `https://i-cisk.dev.52north.org/data/collections/AEMET_stations_${type}/items?f=json&limit=2500&CODI_INM=${id}`;
+                try {
+                    setLoading(true);
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error("Network response was not ok");
+                    const jsonData = await response.json();
+                    fetchedData = jsonData;
+                } catch (err: any) {
+                    setError(err.message);
+                } finally {
+                    setLoading(false);
+                }
+                if (fetchedData) {
+                    setData((prevData) => ({
+                        ...prevData,
+                        [type]: fetchedData,
+                    }));
+                }
+            };
 
-                            if (!response.ok) throw new Error("Network response was not ok");
-                            const jsonData = await response.json();
-                            //console.log(`Fetched ${type} data (limit=${currentLimit}):`, jsonData);
-                            if (jsonData.numberMatched > jsonData.numberReturned) {
-                                //console.log(`Increasing limit for ${type} to ${jsonData.numberMatched}`);
-                                currentLimit = jsonData.numberMatched;// Set the limit to the total number of features
-                            } else {
-                                fetchedData = jsonData;
-                                break;
-                            }
-                        } catch (err: any) {
-                            setError(err.message);
-                            break;
-                        } finally {
-                            setLoading(false);
-                        }
-                    }
-                    // Save the fetched data to the state
-                    if (fetchedData) {
-                        setData((prevData) => ({
-                            ...prevData,
-                            [type]: fetchedData,
-                        }));
-                    }
-                };
-                const id = selectedFeatureId;
-                console.log(selectedFeatureId);
-                const initialLimit = 500;
-                const types = ["precip", "t_mean", "t_max", "t_min"]; // Datatypes to fetch
-                types.forEach((type) => fetchData(type, id, initialLimit));
+            if (lastChangedID !== null) {
+                const types = ["precip", "t_mean", "t_max", "t_min"];
+                types.forEach((type) => fetchData(type, lastChangedID));
             }
-        }, [selectedFeatureId]);
+            
+        }
+    }, [lastChangedID]);
     
-        useEffect(() => {
-            //console.log('Current data:', data);
-        }, [data]); 
+    useEffect(() => {
+        //console.log('Current data:', data);
+    }, [data]); 
     
-        useEffect(() => {
-            if (data.precip && data.t_mean && data.t_max && data.t_min) {
-                // Initialize a common time interval based on all data types
-                const allFeatures = [
-                    ...(data.precip?.features || []),
-                    ...(data.t_mean?.features || []),
-                    ...(data.t_max?.features || []),
-                    ...(data.t_min?.features || []),
-                ];
-                // Sort all features by date and find the earliest and latest date
-                const sortedAllFeatures = allFeatures.sort((a, b) => {
-                    const dateA = new Date(a.properties.DATE);
-                    const dateB = new Date(b.properties.DATE);
-                    return dateA - dateB;
-                });
-                if (sortedAllFeatures.length === 0) return; // No data available
-                
-                const firstDate = new Date(sortedAllFeatures[0].properties.DATE);
-                const lastDate = new Date(sortedAllFeatures[sortedAllFeatures.length - 1].properties.DATE);
-                // Create the categories (time axis) for the x-axis (months)
-                const categories = [];
-                const currentDate = new Date(firstDate);
-                while (currentDate <= lastDate) {
-                    const month = currentDate.toISOString().split("T")[0].slice(0, 7); // Format: YYYY-MM
-                    if (!categories.includes(month)) {
-                        categories.push(month);
-                    }
-                    currentDate.setMonth(currentDate.getMonth() + 1);
+    useEffect(() => {
+        if (data.precip && data.t_mean && data.t_max && data.t_min) {
+            // Initialize a common time interval based on all data types
+            const allFeatures = [
+                ...(data.precip?.features || []),
+                ...(data.t_mean?.features || []),
+                ...(data.t_max?.features || []),
+                ...(data.t_min?.features || []),
+            ];
+            // Sort all features by date and find the earliest and latest date
+            const sortedAllFeatures = allFeatures.sort((a, b) => {
+                const dateA = new Date(a.properties.DATE);
+                const dateB = new Date(b.properties.DATE);
+                return dateA - dateB;
+            });
+            if (sortedAllFeatures.length === 0) return; // No data available
+            
+            const firstDate = new Date(sortedAllFeatures[0].properties.DATE);
+            const lastDate = new Date(sortedAllFeatures[sortedAllFeatures.length - 1].properties.DATE);
+            // Create the categories (time axis) for the x-axis (months)
+            const categories = [];
+            const currentDate = new Date(firstDate);
+            while (currentDate <= lastDate) {
+                const month = currentDate.toISOString().split("T")[0].slice(0, 7); // Format: YYYY-MM
+                if (!categories.includes(month)) {
+                    categories.push(month);
                 }
-                // Log the categories to debug
-                // console.log("Categories:", categories);
-                // Initialize series data
-                const precipSeriesData = new Array(categories.length).fill(null);
-                const meanTempSeriesData = new Array(categories.length).fill(null);
-                const maxTempSeriesData = new Array(categories.length).fill(null);
-                const minTempSeriesData = new Array(categories.length).fill(null);
-                // Fill the series with the respective data
-                const mapFeaturesToSeries = (features, property, seriesData) => {
-                    features.forEach((feature) => {
-                        const date = new Date(feature.properties.DATE).toISOString().split("T")[0].slice(0, 7); // Format: YYYY-MM
-                        const index = categories.indexOf(date);
-                        if (index !== -1) {
-                            seriesData[index] = feature.properties[property];
-                        } else {
-                            // console.log(`Date ${date} not found in categories`);
-                        }
+                currentDate.setMonth(currentDate.getMonth() + 1);
+            }
+            const years = [...new Set(categories.map(date => new Date(date).getFullYear()))];
+            stationDataService.setAvailableYears(years)
+
+            // Log the categories to debug
+            // console.log("Categories:", categories);
+            // Initialize series data
+            const precipSeriesData = new Array(categories.length).fill(null);
+            const meanTempSeriesData = new Array(categories.length).fill(null);
+            const maxTempSeriesData = new Array(categories.length).fill(null);
+            const minTempSeriesData = new Array(categories.length).fill(null);
+            // Fill the series with the respective data
+            const mapFeaturesToSeries = (features, property, seriesData) => {
+                features.forEach((feature) => {
+                    const date = new Date(feature.properties.DATE).toISOString().split("T")[0].slice(0, 7); // Format: YYYY-MM
+                    const index = categories.indexOf(date);
+                    if (index !== -1) {
+                        seriesData[index] = feature.properties[property];
+                    } else {
+                        // console.log(`Date ${date} not found in categories`);
+                    }
+                });
+            };
+            // Process the different data types
+            if (data.precip?.features) {
+                // console.log("Mapping Precipitation Data:", data.precip.features);
+                mapFeaturesToSeries(data.precip.features, "PL_monthly", precipSeriesData);
+            }
+            if (data.t_mean?.features) {
+                // console.log("Mapping Mean Temperature Data:", data.t_mean.features);
+                mapFeaturesToSeries(data.t_mean.features, "MT_monthly", meanTempSeriesData);
+            }
+            if (data.t_max?.features) {
+                // console.log("Mapping Max Temperature Data:", data.t_max.features);
+                mapFeaturesToSeries(data.t_max.features, "MX_monthly", maxTempSeriesData);
+            }
+            if (data.t_min?.features) {
+                // console.log("Mapping Min Temperature Data:", data.t_min.features);
+                mapFeaturesToSeries(data.t_min.features, "MN_monthly", minTempSeriesData);
+            }
+            // Log the series data to debug
+            // console.log("Precipitation Series Data:", precipSeriesData);
+            // console.log("Mean Temperature Series Data:", meanTempSeriesData);
+            // console.log("Max Temperature Series Data:", maxTempSeriesData);
+            // console.log("Min Temperature Series Data:", minTempSeriesData);
+            const allSeries = [
+                {
+                    name: intl.formatMessage({ id: "global.vars.temp_mean" }),
+                    data: meanTempSeriesData,
+                    type: "spline",
+                    color: "rgba(255, 179, 71, 1)", // Lighter orange with 50% opacity
+                    yAxis: 1,
+                },
+                {
+                    name: intl.formatMessage({ id: "global.vars.temp_max" }),
+                    data: maxTempSeriesData,
+                    type: "spline",
+                    color: "rgba(255, 133, 133, 1)", // Lighter red with 50% opacity
+                    yAxis: 1,
+                },
+                {
+                    name: intl.formatMessage({ id: "global.vars.temp_min" }),
+                    data: minTempSeriesData,
+                    type: "spline",
+                    color: "rgba(153, 255, 153, 1)", // Lighter green with 50% opacity
+                    yAxis: 1,
+                },
+                {
+                    name: intl.formatMessage({ id: "global.vars.precip" }),
+                    data: precipSeriesData,
+                    type: "column",
+                    color: "blue",
+                    yAxis: 0,
+                }
+            ];
+
+            function getIndexesByYear(categories, selectedYear) {
+                return categories
+                    .map((date, index) => {
+                        return date.startsWith(selectedYear) ? index : -1;
+                    })
+                    .filter(index => index !== -1);  // Filter out -1 (dates that don't match)
+            }
+            console.log(modus)
+            if (modus === 'no_filter'){
+                stationDataService.setCompareOneYear(null)
+                stationDataService.setFromTimeRange(null)
+                stationDataService.setToTimeRange(null)
+                
+            } else if (modus === 'one_year') {
+                stationDataService.setFromTimeRange(null)
+                stationDataService.setToTimeRange(null)
+                if (selectedYear !== null){
+                    const matchingIndexes = getIndexesByYear(categories, selectedYear);
+                    allSeries.forEach((serie) => {
+                        serie.data = matchingIndexes.map(i => serie.data[i]);
                     });
-                };
-                // Process the different data types
-                if (data.precip?.features) {
-                    // console.log("Mapping Precipitation Data:", data.precip.features);
-                    mapFeaturesToSeries(data.precip.features, "PL_monthly", precipSeriesData);
-                }
-                if (data.t_mean?.features) {
-                    // console.log("Mapping Mean Temperature Data:", data.t_mean.features);
-                    mapFeaturesToSeries(data.t_mean.features, "MT_monthly", meanTempSeriesData);
-                }
-                if (data.t_max?.features) {
-                    // console.log("Mapping Max Temperature Data:", data.t_max.features);
-                    mapFeaturesToSeries(data.t_max.features, "MX_monthly", maxTempSeriesData);
-                }
-                if (data.t_min?.features) {
-                    // console.log("Mapping Min Temperature Data:", data.t_min.features);
-                    mapFeaturesToSeries(data.t_min.features, "MN_monthly", minTempSeriesData);
-                }
-                // Log the series data to debug
-                // console.log("Precipitation Series Data:", precipSeriesData);
-                // console.log("Mean Temperature Series Data:", meanTempSeriesData);
-                // console.log("Max Temperature Series Data:", maxTempSeriesData);
-                // console.log("Min Temperature Series Data:", minTempSeriesData);
-                const allSeries = [
-                    {
-                        name: intl.formatMessage({ id: "global.vars.temp_mean" }),
-                        data: meanTempSeriesData,
-                        type: "spline",
-                        color: "rgba(255, 179, 71, 1)", // Lighter orange with 50% opacity
-                        yAxis: 1,
-                    },
-                    {
-                        name: intl.formatMessage({ id: "global.vars.temp_max" }),
-                        data: maxTempSeriesData,
-                        type: "spline",
-                        color: "rgba(255, 133, 133, 1)", // Lighter red with 50% opacity
-                        yAxis: 1,
-                    },
-                    {
-                        name: intl.formatMessage({ id: "global.vars.temp_min" }),
-                        data: minTempSeriesData,
-                        type: "spline",
-                        color: "rgba(153, 255, 153, 1)", // Lighter green with 50% opacity
-                        yAxis: 1,
-                    },
-                    {
-                        name: intl.formatMessage({ id: "global.vars.precip" }),
-                        data: precipSeriesData,
-                        type: "column",
-                        color: "blue",
-                        yAxis: 0,
-                    }
-                ];
-                const filteredSeries =
-                selectedCategory === "1"
-                    ? allSeries
-                    : selectedCategory === "2"
-                    ? allSeries.filter((s) => s.name.includes("Temperature"))
-                    : selectedCategory === "3"
-                    ? allSeries.filter((s) => s.name === "Precipitation")
-                    : [];
-                // console.log("Filtered Series:", filteredSeries);
-                // Update the chart options
-                setChartOptions({
-                    chart: {
-                        type: "column",
-                        zoomType: "x"
-                    },
-                    title: { text: intl.formatMessage({ id: "global.plot.header_temp_precip" }) },
-                    xAxis: { categories, title: { text: intl.formatMessage({id: "global.vars.date"}) } },
-                    yAxis: [
-                        {
-                            // Left axis for precipitation
-                            title: { text: `${intl.formatMessage({ id: "global.vars.precip" })} (mm)` },
-                            //min: 0,
-                            opposite: false, // Default: left
-                        },
-                        {
-                            // Right axis for temperature
-                            title: { text: `${intl.formatMessage({ id: "global.vars.temp" })} (°C)` },
-                            //min: 0,
-                            opposite: true, // Display on the right
-                        },
-                    ],
-                    series: filteredSeries,
-                });
+                    categories.splice(0, categories.length, ...matchingIndexes.map(i => categories[i]));
+                }            
+
+            } else if ( modus === 'two_years' && selectedYears !== null){
+
                 
+                
+            } else if (modus === 'time_range'){
+                stationDataService.setCompareOneYear(null)
+                if (selectedFromTimeRange !== null && selectedToTimeRange !== null){
+                    let startIndexes = getIndexesByYear(categories, selectedFromTimeRange);
+                    let endIndexes = getIndexesByYear(categories, selectedToTimeRange);
+                    if (selectedFromTimeRange > selectedToTimeRange){
+                        startIndexes = endIndexes
+                    }
+                    allSeries.forEach((serie) => {
+                        serie.data = serie.data.slice(startIndexes[0], endIndexes[endIndexes.length -1]+1);
+                    });
+                    categories.splice(0, categories.length, ...categories.slice(startIndexes[0], endIndexes[endIndexes.length -1 ] + 2));
+                }                
+
             }
-        }, [data, intl, selectedCategory]);
+            
+            
+            
+            
+            const filteredSeries =
+            selectedCategory === "1"
+                ? allSeries
+                : selectedCategory === "2"
+                ? allSeries.filter((s) => s.name.includes("Temperatura"))
+                : selectedCategory === "3"
+                ? allSeries.filter((s) => s.name === intl.formatMessage({ id: "global.vars.precip" }))
+                : [];
+            console.log(selectedCategory, "Filtered Series:", filteredSeries);
+            // Update the chart options
+            setChartOptions({
+                chart: {
+                    type: "column",
+                    zoomType: "x"
+                },
+                title: { text: intl.formatMessage({ id: "global.plot.header_temp_precip" }) },
+                xAxis: { categories, title: { text: intl.formatMessage({id: "global.vars.date"}) } },
+                yAxis: [
+                    {
+                        // Left axis for precipitation
+                        title: { text: `${intl.formatMessage({ id: "global.vars.precip" })} (mm)` },
+                        //min: 0,
+                        opposite: false, // Default: left
+                    },
+                    {
+                        // Right axis for temperature
+                        title: { text: `${intl.formatMessage({ id: "global.vars.temp" })} (°C)` },
+                        //min: 0,
+                        opposite: true, // Display on the right
+                    },
+                ],
+                series: filteredSeries,
+            });
+            
+        }
+    }, [data, intl, selectedCategory, stationDataService, selectedYear, modus, selectedFromTimeRange, selectedToTimeRange]);
 
     useEffect(() => {
         if (mapState?.map?.olMap) {

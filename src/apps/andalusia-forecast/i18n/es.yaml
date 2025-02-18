@@ -78,6 +78,7 @@ messages:
       two_years: Comparar dos años distintos
       time_range: Consultar un rango temporal
       month: Observar evolucion de un mes
+      no_filter: Mostrar series temporales completas
   projections:
     nav: Proyecciones climáticas 
     heading: Proyecciones climáticas

@@ -6,30 +6,42 @@ export interface StationDataHandler extends DeclaredService<"app.StationDataHand
     setData(data: any): void;
     setStations(stations: string[]): void;
     setStationLeft(station: string): void;
-    setStationRight(station: string): void;
+    setStationId(id: string): void;
     setCompareOneYear(year: number): void;
     setCompareTwoYear(year1: number, year2: number): void;
-    setCompareTimeRange(from: Date, to: Date): void;
+    setFromTimeRange(from: number): void;
+    setToTimeRange(to: number): void;
     setCompareOneMonth(month: number): void;
+    setAvailableYears(years: number): void;
+    setModus(modus: string): void;
     data: object;
     allStations: string[];
     selectedStationLeft: string;
-    selectedStationRight: string;
+    selectedStationId: string;
     selectedYear: number;
+    availableYears: number[];
     selectedYears: number[];
-    selectedTimeRange: Date[];
-    selectedMonth: number;    
+    selectedFromTimeRange: number;
+    selectedToTimeRange: number;
+    selectedMonth: number; 
+    modus: string;
 }
-
+function getStationId(stationName, data) {
+    const entry = data.find(item => item.NAME_EST === stationName);
+    return entry ? entry.ID : null;
+}
 export class StationDataHandlerImpl implements StationDataHandler {
     #data: object;
     #allStations: string[] = null;
     #selectedStationLeft: Reactive<string> = reactive('')
-    #selectedStationRight: Reactive<string> = reactive('')    
+    #selectedStationId: Reactive<string> = reactive('')
     #selectedYear: Reactive<number> = reactive(null);
+    #availableYears: Reactive<number> = reactive(null);
     #selectedYears: Reactive<number[]> = reactive([null, null]);
-    #selectedTimeRange: Reactive<Date[]> = reactive([null, null]);
+    #selectedFromTimeRange: Reactive<number> = reactive(null);
+    #selectedToTimeRange: Reactive<number> = reactive(null);
     #selectedMonth: Reactive<number> = reactive(null);
+    #modus: Reactive<string> = reactive('')
     
     async fetchStationsData(): Promise<any> {
         try {
@@ -64,30 +76,63 @@ export class StationDataHandlerImpl implements StationDataHandler {
         return this.#allStations;
     }
     setStationLeft(station: string) {
-        console.log('bumm')        
-        this.#selectedStationLeft = station;
-        console.log(this.#selectedStationLeft)
+        this.#selectedStationLeft.value = station;
+        this.setStationId(getStationId(station, this.#allStations));
     }  
     get selectedStationLeft(){
         return this.#selectedStationLeft;
     }
-    setStationRight(station: string) {
-        this.#selectedStationRight = station;
+    setStationId(id: string): void{
+        this.#selectedStationId.value = id;
     }
-    get selectedStationRight(){
-        return this.#selectedStationRight;
+    get selectedStationId(){
+        return this.#selectedStationId.value;
     }
+    
     setCompareOneYear(year: number) {
-        this.#selectedYear = year
+        this.#selectedYear.value = year
     }
+    get selectedYear(){
+        return this.#selectedYear.value
+    }
+    
+    setAvailableYears(years: number[]): void {
+        this.#availableYears.value = years
+    }    
+    get availableYears(){
+        return this.#availableYears.value
+    }
+    
     setCompareTwoYear(year1: number, year2: number) {
-        this.#selectedYears = [year1, year2]
+        this.#selectedYears.value = [year1, year2]
     }
-    setCompareTimeRange(from: Date, to: Date) {
-        this.#selectedTimeRange = [from, to]
+    get selectedYears(){
+        return this.#selectedYears.value
     }
+    
+    setFromTimeRange(from: number) {
+        this.#selectedFromTimeRange.value = from
+    }
+    get selectedFromTimeRange(){
+        return this.#selectedFromTimeRange.value    
+    }
+
+    setToTimeRange(to: number) {
+        this.#selectedToTimeRange.value = to
+    }
+    get selectedToTimeRange(){
+        return this.#selectedToTimeRange.value
+    }
+    
     setCompareOneMonth(month: number) {
         this.#selectedMonth = month
+    }
+    
+    setModus(modus: string) {
+        this.#modus.value = modus
+    }
+    get modus(){
+        return this.#modus.value
     }
     
 

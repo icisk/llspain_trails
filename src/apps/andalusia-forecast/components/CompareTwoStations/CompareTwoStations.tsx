@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {Box, Radio, RadioGroup} from "@open-pioneer/chakra-integration";
-import {HStack, Select, VStack} from "@chakra-ui/react";
+import {HStack, Select} from "@chakra-ui/react";
 import {useIntl, useService} from "open-pioneer:react-hooks";
-// import {useReactiveSnapshot} from "@open-pioneer/reactivity";
+import {useReactiveSnapshot} from "@open-pioneer/reactivity";
 import {StationDataHandler} from "../../services/StationDataHandler";
 
 export function CompareTwoStations() {
@@ -10,7 +10,8 @@ export function CompareTwoStations() {
     const stationDataService = useService<StationDataHandler>("app.StationDataHandler");
     const [loading, setLoading] = useState(true);
     const [selectedStationLeft, setSelectedStationLeft] = useState(stationDataService.selectedStationLeft);
-    const [selectedStationRight, setSelectedStationRight] = useState(stationDataService.selectedStationRight);
+    const [selectedStationId, setSelectedStationId] = useState(stationDataService.selectedStationId);
+
     
     const [selectedModus, setSelectedModus] = useState<string>("");
     
@@ -18,85 +19,61 @@ export function CompareTwoStations() {
     const [year2, setYear2] = useState<number | null>(null);
 
     const [fromYear, setFromYear] = useState<number | null>(null);
-    const [fromMonth, setFromMonth] = useState<number | null>(null);
+    
     const [toYear, setToYear] = useState<number | null>(null);
-    const [toMonth, setToMonth] = useState<number | null>(null);
 
+
+    const [selectedFromTimeRange, selectedToTimeRange ] = useReactiveSnapshot(()=> [
+        stationDataService.selectedFromTimeRange,
+        stationDataService.selectedToTimeRange
+    ], [stationDataService])
+    
+    
+    useEffect(() => {
+        setFromYear(selectedFromTimeRange)
+        setToYear(selectedToTimeRange)
+        console.log(toYear)
+    }, [selectedFromTimeRange, selectedToTimeRange]);
+    
+    
     const handleFromYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedYear = Number(e.target.value);
-        setFromYear(selectedYear);
-        if (fromMonth) {
-            updateTimeRange(selectedYear, fromMonth, toYear, toMonth);
-        }
+        const selectedFromYear = Number(e.target.value);
+        stationDataService.setFromTimeRange(selectedFromYear)
+        setFromYear(selectedFromYear);
     };
-
-    const handleFromMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedMonth = Number(e.target.value);
-        setFromMonth(selectedMonth);
-        if (fromYear) {
-            updateTimeRange(fromYear, selectedMonth, toYear, toMonth);
-        }
-    };
-
+    
     const handleToYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedYear = Number(e.target.value);
-        setToYear(selectedYear);
-        if (toMonth) {
-            updateTimeRange(fromYear, fromMonth, selectedYear, toMonth);
-        }
+        const selectedToYear = Number(e.target.value);
+        stationDataService.setToTimeRange(selectedToYear)
+        setToYear(selectedToYear);
     };
-
-    const handleToMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedMonth = Number(e.target.value);
-        setToMonth(selectedMonth);
-        if (toYear) {
-            updateTimeRange(fromYear, fromMonth, toYear, selectedMonth);
-        }
-    };
-
-    const updateTimeRange = (fromYear: number | null, fromMonth: number | null, toYear: number | null, toMonth: number | null) => {
-        if (fromYear && fromMonth && toYear && toMonth) {
-            const fromDate = new Date(fromYear, fromMonth - 1, 1); // Month is zero-based
-            const toDate = new Date(toYear, toMonth, 0); // Last day of the month
-            stationDataService.setCompareTimeRange(fromDate, toDate);
-        }
-    };
-
-
+    
+    
 
     useEffect(() => {
         async function loadData() {
             await stationDataService.fetchStationsData();
-            console.log(stationDataService.allStations);
             setLoading(false);
         }
         loadData();
     }, []);
 
-    useEffect(() => {
-        setSelectedStationLeft(stationDataService.selectedStationLeft);
-        setSelectedStationRight(stationDataService.selectedStationRight);
-    }, [stationDataService.selectedStationLeft, stationDataService.selectedStationRight]);
 
-    // const [selectedStationLeft, selectedStationRight] = useReactiveSnapshot(()=> [
-    //     stationDataService.selectedStationLeft,
-    //     stationDataService.selectedStationRight,
-    // ], [stationDataService])
 
     const handleStationLeftChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const newStation = e.target.value;
         stationDataService.setStationLeft(newStation);
         setSelectedStationLeft(newStation);
     };
-
-    const handleStationRightChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const newStation = e.target.value;
-        stationDataService.setStationRight(newStation);
-        setSelectedStationRight(newStation);
-    };
+    
+    const handleOneYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const newYear = e.target.value
+        stationDataService.setCompareOneYear(newYear);        
+    }    
 
     const handleModusChange = (value: string) => {
-        setSelectedModus(value);
+        setSelectedModus(value)
+        stationDataService.setModus(value);
     };
 
     const handleYear1Change = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -118,19 +95,17 @@ export function CompareTwoStations() {
     if (loading) {
         return <div>Loading...</div>; 
     }
-    console.log("selectedStationLeft", selectedStationLeft);
     return (
         <Box padding={50}>
             <p>{intl.formatMessage({ id: "historic_climate_stations.select_stations" })}</p>
             <HStack>
                 <Select
                     value={selectedStationLeft}
-                    // onChange={e => stationDataService.setStationLeft(e.target.value)}
                     onChange={handleStationLeftChange}
                 >
                     {stationDataService.allStations.map((e: any) => (
                         <option key={e.ID} value={e.NAME_EST}>
-                            {e.NAME_EST}
+                            {` ${e.NAME_EST ?? "no station name"} | ID:  ${e.ID}`}
                         </option>
                     ))}
                 </Select>
@@ -147,6 +122,7 @@ export function CompareTwoStations() {
             </HStack>
             <RadioGroup onChange={handleModusChange}>
                 <HStack>
+                    <Radio value={'no_filter'}>{intl.formatMessage({ id: "historic_climate_stations.radio_buttons.no_filter" })}</Radio>
                     <Radio value={'one_year'}>{intl.formatMessage({ id: "historic_climate_stations.radio_buttons.one_year" })}</Radio>
                     <Radio value={'two_years'}>{intl.formatMessage({ id: "historic_climate_stations.radio_buttons.two_years" })}</Radio>
                     <Radio value={'time_range'}>{intl.formatMessage({ id: "historic_climate_stations.radio_buttons.time_range" })}</Radio>
@@ -156,10 +132,10 @@ export function CompareTwoStations() {
 
             {selectedModus === "one_year" && (
                 <Select
-                    onChange={e => stationDataService.setCompareOneYear(Number(e.target.value))}
+                    onChange={handleOneYearChange}
                     placeholder="Select Year"
                 >
-                    {Array.from({ length: 10 }, (_, i) => 2020 + i).map(year => (
+                    {stationDataService.availableYears.map(year => (
                         <option key={year} value={year}>
                             {year}
                         </option>
@@ -173,7 +149,7 @@ export function CompareTwoStations() {
                         onChange={handleYear1Change}
                         placeholder="Select Year"
                     >
-                        {Array.from({ length: 10 }, (_, i) => 2020 + i).map(year => (
+                        {stationDataService.availableYears.map(year => (
                             <option key={year} value={year}>
                                 {year}
                             </option>
@@ -183,7 +159,7 @@ export function CompareTwoStations() {
                         onChange={handleYear2Change}
                         placeholder="Select Year"
                     >
-                        {Array.from({ length: 10 }, (_, i) => 2020 + i).map(year => (
+                        {stationDataService.availableYears.map(year => (
                             <option key={year} value={year}>
                                 {year}
                             </option>
@@ -193,55 +169,33 @@ export function CompareTwoStations() {
             )}
 
             {selectedModus === "time_range" && (
-                <HStack spacing={400}>
-                    <VStack>
+                <HStack >
+                    
                         <Select
                             onChange={handleFromYearChange}
                             value={fromYear || ""}
                             placeholder="Select From Year"
                         >
-                            {Array.from({ length: 10 }, (_, i) => 2020 + i).map(year => (
+                            {stationDataService.availableYears.map(year => (
                                 <option key={year} value={year}>
                                     {year}
                                 </option>
                             ))}
                         </Select>
-                        <Select
-                            onChange={handleFromMonthChange}
-                            value={fromMonth || ""}
-                            placeholder="Select From Month"
-                        >
-                            {Array.from({ length: 12 }, (_, i) => i + 1).map(month => (
-                                <option key={month} value={month}>
-                                    {month < 10 ? `0${month}` : month}
-                                </option>
-                            ))}
-                        </Select>
-                    </VStack>
-                    <VStack>
+
+                    
                         <Select
                             onChange={handleToYearChange}
                             value={toYear || ""}
                             placeholder="Select To Year"
                         >
-                            {Array.from({ length: 10 }, (_, i) => 2020 + i).map(year => (
+                            {stationDataService.availableYears.map(year => (
                                 <option key={year} value={year}>
                                     {year}
                                 </option>
                             ))}
                         </Select>
-                        <Select
-                            onChange={handleToMonthChange}
-                            value={toMonth || ""}
-                            placeholder="Select To Month"
-                        >
-                            {Array.from({ length: 12 }, (_, i) => i + 1).map(month => (
-                                <option key={month} value={month}>
-                                    {month < 10 ? `0${month}` : month}
-                                </option>
-                            ))}
-                        </Select>
-                    </VStack>
+
                 </HStack>
                 
             )}
