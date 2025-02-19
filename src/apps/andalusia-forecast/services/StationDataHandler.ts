@@ -8,7 +8,8 @@ export interface StationDataHandler extends DeclaredService<"app.StationDataHand
     setStationLeft(station: string): void;
     setStationId(id: string): void;
     setCompareOneYear(year: number): void;
-    setCompareTwoYear(year1: number, year2: number): void;
+    setCompareTwoYears1(year1: number): void;
+    setCompareTwoYears2(year2: number): void;
     setFromTimeRange(from: number): void;
     setToTimeRange(to: number): void;
     setCompareOneMonth(month: number): void;
@@ -20,7 +21,8 @@ export interface StationDataHandler extends DeclaredService<"app.StationDataHand
     selectedStationId: string;
     selectedYear: number;
     availableYears: number[];
-    selectedYears: number[];
+    selectedYear1: number;
+    selectedYear2: number;
     selectedFromTimeRange: number;
     selectedToTimeRange: number;
     selectedMonth: number; 
@@ -37,7 +39,8 @@ export class StationDataHandlerImpl implements StationDataHandler {
     #selectedStationId: Reactive<string> = reactive('')
     #selectedYear: Reactive<number> = reactive(null);
     #availableYears: Reactive<number> = reactive(null);
-    #selectedYears: Reactive<number[]> = reactive([null, null]);
+    #selectedYear1: Reactive<number> = reactive(null);
+    #selectedYear2: Reactive<number> = reactive(null);
     #selectedFromTimeRange: Reactive<number> = reactive(null);
     #selectedToTimeRange: Reactive<number> = reactive(null);
     #selectedMonth: Reactive<number> = reactive(null);
@@ -80,7 +83,7 @@ export class StationDataHandlerImpl implements StationDataHandler {
         this.setStationId(getStationId(station, this.#allStations));
     }  
     get selectedStationLeft(){
-        return this.#selectedStationLeft;
+        return this.#selectedStationLeft.value;
     }
     setStationId(id: string): void{
         this.#selectedStationId.value = id;
@@ -103,11 +106,18 @@ export class StationDataHandlerImpl implements StationDataHandler {
         return this.#availableYears.value
     }
     
-    setCompareTwoYear(year1: number, year2: number) {
-        this.#selectedYears.value = [year1, year2]
+    setCompareTwoYears1(year1: number) {
+        this.#selectedYear1.value = year1
     }
-    get selectedYears(){
-        return this.#selectedYears.value
+    get selectedYear1(){
+        return this.#selectedYear1.value
+    }
+
+    setCompareTwoYears2(year2: number) {
+        this.#selectedYear2.value = year2
+    }
+    get selectedYear2(){
+        return this.#selectedYear2.value
     }
     
     setFromTimeRange(from: number) {
@@ -125,7 +135,10 @@ export class StationDataHandlerImpl implements StationDataHandler {
     }
     
     setCompareOneMonth(month: number) {
-        this.#selectedMonth = month
+        this.#selectedMonth.value = month
+    }
+    get selectedMonth(){
+        return this.#selectedMonth.value
     }
     
     setModus(modus: string) {

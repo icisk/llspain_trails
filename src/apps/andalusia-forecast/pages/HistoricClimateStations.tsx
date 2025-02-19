@@ -15,7 +15,7 @@ import {click} from "ol/events/condition";
 import {CompareTwoStations} from "../components/CompareTwoStations/CompareTwoStations";
 import {StationDataHandler} from "../services/StationDataHandler";
 import {useReactiveSnapshot} from "@open-pioneer/reactivity";
-
+import {mesesEnEspanol} from "../components/utils/globals";
 
 const HistoricClimateStations = () => {
     const intl = useIntl();
@@ -62,13 +62,22 @@ const HistoricClimateStations = () => {
         }
     });
 
-    const [selectedStationId, selectedYear, modus, selectedYears, selectedFromTimeRange, selectedToTimeRange] = useReactiveSnapshot(() => [
+    const [ selectedStationId, 
+            selectedYear, 
+            modus, 
+            selectedFromTimeRange, 
+            selectedToTimeRange, 
+            selectedMonth, 
+            selectedYear1, 
+            selectedYear2] = useReactiveSnapshot(() => [
         stationDataService.selectedStationId,
         stationDataService.selectedYear,
         stationDataService.modus,
-        stationDataService.selectedYears,
         stationDataService.selectedFromTimeRange,
-        stationDataService.selectedToTimeRange
+        stationDataService.selectedToTimeRange,
+        stationDataService.selectedMonth,
+        stationDataService.selectedYear1,
+        stationDataService.selectedYear2,
     ], [stationDataService]);
 
     // Add interaction to map for MAP_ID
@@ -86,7 +95,7 @@ const HistoricClimateStations = () => {
                     const feature = selectedFeatures[0];
                     const properties = feature?.getProperties();
                     setSelectedFeatureId(properties?.ID);
-                    console.log(properties?.NAME_EST)
+                    // console.log(properties?.NAME_EST)
                     stationDataService.setStationLeft(properties?.NAME_EST)
                 }
             });
@@ -148,6 +157,20 @@ const HistoricClimateStations = () => {
     }, [data]); 
     
     useEffect(() => {
+        const months = [
+            intl.formatMessage({ id: "global.months.jan" }),
+            intl.formatMessage({ id: "global.months.feb" }),
+            intl.formatMessage({ id: "global.months.mar" }),
+            intl.formatMessage({ id: "global.months.apr" }),
+            intl.formatMessage({ id: "global.months.may" }),
+            intl.formatMessage({ id: "global.months.jun" }),
+            intl.formatMessage({ id: "global.months.jul" }),
+            intl.formatMessage({ id: "global.months.aug" }),
+            intl.formatMessage({ id: "global.months.sep" }),
+            intl.formatMessage({ id: "global.months.oct" }),
+            intl.formatMessage({ id: "global.months.nov" }),
+            intl.formatMessage({ id: "global.months.dec" }),
+        ];
         if (data.precip && data.t_mean && data.t_max && data.t_min) {
             // Initialize a common time interval based on all data types
             const allFeatures = [
@@ -220,12 +243,13 @@ const HistoricClimateStations = () => {
             // console.log("Mean Temperature Series Data:", meanTempSeriesData);
             // console.log("Max Temperature Series Data:", maxTempSeriesData);
             // console.log("Min Temperature Series Data:", minTempSeriesData);
-            const allSeries = [
+            let allSeries = [
                 {
                     name: intl.formatMessage({ id: "global.vars.temp_mean" }),
                     data: meanTempSeriesData,
                     type: "spline",
                     color: "rgba(255, 179, 71, 1)", // Lighter orange with 50% opacity
+                    marker: {symbol: 'point', radius: 3},
                     yAxis: 1,
                 },
                 {
@@ -233,6 +257,7 @@ const HistoricClimateStations = () => {
                     data: maxTempSeriesData,
                     type: "spline",
                     color: "rgba(255, 133, 133, 1)", // Lighter red with 50% opacity
+                    marker: {symbol: 'point', radius: 3},
                     yAxis: 1,
                 },
                 {
@@ -240,6 +265,7 @@ const HistoricClimateStations = () => {
                     data: minTempSeriesData,
                     type: "spline",
                     color: "rgba(153, 255, 153, 1)", // Lighter green with 50% opacity
+                    marker: {symbol: 'point', radius: 3},
                     yAxis: 1,
                 },
                 {
@@ -258,15 +284,32 @@ const HistoricClimateStations = () => {
                     })
                     .filter(index => index !== -1);  // Filter out -1 (dates that don't match)
             }
-            console.log(modus)
+            const getIndexesByMonth = (dates, targetMonth) => {
+                const formattedMonth = targetMonth.toString().padStart(2, '0');
+                return dates.map((date, index) => date.split('-')[1] === formattedMonth ? index : -1)
+                    .filter(index => index !== -1);
+            };
+            let seriesYear1 = []
+            let seriesYear2 = []
+            let datesYear1 = []
+            let datesYear2 = []
+            let chartControl = ''
             if (modus === 'no_filter'){
-                stationDataService.setCompareOneYear(null)
+                stationDataService.setCompareOneYear(null)                
+                stationDataService.setCompareTwoYears1(null)
+                stationDataService.setCompareTwoYears2(null)
                 stationDataService.setFromTimeRange(null)
                 stationDataService.setToTimeRange(null)
-                
+                stationDataService.setCompareOneMonth(null)
+
             } else if (modus === 'one_year') {
+                
+                stationDataService.setCompareTwoYears1(null)
+                stationDataService.setCompareTwoYears2(null)
                 stationDataService.setFromTimeRange(null)
                 stationDataService.setToTimeRange(null)
+                stationDataService.setCompareOneMonth(null)
+
                 if (selectedYear !== null){
                     const matchingIndexes = getIndexesByYear(categories, selectedYear);
                     allSeries.forEach((serie) => {
@@ -275,12 +318,106 @@ const HistoricClimateStations = () => {
                     categories.splice(0, categories.length, ...matchingIndexes.map(i => categories[i]));
                 }            
 
-            } else if ( modus === 'two_years' && selectedYears !== null){
+            } else if ( modus === 'two_years' ){
+                stationDataService.setCompareOneYear(null)
 
                 
+                stationDataService.setFromTimeRange(null)
+                stationDataService.setToTimeRange(null)
+                stationDataService.setCompareOneMonth(null)
+                if (selectedYear1 !== null && selectedYear2 !== null){
+                    chartControl = 'two_years'
+
+                    function getStartMonthIndex(categories, year) {
+                        const firstDateIndex = categories.findIndex(date => date.startsWith(year));
+                        if (firstDateIndex !== -1) {
+                            return new Date(categories[firstDateIndex]).getMonth(); 
+                        }
+                        return null; 
+                    }
+
+                    const indexYear1 = getIndexesByYear(categories, selectedYear1);
+                    const indexYear2 = getIndexesByYear(categories, selectedYear2);
+
+                    datesYear1 = indexYear1.map(index => categories[index]);
+                    datesYear2 = indexYear2.map(index => categories[index]);
+                    // console.log(datesYear1, datesYear2);
+
+                    const startMonthIndex1 = getStartMonthIndex(categories, selectedYear1);
+                    const startMonthIndex2 = getStartMonthIndex(categories, selectedYear2);
+                    // console.log(startMonthIndex1, startMonthIndex2)
+
+                    function createSeriesData(series, indexYear, startMonthIndex) {
+                        const data = new Array(12).fill(null); 
+                        indexYear.forEach(index => {
+                            const monthIndex = new Date(categories[index]).getMonth();
+                            //console.log(`Index: ${index}, Month Index: ${monthIndex}, Data Value: ${series.data[index]}`);
+
+                            if (monthIndex >= 0 && monthIndex < 12) {
+                                data[monthIndex] = series.data[index]; 
+                            }
+                        });
+                        return data;
+                    }
+
+
+                    seriesYear1 = allSeries.map(serie => ({
+                        ...serie,
+                        data: createSeriesData(serie, indexYear1, startMonthIndex1)
+                    }));
+                    seriesYear2 = allSeries.map(serie => ({
+                        ...serie,
+                        data: createSeriesData(serie, indexYear2, startMonthIndex2)
+                    }));
+
+                    seriesYear1[0].marker = { symbol: 'point', radius: 7 };
+                    seriesYear1[0].color = "rgb(220,167,52)"
+                    seriesYear1[0].type = 'scatter'
+                    seriesYear1[0].zIndex = 2
+                    
+                    seriesYear1[1].marker = { symbol: 'triangle-down', radius: 7  };
+                    seriesYear1[1].color = "rgb(89,7,7)"
+                    seriesYear1[1].type = 'scatter'
+                    seriesYear1[1].zIndex = 2
+                    
+                    seriesYear1[2].marker = { symbol: 'triangle', radius: 7  };
+                    seriesYear1[2].color = "rgb(27,78,13)"
+                    seriesYear1[2].type = 'scatter'
+                    seriesYear1[2].zIndex = 2
+                    
+                    seriesYear1[3].color = "rgb(14,36,78)"
+                    seriesYear1[3].zIndex = 1
+                    
+                    
+                    seriesYear2[0].marker = { symbol: 'point', radius: 5 };
+                    seriesYear2[0].color = "rgb(207,125,73)"
+                    seriesYear2[0].type = 'scatter'
+                    seriesYear2[0].zIndex = 3
+                    
+                    seriesYear2[1].marker = { symbol: 'triangle-down', radius: 5 };
+                    seriesYear2[1].color = "rgb(243,33,82)"
+                    seriesYear2[1].type = 'scatter'
+                    seriesYear2[1].zIndex = 3
+                    
+                    seriesYear2[2].marker = { symbol: 'triangle', radius: 5  };
+                    seriesYear2[2].color = "rgba(124, 237, 92, 1)"
+                    seriesYear2[2].type = 'scatter'
+                    seriesYear2[2].zIndex = 3
+                    
+                    seriesYear2[3].color = "rgb(75,159,241)"
+                    seriesYear2[3].zIndex = 1
+
+                    // console.log(seriesYear1, seriesYear2);
+                    
+                }               
                 
             } else if (modus === 'time_range'){
                 stationDataService.setCompareOneYear(null)
+                stationDataService.setCompareTwoYears1(null)
+                stationDataService.setCompareTwoYears2(null)
+
+                
+                stationDataService.setCompareOneMonth(null)
                 if (selectedFromTimeRange !== null && selectedToTimeRange !== null){
                     let startIndexes = getIndexesByYear(categories, selectedFromTimeRange);
                     let endIndexes = getIndexesByYear(categories, selectedToTimeRange);
@@ -293,6 +430,23 @@ const HistoricClimateStations = () => {
                     categories.splice(0, categories.length, ...categories.slice(startIndexes[0], endIndexes[endIndexes.length -1 ] + 2));
                 }                
 
+            } else if (modus === 'month'){
+                stationDataService.setCompareOneYear(null)
+                stationDataService.setCompareTwoYears1(null)
+                stationDataService.setCompareTwoYears2(null)
+                stationDataService.setFromTimeRange(null)
+                stationDataService.setToTimeRange(null)
+                
+                if (selectedMonth !== null){                    
+                    const monthIndexes = getIndexesByMonth(categories, selectedMonth+1)
+
+                    allSeries.forEach(serie => {
+                        serie.data.splice(0, serie.data.length, ...monthIndexes.map(index => serie.data[index]));
+                    });
+                    categories.splice(0, categories.length, ...monthIndexes.map(index => categories[index]));                    
+
+
+                }
             }
             
             
@@ -306,34 +460,86 @@ const HistoricClimateStations = () => {
                 : selectedCategory === "3"
                 ? allSeries.filter((s) => s.name === intl.formatMessage({ id: "global.vars.precip" }))
                 : [];
-            console.log(selectedCategory, "Filtered Series:", filteredSeries);
+
+            const filteredSeriesYear1 =
+                selectedCategory === "1"
+                    ? seriesYear1
+                    : selectedCategory === "2"
+                        ? seriesYear1.filter((s) => s.name.includes("Temperatura"))
+                        : selectedCategory === "3"
+                            ? seriesYear1.filter((s) => s.name === intl.formatMessage({ id: "global.vars.precip" }))
+                            : [];
+
+            const filteredSeriesYear2 =
+                selectedCategory === "1"
+                    ? seriesYear2
+                    : selectedCategory === "2"
+                        ? seriesYear2.filter((s) => s.name.includes("Temperatura"))
+                        : selectedCategory === "3"
+                            ? seriesYear2.filter((s) => s.name === intl.formatMessage({ id: "global.vars.precip" }))
+                            : [];
+            //console.log(selectedCategory, "Filtered Series:", filteredSeries);
             // Update the chart options
-            setChartOptions({
-                chart: {
-                    type: "column",
-                    zoomType: "x"
-                },
-                title: { text: intl.formatMessage({ id: "global.plot.header_temp_precip" }) },
-                xAxis: { categories, title: { text: intl.formatMessage({id: "global.vars.date"}) } },
-                yAxis: [
-                    {
-                        // Left axis for precipitation
-                        title: { text: `${intl.formatMessage({ id: "global.vars.precip" })} (mm)` },
-                        //min: 0,
-                        opposite: false, // Default: left
+            if (modus === 'two_years' && chartControl === 'two_years'){
+                // console.log(mesesEnEspanol)
+                // console.log(filteredSeriesYear1)
+                
+                setChartOptions({
+                    chart: {
+                        type: "column",
+                        zoomType: "x"
                     },
-                    {
-                        // Right axis for temperature
-                        title: { text: `${intl.formatMessage({ id: "global.vars.temp" })} (°C)` },
-                        //min: 0,
-                        opposite: true, // Display on the right
+                    title: { text: intl.formatMessage({ id: "global.plot.header_temp_precip" }) },
+                    xAxis: { categories: mesesEnEspanol, title: { text: intl.formatMessage({id: "global.vars.date"}) } },
+                    yAxis: [
+                        {
+                            // Left axis for precipitation
+                            title: { text: `${intl.formatMessage({ id: "global.vars.precip" })} (mm)` },
+                            //min: 0,
+                            opposite: false, // Default: left
+                        },
+                        {
+                            // Right axis for temperature
+                            title: { text: `${intl.formatMessage({ id: "global.vars.temp" })} (°C)` },
+                            //min: 0,
+                            opposite: true, // Display on the right
+                        },
+                    ],
+                    series: [
+                        ...filteredSeriesYear1,
+                        ...filteredSeriesYear2
+                    ]
+
+                });
+            } else{
+                setChartOptions({
+                    chart: {
+                        type: "column",
+                        zoomType: "x"
                     },
-                ],
-                series: filteredSeries,
-            });
+                    title: { text: intl.formatMessage({ id: "global.plot.header_temp_precip" }) },
+                    xAxis: { categories, title: { text: intl.formatMessage({id: "global.vars.date"}) } },
+                    yAxis: [
+                        {
+                            // Left axis for precipitation
+                            title: { text: `${intl.formatMessage({ id: "global.vars.precip" })} (mm)` },
+                            //min: 0,
+                            opposite: false, // Default: left
+                        },
+                        {
+                            // Right axis for temperature
+                            title: { text: `${intl.formatMessage({ id: "global.vars.temp" })} (°C)` },
+                            //min: 0,
+                            opposite: true, // Display on the right
+                        },
+                    ],
+                    series: filteredSeries,
+                });
+            }
+
             
         }
-    }, [data, intl, selectedCategory, stationDataService, selectedYear, modus, selectedFromTimeRange, selectedToTimeRange]);
+    }, [data, intl, selectedCategory, stationDataService, selectedYear, modus, selectedFromTimeRange, selectedToTimeRange, selectedMonth, selectedYear1, selectedYear2]);
 
     useEffect(() => {
         if (mapState?.map?.olMap) {
