@@ -21,7 +21,7 @@ import {Vector as VectorLayer} from "ol/layer";
 import {Vector as VectorSource} from "ol/source";
 import HighchartsReact from "highcharts-react-official";
 import { set } from 'ol/transform';
-
+import { Radio, RadioGroup, Stack } from '@chakra-ui/react';
 
 // Marker layer for displaying clicks
 const markerSource = new VectorSource();
@@ -57,10 +57,15 @@ const HistoricClimateData1 = () => {
     const [yearLeft, setYearLeft] = useState<number>(2000);
     const [yearRight, setYearRight] = useState<number>(2005);
 
+    //states for comparison mode
     const [precipData1, setPrecipData1] = useState(null);
     const [tempData1, setTempData1] = useState(null);
     const [precipData2, setPrecipData2] = useState(null);
     const [tempData2, setTempData2] = useState(null);
+
+    //states for single mode
+    const [precipData, setPrecipData] = useState(null);
+    const [tempData, setTempData] = useState(null);
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -68,6 +73,8 @@ const HistoricClimateData1 = () => {
     const [precipTimeSeries, setPrecipTimeSeries] = useState<String>(null)
     const [tempTimeSeries, setTempTimeSeries] = useState<String>(null)
     const [longestTimeSeries, setLongestTimeSeries] = useState<String>(null)
+
+    const [isComparisonMode, setIsComparisonMode] = useState(false);
 
     const [chartOptions, setChartOptions] = useState({
         chart: { type: "column", zoomType: "x" },
@@ -113,11 +120,13 @@ const HistoricClimateData1 = () => {
         ]
     });
     
-
     const mapModel = useMapModel(MAP_ID);
 
+    // comparison mode: fetch data when coordinates are clicked
     useEffect(() => {
         if (!clickedCoordinates) return;
+
+        if (!isComparisonMode) return;
 
         const fetchData = async (x: number, y: number, year1: number, year2: number) => {
             const precipUrl = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_precip/position?coords=POINT(${x}%20${y})`;
@@ -198,6 +207,7 @@ const HistoricClimateData1 = () => {
 
     }, [clickedCoordinates, yearLeft, yearRight]);
 
+    // comparison mode: update chart options when data is updated
     useEffect(() => {
         if (!precipData1 || !precipData2 || !tempData1 || !tempData2) return;
     
@@ -262,9 +272,105 @@ const HistoricClimateData1 = () => {
             ]
         });
     }, [precipData1, precipData2, tempData1, tempData2]);
-    
-    
-       
+
+    // single mode: fetch data when coordinates are clicked
+    useEffect(() => {
+        if (!clickedCoordinates) return;
+
+        if (isComparisonMode) return
+
+        const fetchData = async (x, y) => {
+            const precipUrl = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_precip/position?coords=POINT(${x}%20${y})`;
+            const tempUrl = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_temperature/position?coords=POINT(${x}%20${y})`;
+
+            try {
+                setLoading(true);
+                const [precipResponse, tempResponse] = await Promise.all([
+                    fetch(precipUrl),
+                    fetch(tempUrl)
+                ]);
+                if (!precipResponse.ok || !tempResponse.ok) throw new Error("Network response was not ok");
+
+                const precipJsonData = await precipResponse.json();
+                const tempJsonData = await tempResponse.json();
+                setPrecipData(precipJsonData);
+                setTempData(tempJsonData);
+
+                // Create time series
+                const createTimeSeries = (start, stop) => {
+                    const startDate = new Date(start);
+                    const stopDate = new Date(stop);
+                    const timeSeries = [];
+                    while (startDate <= stopDate) {
+                        const year = startDate.getFullYear();
+                        const month = String(startDate.getMonth() + 1).padStart(2, "0");
+                        timeSeries.push(`${year}-${month}`);
+                        startDate.setMonth(startDate.getMonth() + 1);
+                    }
+                    return timeSeries;
+                };
+
+                const precipStart = precipJsonData?.domain?.axes?.time?.start;
+                const precipStop = precipJsonData?.domain?.axes?.time?.stop;
+                const tempStart = tempJsonData?.domain?.axes?.time?.start;
+                const tempStop = tempJsonData?.domain?.axes?.time?.stop;
+
+                if (precipStart && precipStop && tempStart && tempStop) {
+                    const precipTimeSeries = createTimeSeries(precipStart, precipStop);
+                    const tempTimeSeries = createTimeSeries(tempStart, tempStop);
+
+                    setPrecipTimeSeries(precipTimeSeries);
+                    setTempTimeSeries(tempTimeSeries);
+                }
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        const [x, y] = clickedCoordinates;
+        fetchData(x, y);
+
+            if (precipTimeSeries && tempTimeSeries) {
+                setLongestTimeSeries(precipTimeSeries.length > tempTimeSeries.length ? precipTimeSeries : tempTimeSeries);
+            }
+
+    }, [clickedCoordinates]);
+
+    // single mode: update chart options when data is updated
+    useEffect(() => {
+        if (!tempTimeSeries || !precipTimeSeries) return;  // Wait until both time series are available
+
+        setChartOptions({
+            chart: { type: "column", zoomType: "x" },
+            title: { text: intl.formatMessage({ id: "global.plot.header_temp_precip" }) },
+            xAxis: { categories: tempTimeSeries, title: {text: intl.formatMessage({ id: "global.vars.date" })} },
+            yAxis: [
+                {title: { text: "Precipitation (mm)" }, min: 0, max: 400, opposite: false},
+                {title: {text: "Temperatura (ºC)" }, min: -10, max: 40, opposite: true}
+            ],
+            tooltip: {
+                valueDecimals: 1
+            },
+            series: [
+                {
+                    name: intl.formatMessage({ id: "global.vars.precip" }),
+                    data: precipData?.ranges?.historic_precip?.values || [],
+                    type: "column",
+                    color: "blue",
+                    yAxis: 0
+                },
+                {
+                    name: intl.formatMessage({ id: "global.vars.temp" }),
+                    data: tempData?.ranges?.historic_temperature?.values || [],
+                    type: "spline",
+                    color: "orange",
+                    yAxis: 1
+                }
+            ]
+        });
+    }, [longestTimeSeries, precipData, tempData]);
     
     useEffect(() => {
         if(mapModel.map){
@@ -276,8 +382,6 @@ const HistoricClimateData1 = () => {
         }
     }, [mapModel])
 
-
-    
     //click on map
     useEffect(() => {
         if (mapModel?.map?.olMap) {
@@ -304,9 +408,6 @@ const HistoricClimateData1 = () => {
         const marker = createMarker(coordinatesEPSG3857, markerStyle)
         markerSource.addFeature(marker);
     };
-
-
-
 
     type VariableValues = {
         [key: string]: string;
@@ -364,10 +465,26 @@ const HistoricClimateData1 = () => {
                             leftLayers={leftLayers}
                             rightLayers={rightLayers}/>
             }
+            <Box mt={4}>
+                <RadioGroup
+                onChange={(value) => {
+                    setIsComparisonMode(value === "true");
+                }}
+                value={isComparisonMode ? "true" : "false"}
+                >
+                    <Box>
+                        {intl.formatMessage({ id: "historic_compare.radio_buttons.heading" })}
+                    </Box>
+                    <Stack direction="row">
+                        <Radio value="true">{intl.formatMessage({ id: "historic_compare.radio_buttons.compare" })}</Radio>
+                        <Radio value="false">{intl.formatMessage({ id: "historic_compare.radio_buttons.full_series" })}</Radio>
+                    </Stack>
+                </RadioGroup>
+                <div>
+                    <HighchartsReact highcharts={Highcharts} options={chartOptions}/>
+                </div>
+            </Box>
         </Container>
-        <div>
-            <HighchartsReact highcharts={Highcharts} options={chartOptions}/>
-        </div>
     </Box>
 </Box>
     );

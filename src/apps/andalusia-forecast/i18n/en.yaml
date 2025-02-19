@@ -56,6 +56,10 @@ messages:
     nav: Compare historic Data tif & stations (MID JAN)
     heading: historic climatic maps
     heading_descr: Explore maps generated from historical data from the AEMET meteorological station network between 2000 and 2020.
+    radio_buttons:
+      heading: 'Select Data Display Mode:'
+      full_series: Full Time Series
+      compare: Compare Years
     info:
       temp: Monthly mean Temperature Monatliche modellierung der Temperaturdaten nach lorum ipsum bla Hochgekrempelte Ärmel, freches Lächeln, Taylor-Swift-Armbänder. Robert Habecks Kanzlervideo zeigt ungewollt, wie nutzlos die aktuellen politischen Inszenierungen sind.
       precip: Nach der CDU dürfen nun auch die Grünen das Lied Zeit, dass sich was dreht nicht mehr im Wahlkampf benutzen. "Wir haben heute auch die Partei Bündnis 90/Die Grünen und Herrn Habeck aufgefordert, es in Zukunft zu unterlassen, Lieder von Herbert Grönemeyer und hier konkret das Lied 'Zeit, dass sich was dreht' für Wahlkampfzwecke zu nutzen", teilte Grönemeyers Medienanwalt Christian Schertz der Nachrichtenagentur dpa mit.
