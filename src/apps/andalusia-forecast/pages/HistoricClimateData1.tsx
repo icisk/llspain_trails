@@ -205,7 +205,7 @@ const HistoricClimateData1 = () => {
             setLongestTimeSeries(precipTimeSeries.length > tempTimeSeries.length ? precipTimeSeries : tempTimeSeries);
         }
 
-    }, [clickedCoordinates, yearLeft, yearRight]);
+    }, [clickedCoordinates, yearLeft, yearRight, isComparisonMode]);
 
     // comparison mode: update chart options when data is updated
     useEffect(() => {
@@ -336,7 +336,7 @@ const HistoricClimateData1 = () => {
                 setLongestTimeSeries(precipTimeSeries.length > tempTimeSeries.length ? precipTimeSeries : tempTimeSeries);
             }
 
-    }, [clickedCoordinates]);
+    }, [clickedCoordinates, isComparisonMode]);
 
     // single mode: update chart options when data is updated
     useEffect(() => {
