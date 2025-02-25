@@ -162,9 +162,6 @@ const HistoricClimateData1 = () => {
                 const tempIndicesYear2 = getIndicesForYear(tempMetrics, year2);
                 const precipIndicesYear1 = getIndicesForYear(precipMetrics, year1);
                 const precipIndicesYear2 = getIndicesForYear(precipMetrics, year2);
-
-
-                console.log(precipIndicesYear1)
         
                 const precipData = await fetch(precipUrl).then((response) => response.json());
                 const tempData = await fetch(tempUrl).then((response) => response.json());
