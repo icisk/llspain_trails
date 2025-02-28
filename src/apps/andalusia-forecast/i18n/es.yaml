@@ -92,9 +92,23 @@ messages:
     heading: Bioindicadores/Sequía
     heading_descr: Esta es una página para explorar los días efectivos biológicos
   hydro_service:
-    nav: Servicio hidrológico
-    heading: Servicio hidrológico
-    heading_descr: Este es un mapa de historias sobre hechos hidrológicos
+    nav: Informatión hidrológica
+    heading: Información hidrológica de la comarca de Los Pedroches (norte de Córdoba)
+    heading_descr: En esta página pueden encontrarse las fuentes de información hidrológica de la región, así como la información recopilada durante las campañas de muestreo del proyecto ICISK (2023-2025)
+    selection_options:
+      thematic_maps:
+        title: 'Mapas temáticos:'
+        none: Sin selección
+        land_use: Usos del suelo
+        geological: Mapa geológico
+        groundwater: Profundidad del nivel freático
+      hydro_data:
+        title: 'Datos hidrológicos:'
+        groundwater: Límite de las masas de agua subterránea
+        authorities_boundaries: Límite las demarcaciones dentro de la comarca
+        municipalities: Municipios
+        network: Red hidrográfica
+      aquifer_info: 'Chismorreos del acuífero:'
   historic_stations:
     nav: Estaciones Climáticas Históricas
     heading:  Registros climáticos históricos en las estaciones

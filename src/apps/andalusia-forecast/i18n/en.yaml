@@ -90,9 +90,9 @@ messages:
     heading: Bioindicators/Drought
     heading_descr: This is a page to explore the biological effective degree days
   hydro_service:
-    nav: Hydrological Service (DATA BY DEZ)
-    heading: Hydrological Service
-    heading_descr: This is a story map about hydrological facts
+    nav: Hydrological Informtion
+    heading: Hydrological information on the Los Pedroches region (north of Córdoba)
+    heading_descr: On this page you can find the sources of hydrological information for the region, as well as the information collected during the sampling campaigns of the ICISK project (2023-2025).
   historic_stations:
     nav: Historic Climate Stations
     heading: Historic Climate Stations
