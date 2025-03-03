@@ -17,6 +17,7 @@ import {createMarker, markerStyle} from "../components/utils/marker";
 import {Header} from "../components/MainComponents/Header";
 import {MainMap} from "../components/MainComponents/MainMap";
 import {StaticPrecipitationLegend} from "../components/Legends/StaticPrecipitationLegend"; // Correct import statement
+import {UncertaintyLegend} from "../components/Legends/uncertainty";
 
 // Marker layer for displaying clicks
 const markerSource = new VectorSource();
@@ -106,7 +107,8 @@ export function Forecast() {
 
             <Box position="relative">
                 <MainMap MAP_ID={MAP_ID} />
-                <StaticPrecipitationLegend /> 
+                <StaticPrecipitationLegend />
+                <UncertaintyLegend />
             </Box>
             <Box p={4}>
                 {/*<div style={{ marginBottom: "10px", fontSize: "16px" }}>*/}

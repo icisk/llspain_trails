@@ -70,7 +70,7 @@ export class HistoricClimateMapProvider implements MapConfigProvider {
                             normalize: false,
                             sources: [
                                 {
-                                    url: "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_2004_07_MeanTemperature_v0.tif",
+                                    url: "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_2000_08_MeanTemperature_v0.tif",
                                     nodata: -5.3e+37
                                     
                                 }
@@ -92,7 +92,7 @@ export class HistoricClimateMapProvider implements MapConfigProvider {
                             normalize: false,
                             sources: [
                                 {
-                                    url: "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_2000_02_MeanTemperature_v0.tif",
+                                    url: "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_2005_01_MeanTemperature_v0.tif",
                                     nodata: -5.3e+37
                                 }
                             ]

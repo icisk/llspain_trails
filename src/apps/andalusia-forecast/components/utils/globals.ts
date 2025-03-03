@@ -138,3 +138,9 @@ export const mesesEnEspanol = [
     "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
 ];
+
+export const uncertaintyColors = {
+    red: '#fa0000',
+    green: '#00ff00',
+    yellow: '#fffa00',
+}

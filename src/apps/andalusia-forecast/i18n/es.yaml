@@ -13,6 +13,7 @@ messages:
       temp_mean:  Temperatura media
       precip: Precipitación 
       precip_cum:  Precipitación acumulada mensual 
+      uncertainty: Incertidumbre
       year: año
       month: mes
       date: Fecha
@@ -28,6 +29,11 @@ messages:
       header_temp_precip: Valores de Precipitación y Temperatura a lo largo de los Meses
       header_precip: Precipitación Data
       header_temp: Temperatura Data
+    legend:
+      uncertainty:
+        red: Gran incertidumbre
+        yellow: Incertidumbre media
+        green: Poca incertidumbre
     months:
       jan: Enero
       feb: Febrero

@@ -79,7 +79,7 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
     private mapRegistry: MapRegistry;
     private layerLeft: WebGLTileLayer | undefined;
     private layerRight: WebGLTileLayer | undefined;
-    #currentMonthLeft: Reactive<Month> = reactive(Month.March);
+    #currentMonthLeft: Reactive<Month> = reactive(8); //Month.March
     #currentYearLeft: Reactive<Year> = reactive(Year.dummy);
     #currentVarLeft: Reactive<Variable> = reactive("temp");
     #currentMonthRight: Reactive<Month> = reactive(Month.August);
