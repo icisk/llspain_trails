@@ -10,7 +10,8 @@ export default defineBuildConfig({
         references: [
             "app.PrecipitationLayerHandler", 
             "app.HistoricLayerHandler",
-            "app.StationDataHandler"
+            "app.StationDataHandler",
+            "app.BioindicatorLayerHandler"
                     ]
     },
     services: {
@@ -28,6 +29,12 @@ export default defineBuildConfig({
         },
         BioindicatorMapProvider: {
             provides: ["map.MapConfigProvider"]
+        },
+        BioindicatorLayerHandlerImpl: {
+            provides: ["app.BioindicatorLayerHandler"],
+            references: {
+                mapRegistry: "map.MapRegistry"
+            }
         },
         PrecipitationLayerHandlerImpl: {
             provides: ["app.PrecipitationLayerHandler"],
@@ -47,7 +54,7 @@ export default defineBuildConfig({
         HistoricClimateMapProvider2: {
             provides: ["map.MapConfigProvider"]
         },
-        HistoricClimateStationsMapProvider: { // Added new map provider
+        HistoricClimateStationsMapProvider: { 
             provides: ["map.MapConfigProvider"]
         },
         StationDataHandlerImpl: {

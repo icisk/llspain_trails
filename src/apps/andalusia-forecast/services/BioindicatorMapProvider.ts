@@ -6,6 +6,9 @@ import { register } from "ol/proj/proj4";
 import OSM from "ol/source/OSM";
 import proj4 from "proj4";
 import { createCazorlaLayer, createLosPedrochesLayer } from "../components/utils/regionLayers";
+import WebGLTileLayer from "ol/layer/WebGLTile";
+import GeoTIFF from "ol/source/GeoTIFF";
+import {tempColorGradient} from "../components/utils/globals";
 
 
 proj4.defs(
@@ -15,7 +18,20 @@ proj4.defs(
 register(proj4);
 
 export const MAP_ID = "bioindicator";
-
+const ex = [
+    -794753.04,
+    4345052.37,
+    -194771.63,
+    4757383.53
+] //epsg 3857
+const getColorStyle = () => {
+    return [
+        "case",
+        ["<=", ["band", 1], 30], [255, 0, 0, 1],  // Red
+        ["<=", ["band", 1], 60], [255, 255, 0, 1], // Yellow
+        [0, 255, 0, 1]  // Green (default if > 60)
+    ];
+};
 export class BioindicatorMapProvider implements MapConfigProvider {
     mapId = MAP_ID;
 
@@ -35,6 +51,29 @@ export class BioindicatorMapProvider implements MapConfigProvider {
                         properties: { title: "OSM" }
                     }),
                     isBaseLayer: true
+                }),
+                new SimpleLayer({
+                    id: "tif",
+                    title: "CDD",
+                    olLayer: new WebGLTileLayer({
+                        opacity: 0.5,
+                        source: new GeoTIFF({
+                            normalize: false,
+                            sources: [
+                                {
+                                    url: "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/spain/agro_indicator/CDD/CDD_2025-10-16.tif",
+                                    nodata: -5.3e+37
+
+                                }
+                            ]
+                        }),
+                        style: {
+                            color: getColorStyle()
+                        },
+                        extent: ex,
+                        properties: { title: "CDD" }
+                    }),
+                    isBaseLayer: false
                 }),
                 new SimpleLayer({
                     title: "Cazorla",
