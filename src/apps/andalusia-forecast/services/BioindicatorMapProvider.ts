@@ -40,7 +40,7 @@ export class BioindicatorMapProvider implements MapConfigProvider {
             initialView: {
                 kind: "position",
                 center: { x: -460000, y: 4540000 },
-                zoom: 8
+                zoom: 7
             },
             projection: "EPSG:3857",
             layers: [
