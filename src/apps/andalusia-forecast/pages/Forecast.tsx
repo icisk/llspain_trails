@@ -18,10 +18,12 @@ import {Header} from "../components/MainComponents/Header";
 import {MainMap} from "../components/MainComponents/MainMap";
 import {StaticPrecipitationLegend} from "../components/Legends/StaticPrecipitationLegend"; // Correct import statement
 import {UncertaintyLegend} from "../components/Legends/uncertainty";
+import {useReactiveSnapshot} from "@open-pioneer/reactivity";
 
 // Marker layer for displaying clicks
 const markerSource = new VectorSource();
 const markerLayer = new VectorLayer({ source: markerSource, zIndex: 1 });
+
 
 export function Forecast() {
     const intl = useIntl();
@@ -29,14 +31,16 @@ export function Forecast() {
     const { data, loading, error } = useFetchData(clickedCoordinates);
     const mapState = useMapModel(MAP_ID);
     const precipitationService = useService<PrecipitationLayerHandler>("app.PrecipitationLayerHandler");
-    
+    const prepSrvc = useService<PrecipitationLayerHandler>("app.PrecipitationLayerHandler");
+    const [curVar] = useReactiveSnapshot(() =>[prepSrvc.currentVariable], [prepSrvc])
     const currentVariable = precipitationService?.currentVariable;
     
     // State for managing chart options
     const [chartOptions, setChartOptions] = useState({
         title: { text: intl.formatMessage({ id: "global.plot.header_precip" }) },
         xAxis: { categories: ["Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto"] },
-        yAxis: { title: { text: "Precipitation (mm)" }, min: 0, max: 350 },
+        tooltip: { valueDecimals: 1 },
+        yAxis: { title: { text: intl.formatMessage({ id: "global.vars.precip" }) + " " + intl.formatMessage({ id: "global.units.mm" }) }, min: 0, max: 350 },
         series: []
     });
 
@@ -93,7 +97,7 @@ export function Forecast() {
         markerSource.addFeature(marker);
     };
 
-    //console.log(getMonthArray())
+    //console.log(curVar)
     return (
         <Container minWidth={"container.xl"}>            
             <Header subpage={'forecast'} />
@@ -107,8 +111,15 @@ export function Forecast() {
 
             <Box position="relative">
                 <MainMap MAP_ID={MAP_ID} />
-                <StaticPrecipitationLegend />
-                <UncertaintyLegend />
+                {(curVar === 'pc50') &&
+                    <StaticPrecipitationLegend />                
+                }
+
+                {(curVar === 'UNCERTAINTY') &&                   
+                    <UncertaintyLegend />
+                }
+                
+                
             </Box>
             <Box p={4}>
                 {/*<div style={{ marginBottom: "10px", fontSize: "16px" }}>*/}

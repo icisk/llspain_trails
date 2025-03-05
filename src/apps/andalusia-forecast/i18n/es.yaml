@@ -13,7 +13,7 @@ messages:
       temp_mean:  Temperatura media
       precip: Precipitación 
       precip_cum:  Precipitación acumulada mensual 
-      uncertainty: Incertidumbre
+      uncertainty: Grado de incertidumbre
       year: año
       month: mes
       date: Fecha
@@ -26,14 +26,14 @@ messages:
       coord_clicked: coordenadas clicadas {x} & {y} #bsp mit dynamischen inputs
       no_coord_clicked: Aún no hay coordenadas clicadas
     plot:
-      header_temp_precip: Valores de Precipitación y Temperatura a lo largo de los Meses
-      header_precip: Precipitación Data
+      header_temp_precip: Precipitación (acumulada mensual) y temperatura media mensual
+      header_precip: Datos de precipitación
       header_temp: Temperatura Data
     legend:
       uncertainty:
-        red: Gran incertidumbre
-        yellow: Incertidumbre media
-        green: Poca incertidumbre
+        red: alta
+        yellow: media
+        green: baja
     months:
       jan: Enero
       feb: Febrero
@@ -79,7 +79,7 @@ messages:
     heading: Estaciones Climáticas Históricas
     heading_descr: Datos históricos de estaciones climáticas
     heading_legend: Conjuntos de datos disponibles
-    select_stations: Escoja dos estacion a través del listados
+    select_stations: Selecione estacion
     radio_buttons:
       temp: Temperatura
       precip: Precipitación
@@ -97,6 +97,10 @@ messages:
     nav: Indicadores fenológicos y modelo de aceite
     heading: Bioindicadores/Sequía
     heading_descr: Esta es una página para explorar los días efectivos biológicos
+    plot:
+      title: Días secos consecutivos (< 1mm precipitaciones)
+      xAxis: DSC
+      yAxis: Dias
   hydro_service:
     nav: Servicio hidrológico
     heading: Servicio hidrológico

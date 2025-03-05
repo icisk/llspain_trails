@@ -167,6 +167,7 @@ const HistoricClimateStations = () => {
             intl.formatMessage({ id: "global.months.jul" }),
             intl.formatMessage({ id: "global.months.aug" }),
             intl.formatMessage({ id: "global.months.sep" }),
+            intl.formatMessage({ id: "global.months.sep" }),
             intl.formatMessage({ id: "global.months.oct" }),
             intl.formatMessage({ id: "global.months.nov" }),
             intl.formatMessage({ id: "global.months.dec" }),
@@ -566,12 +567,12 @@ const HistoricClimateStations = () => {
                         <StationValueLegend/>
                         {/* Removed DynamicPrecipitationLegend */}
                         <Box position="absolute" bottom="10px" left="10px">
-                            <Switch
-                                isChecked={stationsVisible}
-                                onChange={() => setStationsVisible(!stationsVisible)}
-                            >
-                                {intl.formatMessage({ id: "global.controls.toggle_stations" })}
-                            </Switch>
+                            {/*<Switch*/}
+                            {/*    isChecked={stationsVisible}*/}
+                            {/*    onChange={() => setStationsVisible(!stationsVisible)}*/}
+                            {/*>*/}
+                            {/*    {intl.formatMessage({ id: "global.controls.toggle_stations" })}*/}
+                            {/*</Switch>*/}
                         </Box>
                     </Box>
                     <Box width="100000%" pt={6}> {/* no idea why, but when i dont move it out of view the buttons are rendered twice */}

@@ -22,6 +22,8 @@ import {Vector as VectorSource} from "ol/source";
 import HighchartsReact from "highcharts-react-official";
 import { set } from 'ol/transform';
 import { Radio, RadioGroup, Stack } from '@chakra-ui/react';
+import {HistoricLayerHandler} from "../services/HistoricLayerHandler";
+import {useReactiveSnapshot} from "@open-pioneer/reactivity";
 
 // Marker layer for displaying clicks
 const markerSource = new VectorSource();
@@ -47,7 +49,10 @@ const HistoricClimateData1 = () => {
         intl.formatMessage({ id: "global.months.nov" }),
         intl.formatMessage({ id: "global.months.dec" }),
     ];
-    
+    const [varLeft, 
+        varRight] = useReactiveSnapshot(()=> [
+            histLayerHandler.currentVarLeft, 
+        histLayerHandler.currentVarRight], [histLayerHandler])
     const mapRef = useRef<HTMLDivElement>(null);
     const [leftLayers, setLeftLayers]= useState<Layer[]>();
     const [rightLayers, setRightLayers]= useState<Layer[]>();
@@ -438,6 +443,11 @@ const HistoricClimateData1 = () => {
     //HistoricClimateHook1(mapRef);
     HistoricClimateHook2(mapRef);
     
+    //console.log(histLayerHandler.currentVarLeft)
+    useEffect(() => {
+        
+    }, [histLayerHandler]);
+    
     return (
 <Box>
     <Header subpage={'historic_compare'} />
@@ -449,8 +459,16 @@ const HistoricClimateData1 = () => {
         <Container flex={2} minWidth={"container.xl"}>
             <Box width="100%" height="600px" position="relative">
                 <MainMap MAP_ID={MAP_ID}/>
-                <DynamicPrecipitationLegend/>
-                <Knecht/>
+                {
+                    (varLeft === 'temp' || varRight === 'temp') &&
+                    <DynamicPrecipitationLegend/>
+                }
+                {
+                    (varLeft=== 'precip' || varRight === 'precip') &&
+                    <Knecht/>
+                }
+                {/*<Knecht/>*/}
+                
             </Box>
 
             {(leftLayers && rightLayers && mapModel.map) &&
