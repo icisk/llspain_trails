@@ -3,6 +3,8 @@
 
 import { MapConfig, MapConfigProvider, SimpleLayer } from "@open-pioneer/map";
 import TileLayer from "ol/layer/Tile";
+import ImageLayer from "ol/layer/Image";
+import Static from "ol/source/ImageStatic";
 import View from "ol/View";
 import { register } from "ol/proj/proj4";
 import OSM from "ol/source/OSM";
@@ -30,20 +32,22 @@ export class HydrologicalMapProvider implements MapConfigProvider {
     async getMapConfig(): Promise<MapConfig> {
         
         //landuse layer
-        const landUseLayer = new TileLayer({
-            source: new TileWMS({
-                url: "https://i-cisk.dev.52north.org/data/collections/maps_api_ll_spain_landuse_dissolved/map",
-                params: {
-                    "bbox-crs": 4326,
-                },
-                serverType: "mapserver",
-                crossOrigin: "anonymous"
+        const landUseLayer = new ImageLayer({
+            source: new Static({
+                url: 'https://i-cisk.dev.52north.org/data/collections/maps_api_ll_spain_landuse_dissolved/map?f=png',
+                imageExtent: [
+                    -5.392816586767803,
+                    38.088551680000016,
+                    -4.193883430000028,
+                    38.72908738000001
+                ],
+                projection: 'EPSG:4326',
             })
         });
-
+        
         landUseLayer.set("id", "thematic-1");
         landUseLayer.set("thematic", true);
-
+        
         // groundwater layer (VECTOR)
         const groundwaterLayer = new VectorLayer({
             source: new VectorSource({
