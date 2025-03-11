@@ -115,7 +115,7 @@ export class HydrologicalMapProvider implements MapConfigProvider {
         return {
             initialView: {
                 kind: "position",
-                center: { x: pedrochesPoint.geom.getCoordinates()[0], y: pedrochesPoint.geom.getCoordinates()[1] },
+                center: { x: pedrochesPoint.geom.getCoordinates()[0] ?? 0, y: pedrochesPoint.geom.getCoordinates()[1] ?? 0 },
                 zoom: pedrochesPoint.zoom,
             },
             projection: "EPSG:3857",

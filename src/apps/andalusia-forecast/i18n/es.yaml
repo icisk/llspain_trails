@@ -102,13 +102,14 @@ messages:
         land_use: Usos del suelo
         geological: Mapa geológico
         groundwater: Profundidad del nivel freático
+        opacity: 'Transparencia:'
       hydro_data:
         title: 'Datos hidrológicos:'
         groundwater: Límite de las masas de agua subterránea
         authorities_boundaries: Límite las demarcaciones dentro de la comarca
         municipalities: Municipios
         network: Red hidrográfica
-      aquifer_info: 'Chismorreos del acuífero:'
+      aquifer_info: 'Chismorreos del acuífero'
   historic_stations:
     nav: Estaciones Climáticas Históricas
     heading:  Registros climáticos históricos en las estaciones
