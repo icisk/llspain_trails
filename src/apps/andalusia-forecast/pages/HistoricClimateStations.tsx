@@ -96,7 +96,7 @@ const HistoricClimateStations = () => {
                     const properties = feature?.getProperties();
                     setSelectedFeatureId(properties?.ID);
                     // console.log(properties?.NAME_EST)
-                    stationDataService.setStationLeft(properties?.NAME_EST)
+                    stationDataService.setStationLeft(properties?.NAME_STATION)
                 }
             });
             
@@ -119,12 +119,13 @@ const HistoricClimateStations = () => {
         }
         prevValues.current = { selectedFeatureId, selectedStationId };
     }, [selectedFeatureId, selectedStationId]);
-    
+        
     useEffect(() => {
-        if (selectedFeatureId !== null || selectedStationId !== null) {           
-            const fetchData = async (type: string, id: any) => {
+        //console.log('Current data:', data);
+        if (selectedFeatureId !== null || selectedStationId !== null) {
+            const fetchData = async (id: any) => {
                 let fetchedData = null;
-                const url = `https://i-cisk.dev.52north.org/data/collections/AEMET_stations_${type}/items?f=json&limit=2500&CODI_INM=${id}`;
+                const url = `https://i-cisk.dev.52north.org/data/collections/AEMET_stations_all/items?f=json&limit=2500&CODE_INM=${id}`;
                 try {
                     setLoading(true);
                     const response = await fetch(url);
@@ -137,24 +138,22 @@ const HistoricClimateStations = () => {
                     setLoading(false);
                 }
                 if (fetchedData) {
-                    setData((prevData) => ({
-                        ...prevData,
-                        [type]: fetchedData,
-                    }));
+                    
+                    setData(fetchedData)
                 }
             };
-
             if (lastChangedID !== null) {
-                const types = ["precip", "t_mean", "t_max", "t_min"];
-                types.forEach((type) => fetchData(type, lastChangedID));
+                fetchData(lastChangedID);
             }
-            
-        }
+
+        }        
     }, [lastChangedID]);
     
     useEffect(() => {
-        //console.log('Current data:', data);
-    }, [data]); 
+        console.log('Current data:', data);
+        console.log('Current id:', lastChangedID);
+
+    }, [data, lastChangedID]);
     
     useEffect(() => {
         const months = [

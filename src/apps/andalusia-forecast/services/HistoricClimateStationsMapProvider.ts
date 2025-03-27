@@ -30,27 +30,27 @@ export class HistoricClimateStationsMapProvider implements MapConfigProvider {
     constructor() {
         this.stationsLayer = new VectorLayer({
             source: new VectorSource({
-                url: 'https://i-cisk.dev.52north.org/data/collections/ll_spain_creaf_in_boundary/items?f=json&limit=1000',
+                url: 'https://i-cisk.dev.52north.org/data/collections/ll_spain_aemet_stations/items?f=json&limit=1000',
                 format: new GeoJSON(),
                 projection: 'EPSG:4326'
             }),
             style: (feature) => {
-                const val = feature.get('val');
-                let color;
-        
-                if (val === "both") {
-                    color = stationValueColors.purple;
-                } else if (val === "precip") {
-                    color = stationValueColors.blue;
-                } else {
-                    color = stationValueColors.red;
-                }
+                // const val = feature.get('val');
+                // let color;
+                //
+                // if (val === "both") {
+                //     color = stationValueColors.purple;
+                // } else if (val === "precip") {
+                //     color = stationValueColors.blue;
+                // } else {
+                //     color = stationValueColors.red;
+                // }
         
                 return new Style({
                     image: new Circle({
                         radius: 5,
                         fill: new Fill({
-                            color: color
+                            color: stationValueColors.purple
                         }),
                         stroke: new Stroke({
                             color: 'black',
