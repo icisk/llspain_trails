@@ -17,10 +17,12 @@ messages:
       year: año
       month: mes
       date: Fecha
+      csd: Días secos consecutivos.
     controls:
       sel_month: Seleccione el mes 
       sel_year: Seleccione el año
       sel_var: Seleccione la variable
+      sel_prediction: Seleccione la prediction
       toggle_stations: alternar estaciones
     map:
       coord_clicked: coordenadas clicadas {x} & {y} #bsp mit dynamischen inputs
@@ -52,9 +54,9 @@ messages:
         title: Mueva el control deslizante para ajustar la comparación de capas del mapa.
 
   home:
-    nav: Home
-    heading: Hola!
-    heading_descr: Esta página web exhibe algunos primeros ejemplos de visualización de datos climáticos y meteorológicos para el Living Lab Andalucía en España 🇪🇸 en el proyecto I-CISK.
+    nav: Portada
+    heading: Servicios climáticos I-CISK
+    heading_descr: Esta página da acceso a los servicios climáticos desarrollados en el marco del proyecto I-CISK para el Laboratorio Vivo Andalucía-Los Pedroches. 🇪🇸  
   forecast:
     nav: Mapas previsión a 6 meses
     heading: Pronósticos meteorológicos mensuales a medio plazo (hasta 6 meses)
@@ -65,7 +67,7 @@ messages:
     heading_descr: Explore los mapas generados a partir de datos históricos de la red de estaciones meteorológicas de la AEMET entre los años 2000 y 2020.
     info:
       temp: 'Modelización de la temperatura media mensual (unidades: ºC) generada por regresión múltiple lineal e interpolación de residuos a partir de los valores en las estaciones y variables geográficas. (Ninyerola M, Pons X Roure JM. 2000. A methodological approach of climatological modelling of air temperature and precipitation through GIS techniques. Int. J. Climatol. 20: 1823–1841)'
-      precip: 'Precipitación acumulada mensual (unidades: mm)  Modelización de la precipitación mensual acumulada (unidades: mm) generada por regresión múltiple lineal e interpolación de residuos a partir de los valores en las estaciones y variables geográficas. (Ninyerola M, Pons X Roure JM. 2000. A methodological approach of climatological modelling of air temperature and precipitation through GIS techniques. Int. J. Climatol. 20: 1823–1841)'
+      precip: 'Precipitación acumulada mensual (unidades: mm). Modelización de la precipitación mensual acumulada (unidades: mm) generada por regresión múltiple lineal e interpolación de residuos a partir de los valores en las estaciones y variables geográficas. (Ninyerola M, Pons X Roure JM. 2000. A methodological approach of climatological modelling of air temperature and precipitation through GIS techniques. Int. J. Climatol. 20: 1823–1841)'
     radio_buttons:
       heading: 'Seleccionar modo de visualización de datos:'
       full_series: Serie temporal completa
@@ -79,7 +81,7 @@ messages:
     heading: Estaciones Climáticas Históricas
     heading_descr: Datos históricos de estaciones climáticas
     heading_legend: Conjuntos de datos disponibles
-    select_stations: Selecione estacion
+    select_stations: Seleccione estación
     radio_buttons:
       temp: Temperatura
       precip: Precipitación
@@ -95,11 +97,11 @@ messages:
     heading_descr: Proyecciones climáticas hasta 2100
   phenology:
     nav: Indicadores fenológicos y modelo de aceite
-    heading: Bioindicadores/Sequía
-    heading_descr: Esta es una página para explorar los días efectivos biológicos
+    heading: Número máximo de días secos consecutivos.
+    heading_descr: "Período más largo de días consecutivos dentro de un trimestre con suma de precipitación diaria inferior a 1 mm. Las fechas corresponden a los días centrales de los trimestres:\n\n• Dic, Ene, Feb (invierno)\n• Mar, Abr, May (primavera)\n• Jun, Jul, Ago (verano)\n• Sep, Oct, Nov (otoño)"
     plot:
-      title: Días secos consecutivos (< 1mm precipitaciones)
-      xAxis: DSC
+      title: Número de días secos consecutivos por trimestre
+      xAxis: Fecha central del trimestre
       yAxis: Dias
   hydro_service:
     nav: Servicio hidrológico

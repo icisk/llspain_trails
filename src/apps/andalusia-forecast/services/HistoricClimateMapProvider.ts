@@ -9,6 +9,7 @@ import proj4 from "proj4";
 import {createCazorlaLayer, createLosPedrochesLayer} from "../components/utils/regionLayers";
 import {tempColorGradient} from "../components/utils/globals";
 import {transformExtent} from 'ol/proj';
+import XYZ from "ol/source/XYZ";
 
 
 // Registrierung von EPSG:25830
@@ -53,11 +54,13 @@ export class HistoricClimateMapProvider implements MapConfigProvider {
             layers: [
                 // OpenStreetMap als Hintergrund
                 new SimpleLayer({
-                    title: "OpenStreetMap",
-                    id: "osm",
+                    title: "ESRI Gray",
                     olLayer: new WebGLTileLayer({
-                        source: new OSM(),
-                        properties: { title: "OSM" }
+                        source: new XYZ({
+                            url: 'https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+                            attributions: '&copy; Esri, HERE, Garmin, OpenStreetMap contributors'
+                        }),
+                        properties: { title: "ESRI Gray" }
                     }),
                     isBaseLayer: true
                 }),

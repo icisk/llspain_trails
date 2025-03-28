@@ -19,6 +19,7 @@ import {MainMap} from "../components/MainComponents/MainMap";
 import {StaticPrecipitationLegend} from "../components/Legends/StaticPrecipitationLegend"; // Correct import statement
 import {UncertaintyLegend} from "../components/Legends/uncertainty";
 import {useReactiveSnapshot} from "@open-pioneer/reactivity";
+import {Select} from "@chakra-ui/react";
 
 // Marker layer for displaying clicks
 const markerSource = new VectorSource();
@@ -103,9 +104,16 @@ export function Forecast() {
             <Header subpage={'forecast'} />
 
             <Center pt={2}>
-                <HStack>
-                    <ChangeMonth />
-                    <ChangeVariable />
+                <HStack flex={"overflow"}>
+                    <HStack>
+                        <Box
+                            whiteSpace={"nowrap"}>{intl.formatMessage({id: "global.controls.sel_prediction"})} </Box>
+                        <Select>
+                            <option value="february">Febrero</option>
+                        </Select>
+                    </HStack>
+                    <ChangeMonth/>
+                    <ChangeVariable/>
                 </HStack>
             </Center>
 

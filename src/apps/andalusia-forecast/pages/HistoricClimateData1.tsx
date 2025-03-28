@@ -1,8 +1,8 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Box, Container} from "@open-pioneer/chakra-integration";
+import {Box, Container, Flex} from "@open-pioneer/chakra-integration";
 import {HStack} from "@chakra-ui/react";
 import {useIntl, useService} from "open-pioneer:react-hooks";
-import {SimpleLayer, useMapModel} from "@open-pioneer/map";
+import {MapAnchor, MapContainer, SimpleLayer, useMapModel} from "@open-pioneer/map";
 import {Header} from "../components/MainComponents/Header";
 import {MainMap} from "../components/MainComponents/MainMap";
 import {HistoricClimateHook2} from '../hooks/HistoricClimatehook';
@@ -24,6 +24,9 @@ import { set } from 'ol/transform';
 import { Radio, RadioGroup, Stack } from '@chakra-ui/react';
 import {HistoricLayerHandler} from "../services/HistoricLayerHandler";
 import {useReactiveSnapshot} from "@open-pioneer/reactivity";
+import {ZoomIn, ZoomOut} from "@open-pioneer/map-navigation";
+import {CoordsScaleBar} from "../components/CoordsScaleBar/CoordsScaleBar";
+import {RegionZoom} from "../components/RegionZoom/RegionZoom";
 
 // Marker layer for displaying clicks
 const markerSource = new VectorSource();
@@ -457,8 +460,24 @@ const HistoricClimateData1 = () => {
             <HistoricPickerRight onChange={onRightPickerChange}/>
         </HStack>
         <Container flex={2} minWidth={"container.xl"}>
-            <Box width="100%" height="600px" position="relative">
-                <MainMap MAP_ID={MAP_ID}/>
+            <Box width="100%" height="540px" position="relative">
+                {/*<MainMap MAP_ID={MAP_ID}/>*/}
+
+                    <Box height={"500px"} pt={2} overflow="visible">
+                        <MapContainer mapId={MAP_ID} role="main" >
+                            <MapAnchor position="bottom-right" horizontalGap={10} verticalGap={30}>
+                                <Flex role="bottom-right" direction="column" gap={1} padding={1}>
+                                    <ZoomIn mapId={MAP_ID}/>
+                                    <ZoomOut mapId={MAP_ID}/>
+                                </Flex>
+                            </MapAnchor>
+                            
+                        </MapContainer>
+                    </Box>
+                    <Box mb={4}>
+                        <CoordsScaleBar MAP_ID={MAP_ID} />
+                    </Box>                   
+
                 {
                     (varLeft === 'temp' || varRight === 'temp') &&
                     <DynamicPrecipitationLegend/>
@@ -480,6 +499,9 @@ const HistoricClimateData1 = () => {
                             leftLayers={leftLayers}
                             rightLayers={rightLayers}/>
             }
+            <Box mb={4} gap={10}>
+                <RegionZoom MAP_ID={MAP_ID} />
+            </Box>
             <Box mt={4}>
                 <RadioGroup
                 onChange={(value) => {

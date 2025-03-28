@@ -151,7 +151,7 @@ export const LayerSwipe = (props: LayerSwipeProps) => {
     }
 
     return (
-        <Box>
+        <Box height={"40px"}>
             <Slider aria-label={intl.formatMessage({ id: "global.layerswipe.slider.title" })}  value={sliderValueRef.current}  onChange={(value) => {handleSliderValueChanged(value)}} min={0} max={100}>
                 <SliderTrack>
                     <SliderFilledTrack />

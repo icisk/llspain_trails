@@ -1,4 +1,3 @@
-import React, {useEffect, useState} from 'react';
 import {
     Box,
     Center,
@@ -33,8 +32,21 @@ import {useReactiveSnapshot} from "@open-pioneer/reactivity";
 import {meta} from "eslint-plugin-react/lib/rules/jsx-props-no-spread-multi";
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
+import {PhenologyLegend} from "../components/Legends/PhenologyLegend";
+import React, {useEffect, useState} from "react";
 
+function getSeasonLabel(date) {
+    const month = date.getMonth() + 1; // months are 0-indexed
+    const year = date.getFullYear();
 
+    let season;
+    if (month >= 3 && month <= 5) season = "Primavera";
+    else if (month >= 6 && month <= 8) season = "Verano";
+    else if (month >= 9 && month <= 11) season = "Otoño";
+    else season = "Invierno";
+
+    return `${year} ${season}`;
+}
 
 
 export function Phenology() {
@@ -130,11 +142,13 @@ export function Phenology() {
     useEffect(() => {
         if (cddValues.length > 0) {
             let iso_dates = dateObjects.map((date) => date.toISOString().split('T')[0]);
+            let seasonLabels = dateObjects.map(date => getSeasonLabel(date)); // Convert dates to season labels
+
 
             setChartOptions(prevOptions => ({
                 ...prevOptions,
                 title: { text: intl.formatMessage({ id: "phenology.plot.title" }) },
-                xAxis: { ...prevOptions.xAxis, categories: iso_dates },
+                xAxis: { ...prevOptions.xAxis, categories: seasonLabels },
                 series: [{ ...prevOptions.series[0], data: cddValues }]
             }));
 
@@ -149,57 +163,65 @@ export function Phenology() {
     }
 
     return (
-        <Container minWidth={"container.xl"}>
-
+        <Box>
             <InfoBoxComponent
                 header={intl.formatMessage({id: "phenology.heading"})}
-                description={intl.formatMessage({id: "phenology.heading_descr"})}
-            ></InfoBoxComponent>
+                description={intl.formatMessage({ id: "phenology.heading_descr" }).split("\n").map((line, index) => (
+                    <p key={index}>{line}</p>
+                ))}
+            />
 
-            <Box width={'100%'} padding={5}>
-                <VStack>
-                    {metadata.time.length > 0 && (
-                        <>
-                            <Slider
-                                min={0}
-                                max={dateObjects.length - 1}
-                                step={1}
-                                value={sliderValue}
-                                onChange={(value) => setSliderValue(value)}
-                            >
-                                <SliderTrack bg="gray.200">
-                                    <SliderFilledTrack bg="blue.450"/>
-                                </SliderTrack>
-                                <SliderThumb boxSize={30} bg="blue.450"/>
-                            </Slider>
+            <Container flex={2} minWidth={"container.xl"}>
+                <Box mt={5}>
+                    <VStack>
+                        {metadata.time.length > 0 && (
+                            <>
+                                <Slider
+                                    min={0}
+                                    max={dateObjects.length - 1}
+                                    step={1}
+                                    value={sliderValue}
+                                    onChange={(value) => setSliderValue(value)}
+                                >
+                                    <SliderTrack bg="gray.200">
+                                        <SliderFilledTrack bg="blue.450"/>
+                                    </SliderTrack>
+                                    <SliderThumb boxSize={30} bg="blue.450"/>
+                                </Slider>
 
-                            <Box mt={2} textAlign="center" fontSize="lg" fontWeight="bold">
-                                {dateObjects[sliderValue].toISOString().split("T")[0]}
-                            </Box>
-                        </>
-                    )}
-                </VStack>
-
-            </Box>
-            <Box height={500}>
-                <MapContainer mapId={MAP_ID} role="main">
-                    <MapAnchor position="bottom-right" horizontalGap={10} verticalGap={30}>
-                        <Flex role="bottom-right" direction="column" gap={1} padding={1}>
-                            <ZoomIn mapId={MAP_ID}/>
-                            <ZoomOut mapId={MAP_ID}/>
-                        </Flex>
-                    </MapAnchor>
-                </MapContainer>
-                <RegionZoom MAP_ID={MAP_ID}/>
-            </Box>
-            <CoordsScaleBar MAP_ID={MAP_ID}/>
-
-            {!chartLoading && (
-                <div style={{ marginTop: "50px" }}>
-                    <HighchartsReact highcharts={Highcharts} options={chartOptions} />
-                </div>
-            )}
-        </Container>
+                                <Box mt={2} textAlign="center" fontSize="lg" fontWeight="bold">
+                                    {getSeasonLabel(dateObjects[sliderValue])}
+                                </Box>
+                            </>
+                        )}
+                    </VStack>
+                </Box>
+                <Box width="100%" height="540px" position="relative">
+                    <Box height={"500px"} pt={2} overflow={"visable"}>
+                        <MapContainer mapId={MAP_ID} role="main">
+                            <MapAnchor position="bottom-right" horizontalGap={10} verticalGap={30}>
+                                <Flex role="bottom-right" direction="column" gap={1} padding={1}>
+                                    <ZoomIn mapId={MAP_ID}/>
+                                    <ZoomOut mapId={MAP_ID}/>
+                                </Flex>
+                            </MapAnchor>
+                        </MapContainer>
+                    </Box>
+                    <Box mb={4}>
+                        <CoordsScaleBar MAP_ID={MAP_ID}/>
+                    </Box>
+                    <PhenologyLegend/>
+                </Box>
+                <Box>
+                    <RegionZoom MAP_ID={MAP_ID}/>
+                </Box>
+                {!chartLoading && (
+                    <div style={{marginTop: "50px"}}>
+                        <HighchartsReact highcharts={Highcharts} options={chartOptions}/>
+                    </div>
+                )}
+            </Container>
+        </Box>
     )
 }
 

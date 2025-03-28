@@ -16,6 +16,7 @@ import {CompareTwoStations} from "../components/CompareTwoStations/CompareTwoSta
 import {StationDataHandler} from "../services/StationDataHandler";
 import {useReactiveSnapshot} from "@open-pioneer/reactivity";
 import {mesesEnEspanol} from "../components/utils/globals";
+import { Overlay } from 'ol';
 
 const HistoricClimateStations = () => {
     const intl = useIntl();
@@ -80,7 +81,7 @@ const HistoricClimateStations = () => {
         stationDataService.selectedYear2,
     ], [stationDataService]);
 
-    // Add interaction to map for MAP_ID
+    
     useEffect(() => {        
         if (mapState?.map?.olMap) {
             const olMap = mapState.map.olMap;
@@ -99,13 +100,13 @@ const HistoricClimateStations = () => {
                     stationDataService.setStationLeft(properties?.NAME_EST)
                 }
             });
-            
+
             return () => {
                 olMap.removeInteraction(selectInteraction);
             };
         }
     }, [mapState]);
-  
+
     
     const prevValues = useRef({ selectedFeatureId, selectedStationId });
     useEffect(() => {

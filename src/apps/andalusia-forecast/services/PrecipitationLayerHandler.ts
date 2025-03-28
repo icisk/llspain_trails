@@ -23,7 +23,7 @@ export enum Month {
     Mayo = "5",
     Junio = "6",
     Julio = "7",
-    Augusto = "8"
+    Agosto = "8"
 }
 
 const p_01 = '#C4DAF6BC'
@@ -132,17 +132,17 @@ export class PrecipitationLayerHandlerImpl implements PrecipitationLayerHandler 
                 p_09
             ];
         } if (this.#currentVariable.value === Variable.Incertidumbre){
-            return[
+            return [
                 "case",
                 ["all", ["==", ["*", ["band", 1], 150], 0], ["==", ["*", ["band", 2], 150], 0]],
-                [0, 0, 0, 0], // Transparent for 0 values outside the area of interest
-                ["==", ["band", 1], 1],
-                'red', // Red for actual 0 values within the area of interest
-                ["==", ["band", 1], 2],
-                'yellow',
-                ["<=", ["band", 1], 3],
-                'green',
-                'blue'
+                [0, 0, 0, 0], // Fully transparent for 0 values outside the area of interest
+                ["<", ["band", 1], 1.5],
+                "#FF0000BF", // Red (75% opacity) for values close to 1
+                ["<", ["band", 1], 2.5],
+                "#FFFF00BF", // Yellow (75% opacity) for values close to 2
+                ["<", ["band", 1], 3.5],
+                "#00FF00BF", // Green (75% opacity) for values close to 3
+                "#0000FFBF" // Default Blue (75% opacity) for unclassified pixels
             ];
         }
     }
