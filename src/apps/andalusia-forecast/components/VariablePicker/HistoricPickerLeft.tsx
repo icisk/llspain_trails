@@ -11,7 +11,7 @@ interface HistoricPickerProps {
     onChange: (field: string, value: number|string) => void
 }
 
-export interface Selection{
+export interface SelectionLeft{
     year: number,
     month: number,
     var: string

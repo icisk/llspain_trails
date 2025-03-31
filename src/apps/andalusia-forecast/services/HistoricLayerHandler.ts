@@ -82,7 +82,7 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
     #currentMonthLeft: Reactive<Month> = reactive(8); //Month.March
     #currentYearLeft: Reactive<Year> = reactive(Year.dummy);
     #currentVarLeft: Reactive<Variable> = reactive("temp");
-    #currentMonthRight: Reactive<Month> = reactive(Month.August);
+    #currentMonthRight: Reactive<Month> = reactive(1);
     #currentYearRight: Reactive<Year> = reactive(Year.dummy2);
     #currentVarRight: Reactive<Variable> = reactive("temp");
    
