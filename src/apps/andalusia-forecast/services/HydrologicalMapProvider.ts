@@ -67,9 +67,15 @@ export class HydrologicalMapProvider implements MapConfigProvider {
                 format: new GeoJSON(),
             }),
             visible: false,
+            style: new Style({
+                stroke: new Stroke({
+                    color: "#008000", 
+                    width: 2,         
+                }),
+            }),
         });
 
-        authoritiesLayer.set("id", "authorities");
+        authoritiesLayer.set("id", "authorities_boundaries");
         authoritiesLayer.set("vector", true);
 
         // hydro network layer (VECTOR)
@@ -155,6 +161,11 @@ export class HydrologicalMapProvider implements MapConfigProvider {
                 new SimpleLayer({
                     title: "Groundwater",
                     olLayer: groundwaterLayer,
+                    isBaseLayer: false
+                }),
+                new SimpleLayer({
+                    title: "Authorities",
+                    olLayer: authoritiesLayer,
                     isBaseLayer: false
                 }),
             ]
