@@ -37,6 +37,18 @@ export const tempColors = {
      red: '#832525BC',
      dark_red: '#53050aBC', //rgba(83,5,10,0.74)
 }
+export const speicolors = {
+    nuller : '#0000000',
+    extrem_dry: '#8B1A1AFF',
+    very_dry: '#DE2929FF',
+    dry: '#F3641DFF',
+    little_dry: '#FDC404FF',
+    normal: '#9AFA94FF',
+    little_wet: '#03F2FDFF',
+    wet: '#12ADF3FF',
+    very_wet: '#1771DEFF',
+    extrem_wet: '#00008BFF'   
+}
 
 const boundaries_temp = [ -100, 0, 5, 10, 15, 20, 25, 30, 40];
 const gradientColors_temp = [
@@ -90,6 +102,29 @@ export const precipColorGradient = [
     ...boundaries_precip.flatMap((boundary) => [boundary, colorScale_precip(boundary).hex()])
 ];
 
+const boundaries_spei = [-10, -8, -3.0, -2.25, -1.5, -0.75, 0.0, 0.75, 1.5, 2.25, 3.0]
+const gradientColors_spei = [
+    tempColors.black,
+    '#000000',
+    speicolors.extrem_dry,
+    speicolors.very_dry,
+    speicolors.dry,
+    speicolors.little_dry,
+    speicolors.normal,
+    speicolors.little_wet,
+    speicolors.wet,
+    speicolors.very_wet,
+    speicolors.extrem_wet
+];
+
+const colorScale_spei = chroma.scale(gradientColors_spei).domain(boundaries_spei).mode('lab');
+
+export const speiColorGradient = [
+    "interpolate",
+    ["linear"], // Specify the interpolation type
+    ["band", 1], // The data band
+    ...boundaries_spei.flatMap((boundary) => [boundary, colorScale_spei(boundary).hex()])
+];
 
 export const precipColorCase = [
     "case",

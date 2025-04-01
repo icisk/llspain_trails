@@ -147,17 +147,27 @@ const HistoricClimateData1 = () => {
             return Object.keys(metaData).map(timestamp => new Date(timestamp).getTime());
         }
         function coords2TS(startISO, endISO, steps) {
-            const startDate = new Date(startISO).getTime();
-            const endDate = new Date(endISO).getTime();
-            const interval = (endDate - startDate) / (steps - 1);
+            const startDate = new Date(startISO);
+            const endDate = new Date(endISO);
+            if (steps === 1) {
+                return [startDate.getTime()];
+            }
+            const timeSeries = [];
+            const monthsInterval = Math.floor((endDate.getFullYear() - startDate.getFullYear()) * 12 + endDate.getMonth() - startDate.getMonth());
 
-            return Array.from({ length: steps }, (_, i) => Math.round(startDate + i * interval));
+            for (let i = 0; i < steps; i++) {
+                const currentDate = new Date(startDate);
+                currentDate.setMonth(startDate.getMonth() + Math.round((monthsInterval * i) / (steps - 1)));
+                timeSeries.push(currentDate.getTime());
+            }
+
+            return timeSeries;
         }
         
         const fetchMetaData = async () => {
             const tempMetadataUrl = "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/creaf_historic_temperature_metrics.zarr/.zmetadata";
             const precipMetadataUrl = "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/creaf_historic_precip_metrics.zarr/.zmetadata";
-            const speiMetaDataUrl = "https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_3months/position?coords=POINT(0 0)&f=json"
+            const speiMetaDataUrl = "https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_3months/position?coords=POINT(0 0)&f=json";
 
             try {
                 const [precipMetadata, tempMetadata, speiMetadata] = await Promise.all([
@@ -203,7 +213,7 @@ const HistoricClimateData1 = () => {
                     fetch(tempUrl),
                     fetch(speiUrl)
                 ]);
-                if (!precipResponse.ok || !tempResponse.ok || speiResponse.ok) throw new Error("Network response was not ok");
+                if (!precipResponse.ok || !tempResponse.ok || !speiResponse.ok) throw new Error("Network response was not ok");
 
                 const precipJsonData =  await precipResponse.json();
                 const tempJsonData =  await tempResponse.json();
@@ -233,13 +243,22 @@ const HistoricClimateData1 = () => {
         // console.log(speiData)
     }, [clickedCoordinates, isComparisonMode, yearRight, yearLeft, precipTimeSeries, tempTimeSeries, speiTimeSeries]);
 
+    // useEffect(() => {
+    //     if (!tempData || !precipData || !speiData || !tempTimeSeries || !precipTimeSeries || !speiTimeSeries) return;
+    //
+    //     setTempTSDATA(tempTimeSeries.map((val, i) => [val, tempData[i]]));
+    //     setPrecipTSDATA(precipTimeSeries.map((val, i) => [val, precipData[i]]));
+    //     setSpeiTSDATA(speiTimeSeries.map((val, i) => [val, speiData[i]]));
+    //    
+    // }, [tempData, precipData, speiData, tempTimeSeries, precipTimeSeries, speiTimeSeries]);
+
+
     useEffect(() => {
         if (!tempData || !precipData || !speiData || !tempTimeSeries || !precipTimeSeries || !speiTimeSeries) return;
 
         setTempTSDATA(tempTimeSeries.map((val, i) => [val, tempData[i]]));
         setPrecipTSDATA(precipTimeSeries.map((val, i) => [val, precipData[i]]));
         setSpeiTSDATA(speiTimeSeries.map((val, i) => [val, speiData[i]]));
-        
     }, [tempData, precipData, speiData, tempTimeSeries, precipTimeSeries, speiTimeSeries]);
 
     useEffect(() => {
@@ -280,13 +299,17 @@ const HistoricClimateData1 = () => {
     //    
     // }, [clickedCoordinates, yearLeft, yearRight, tempTSDATA, precipTSDATA]);
 
-    useEffect(() => {
-        console.log(speiData);
-        console.log(speiTimeSeries);
-        //console.log(precipTimeSeries);
-        console.log(speiTSDATA);
-        console.log(precipTSDATA)
-    }, [speiTSDATA, speiData, speiTimeSeries, precipTSDATA, precipTimeSeries]);
+    // useEffect(() => {        
+    //     console.log(speiTimeSeries);
+    //     console.log(precipTimeSeries);
+    //     console.log(tempTimeSeries);
+    //     console.log(speiData);
+    //     console.log(precipData);
+    //     console.log(tempData);
+    //     console.log(speiTSDATA);
+    //     console.log(precipTSDATA);
+    //     console.log(tempTSDATA);
+    // }, [speiTSDATA, speiData, speiTimeSeries, precipTSDATA, precipTimeSeries, tempTimeSeries, precipTimeSeries]);
 
     // comparison mode: update chart options when data is updated
     useEffect(() => {
