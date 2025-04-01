@@ -75,14 +75,22 @@ const HistoricClimateData1 = () => {
     //states for single mode
     const [precipData, setPrecipData] = useState(null);
     const [tempData, setTempData] = useState(null);
+    const [speiData, setSpeiData] = useState(null);
+    const [spiData, setSpiData] = useState(null);
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     
     const [precipTimeSeries, setPrecipTimeSeries] = useState<String>(null)
     const [tempTimeSeries, setTempTimeSeries] = useState<String>(null)
+    const [speiTimeSeries, setSpeiTimeSeries] = useState<String>(null)
+    const [spiTimeSeries, setSpiTimeSeries] = useState<String>(null)
+    
     const [precipTSDATA, setPrecipTSDATA] = useState<String>(null)
     const [tempTSDATA, setTempTSDATA] = useState<String>(null)
+    const [speiTSDATA, setSpeiTSDATA] = useState<String>(null)
+    const [spiTSDATA, setSpiTSDATA] = useState<String>(null)
+    
     const [chartInstance, setChartInstance] = useState(null);
 
     const [isComparisonMode, setIsComparisonMode] = useState(false);
@@ -138,25 +146,37 @@ const HistoricClimateData1 = () => {
         const meta2TS = (metaData) => {
             return Object.keys(metaData).map(timestamp => new Date(timestamp).getTime());
         }
+        function coords2TS(startISO, endISO, steps) {
+            const startDate = new Date(startISO).getTime();
+            const endDate = new Date(endISO).getTime();
+            const interval = (endDate - startDate) / (steps - 1);
+
+            return Array.from({ length: steps }, (_, i) => Math.round(startDate + i * interval));
+        }
         
         const fetchMetaData = async () => {
             const tempMetadataUrl = "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/creaf_historic_temperature_metrics.zarr/.zmetadata";
             const precipMetadataUrl = "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/creaf_historic_precip_metrics.zarr/.zmetadata";
+            const speiMetaDataUrl = "https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_3months/position?coords=POINT(0 0)&f=json"
 
             try {
-                const [precipMetadata, tempMetadata] = await Promise.all([
+                const [precipMetadata, tempMetadata, speiMetadata] = await Promise.all([
                     fetch(precipMetadataUrl).then((res) => res.json()),
-                    fetch(tempMetadataUrl).then((res) => res.json())
+                    fetch(tempMetadataUrl).then((res) => res.json()),
+                    fetch(speiMetaDataUrl).then((res) => res.json())
                 ]);
 
                 const tempMetrics = tempMetadata.metadata[".zattrs"].metrics;
                 const precipMetrics = precipMetadata.metadata[".zattrs"].metrics;
+                const speiMetrics = speiMetadata?.domain.axes.time;
                 
                 const tempTimeSeries = meta2TS(tempMetrics)
                 const precipTimeSeries = meta2TS(precipMetrics)
+                const speiTimeSeries = coords2TS(speiMetrics.start, speiMetrics.stop, speiMetrics.num);
                                 
                 setTempTimeSeries(tempTimeSeries)
                 setPrecipTimeSeries(precipTimeSeries)
+                setSpeiTimeSeries(speiTimeSeries)
                 
             } catch (err) {
                 setError(err.message);
@@ -175,19 +195,25 @@ const HistoricClimateData1 = () => {
         const fetchData = async (x, y) => {
             const precipUrl = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_precip/position?coords=POINT(${x}%20${y})`;
             const tempUrl = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_temperature/position?coords=POINT(${x}%20${y})`;
+            const speiUrl = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_3months/position?coords=POINT(${x}%20${y})`;
             
             try {                
-                const [precipResponse, tempResponse] = await Promise.all([
+                const [precipResponse, tempResponse, speiResponse] = await Promise.all([
                     fetch(precipUrl),
-                    fetch(tempUrl)
+                    fetch(tempUrl),
+                    fetch(speiUrl)
                 ]);
-                if (!precipResponse.ok || !tempResponse.ok) throw new Error("Network response was not ok");
+                if (!precipResponse.ok || !tempResponse.ok || speiResponse.ok) throw new Error("Network response was not ok");
 
                 const precipJsonData =  await precipResponse.json();
                 const tempJsonData =  await tempResponse.json();
+                const speiJsonData = await speiResponse.json();
+                
                 
                 setPrecipData(precipJsonData?.ranges.historic_precip.values);
                 setTempData(tempJsonData?.ranges.historic_temperature.values);
+                setSpeiData(speiJsonData?.ranges.historic_SPEI_3months.values);
+                
                 // setTempTSDATA(tempTimeSeries?.map((val, i) => [val, tempData[i]]));
                 // setPrecipTSDATA(precipTimeSeries?.map((val, i) => [val, precipData[i]]));
                 // setTempData1(filterTimeSeriesByYear(tempTSDATA, yearLeft));
@@ -204,14 +230,17 @@ const HistoricClimateData1 = () => {
         const [x, y] = clickedCoordinates;
         
         fetchData(x, y);
-    }, [clickedCoordinates, isComparisonMode, yearRight, yearLeft, precipTimeSeries, tempTimeSeries]);
+        // console.log(speiData)
+    }, [clickedCoordinates, isComparisonMode, yearRight, yearLeft, precipTimeSeries, tempTimeSeries, speiTimeSeries]);
 
     useEffect(() => {
-        if (!tempData || !precipData || !tempTimeSeries || !precipTimeSeries) return;
+        if (!tempData || !precipData || !speiData || !tempTimeSeries || !precipTimeSeries || !speiTimeSeries) return;
 
         setTempTSDATA(tempTimeSeries.map((val, i) => [val, tempData[i]]));
         setPrecipTSDATA(precipTimeSeries.map((val, i) => [val, precipData[i]]));
-    }, [tempData, precipData, tempTimeSeries, precipTimeSeries]);
+        setSpeiTSDATA(speiTimeSeries.map((val, i) => [val, speiData[i]]));
+        
+    }, [tempData, precipData, speiData, tempTimeSeries, precipTimeSeries, speiTimeSeries]);
 
     useEffect(() => {
         if (!tempTSDATA || !precipTSDATA) return;
@@ -251,12 +280,13 @@ const HistoricClimateData1 = () => {
     //    
     // }, [clickedCoordinates, yearLeft, yearRight, tempTSDATA, precipTSDATA]);
 
-    // useEffect(() => {
-    //     console.log(tempData2)
-    //     console.log(tempData1)
-    //     console.log(precipData2)
-    //     console.log(precipData1);
-    // }, [tempTSDATA, tempData, tempTimeSeries, precipData1 , precipData2 , tempData1 , tempData2]);
+    useEffect(() => {
+        console.log(speiData);
+        console.log(speiTimeSeries);
+        //console.log(precipTimeSeries);
+        console.log(speiTSDATA);
+        console.log(precipTSDATA)
+    }, [speiTSDATA, speiData, speiTimeSeries, precipTSDATA, precipTimeSeries]);
 
     // comparison mode: update chart options when data is updated
     useEffect(() => {
@@ -357,6 +387,13 @@ const HistoricClimateData1 = () => {
                         data: tempTSDATA || [],
                         type: "spline",
                         color: "orange",
+                        yAxis: 1
+                    },
+                    {
+                        name: intl.formatMessage({ id: "global.vars.temp" }),
+                        data: speiTSDATA || [],
+                        type: "spline",
+                        color: "red",
                         yAxis: 1
                     }
                 ]

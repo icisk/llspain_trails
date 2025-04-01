@@ -122,6 +122,10 @@ export function HistoricPickerLeft(props: HistoricPickerProps) {
                         <Radio value="precip">{intl.formatMessage({ id: "global.vars.precip" })}</Radio>
                         <InfoTooltip i18n_path="historic_compare.info.precip" />
                     </HStack>
+                    <HStack>
+                        <Radio value="spei">{intl.formatMessage({ id: "global.vars.SPEI" })}</Radio>
+                        <InfoTooltip i18n_path="historic_compare.info.SPEI" />
+                    </HStack>
                 </VStack>
             </RadioGroup>
         </div>
