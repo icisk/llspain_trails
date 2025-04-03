@@ -34,6 +34,36 @@ const markerSource = new VectorSource();
 const markerLayer = new VectorLayer({ source: markerSource, zIndex: 100 });
 
 
+Highcharts.setOptions({
+    lang: {
+        // Basic Date/Time Names
+        months: [
+            'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio',
+            'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+        ],
+        shortMonths: [
+            'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul',
+            'Ago', 'Sep', 'Oct', 'Nov', 'Dic'
+        ],
+        weekdays: [
+            'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'
+        ],
+
+        // Other common texts you might want to translate
+        loading: 'Cargando...',
+        contextButtonTitle: 'Menú contextual del gráfico',
+        downloadJPEG: 'Descargar imagen JPEG',
+        downloadPDF: 'Descargar documento PDF',
+        downloadPNG: 'Descargar imagen PNG',
+        downloadSVG: 'Descargar imagen vectorial SVG',
+        printChart: 'Imprimir gráfico',
+        resetZoom: 'Restablecer zoom',
+        resetZoomTitle: 'Restablecer nivel de zoom 1:1',
+        thousandsSep: '.', // Often '.' for thousands in Spanish
+        decimalPoint: ','   // Often ',' for decimal point in Spanish
+        // Add any other lang options you need from the Highcharts API documentation
+    }
+});
 
 const HistoricClimateData1 = () => {
     const intl = useIntl();
@@ -391,11 +421,12 @@ const HistoricClimateData1 = () => {
                     min: null,
                     max: null},
                 yAxis: [
-                    {title: { text: "Precipitation (mm)" }, min: 0, max: 400, opposite: false},
-                    {title: {text: "Temperatura (ºC)" }, min: -10, max: 40, opposite: true}
+                    {title: {text: intl.formatMessage({ id: "global.vars.precip" }) + " (mm)" }, min: 0, max: 400, opposite: false},
+                    {title: {text: intl.formatMessage({ id: "global.vars.temp" }) + " (°C)" }, min: -10, max: 40, opposite: true}
                 ],
                 tooltip: {
-                    valueDecimals: 1
+                    valueDecimals: 1,
+                    xDateFormat: '%Y-%m-%d',
                 },
                 series: [
                     {
@@ -406,19 +437,19 @@ const HistoricClimateData1 = () => {
                         yAxis: 0
                     },
                     {
+                        name: intl.formatMessage({ id: "global.vars.SPEI" }),
+                        data: speiTSDATA || [],
+                        type: "spline",
+                        color: "red",
+                        yAxis: 1
+                    },
+                    {
                         name: intl.formatMessage({ id: "global.vars.temp" }),
                         data: tempTSDATA || [],
                         type: "spline",
                         color: "orange",
                         yAxis: 1
                     },
-                    {
-                        name: intl.formatMessage({ id: "global.vars.temp" }),
-                        data: speiTSDATA || [],
-                        type: "spline",
-                        color: "red",
-                        yAxis: 1
-                    }
                 ]
             });
         }

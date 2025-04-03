@@ -57,22 +57,32 @@ export class HydrologicalMapProvider implements MapConfigProvider {
                 format: new GeoJSON(),
             }),
             visible: false,
+            style: new Style({
+                fill: new Fill({
+                    color: "rgba(128, 0, 128, 0.4)",
+                }),
+                stroke: new Stroke({
+                    color: "#800080",
+                    width: 1.5,
+                }),
+            }),
         });
 
-        groundwaterLayer.set("id", "groundwater");
-        groundwaterLayer.set("vector", true);
+        groundwaterLayer.set("id", "thematic-3");
+        groundwaterLayer.set("thematic", true);
 
-        // authorities layer (VECTOR)
-        const authoritiesLayer = new VectorLayer({
+        // springs layer (VECTOR)
+        const springsLayer = new VectorLayer({
             source: new VectorSource({
-                url: "https://i-cisk.dev.52north.org/data/collections/ll_spain_authorities/items?f=json",
+                url: "https://i-cisk.dev.52north.org/data/collections/ll_spain_springs/items?f=json&limit=150",
                 format: new GeoJSON(),
             }),
             visible: false,
         });
 
-        authoritiesLayer.set("id", "authorities");
-        authoritiesLayer.set("vector", true);
+        springsLayer.set("id", "springs");
+        springsLayer.set("vector", true);
+
 
         // hydro network layer (VECTOR)
         const networkLayer = new VectorLayer({
@@ -100,9 +110,9 @@ export class HydrologicalMapProvider implements MapConfigProvider {
             }),
             visible: false,
             style: new Style({
-                fill: new Fill({
-                    color: "rgba(128, 0, 128, 0.4)",
-                }),
+                // fill: new Fill({
+                //     color: "rgba(128, 0, 128, 0.4)",
+                // }),
                 stroke: new Stroke({
                     color: "#800080",
                     width: 1.5,
@@ -113,6 +123,74 @@ export class HydrologicalMapProvider implements MapConfigProvider {
 
         municipalityLayer.set("id", "municipalities");
         municipalityLayer.set("vector", true);
+
+        // geologicalLayer (VECTOR)
+        const geologicalPolygonsLayer = new VectorLayer({
+            source: new VectorSource({
+                url: "https://i-cisk.dev.52north.org/data/collections/ll_spain_geological_polygons/items?f=json&limit=7000",
+                format: new GeoJSON(),
+            }),
+            visible: false,
+            style: new Style({
+                fill: new Fill({
+                    color: "rgba(128, 0, 128, 0.4)",
+                }),
+                stroke: new Stroke({
+                    color: "#800080",
+                    width: 1.5,
+                }),
+            }),
+        });
+
+
+        geologicalPolygonsLayer.set("id", "thematic-2");
+        geologicalPolygonsLayer.set("thematic", true);
+
+        // geologicalLayer (VECTOR)
+        const geologicalLinesLayer = new VectorLayer({
+            source: new VectorSource({
+                url: "https://i-cisk.dev.52north.org/data/collections/ll_spain_geological_lines/items?f=json&limit=15000",
+                format: new GeoJSON(),
+            }),
+            visible: false,
+            style: new Style({
+                fill: new Fill({
+                    color: "rgba(128, 0, 128, 0.4)",
+                }),
+                stroke: new Stroke({
+                    color: "#800080",
+                    width: 1.5,
+                }),
+            }),
+        });
+
+
+        geologicalLinesLayer.set("id", "thematic-2");
+        geologicalLinesLayer.set("thematic", true);
+
+
+
+        // geologicalLayer (VECTOR)
+        const authoritiesLayer = new VectorLayer({
+            source: new VectorSource({
+                url: "https://i-cisk.dev.52north.org/data/collections/ll_spain_authorities/items?f=json&limit=3",
+                format: new GeoJSON(),
+            }),
+            visible: false,
+            style: new Style({
+                fill: new Fill({
+                    color: "rgba(128, 0, 128, 0.4)",
+                }),
+                stroke: new Stroke({
+                    color: "#800080",
+                    width: 1.5,
+                }),
+            }),
+        });
+
+
+        authoritiesLayer.set("id", "thematic-4");
+        authoritiesLayer.set("thematic", true);
 
         return {
             initialView: {
@@ -154,6 +232,11 @@ export class HydrologicalMapProvider implements MapConfigProvider {
                     isBaseLayer: false
                 }),
                 new SimpleLayer({
+                    title: "Hsprings",
+                    olLayer: springsLayer,
+                    isBaseLayer: false
+                }),
+                new SimpleLayer({
                     title: "Municipalities",
                     olLayer: municipalityLayer,
                     isBaseLayer: false
@@ -161,6 +244,21 @@ export class HydrologicalMapProvider implements MapConfigProvider {
                 new SimpleLayer({
                     title: "Groundwater",
                     olLayer: groundwaterLayer,
+                    isBaseLayer: false
+                }),
+                new SimpleLayer({
+                    title: "GeologicalPolygons",
+                    olLayer: geologicalPolygonsLayer,
+                    isBaseLayer: false
+                }),
+                new SimpleLayer({
+                    title: "GeologicalLines",
+                    olLayer: geologicalLinesLayer,
+                    isBaseLayer: false
+                }),
+                new SimpleLayer({
+                    title: "authorities",
+                    olLayer: authoritiesLayer,
                     isBaseLayer: false
                 }),
             ]

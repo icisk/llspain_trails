@@ -35,6 +35,7 @@ import Highcharts from "highcharts";
 import {PhenologyLegend} from "../components/Legends/PhenologyLegend";
 import React, {useEffect, useState} from "react";
 
+
 function getSeasonLabel(date) {
     const month = date.getMonth() + 1; // months are 0-indexed
     const year = date.getFullYear();
@@ -62,8 +63,8 @@ export function Phenology() {
         title: { text: "Loading..." },
         xAxis: { categories: [], title: { text: intl.formatMessage({ id: "global.vars.date" }) } },
         yAxis: { title: { text: intl.formatMessage({ id: "phenology.plot.yAxis" }) } },
-        tooltip: { valueDecimals: 1 },
-        series: [{ name: intl.formatMessage({ id: "phenology.plot.xAxis" }), data: [], type: "column", color: "orange" }]
+        tooltip: { valueDecimals: 0 },
+        series: [{ name: intl.formatMessage({ id: "phenology.plot.popupvar" }), data: [], type: "column", color: "orange" }]
     });
     const [chartLoading, setChartLoading] = useState<boolean>(true);
 
@@ -176,18 +177,37 @@ export function Phenology() {
                     <VStack>
                         {metadata.time.length > 0 && (
                             <>
-                                <Slider
-                                    min={0}
-                                    max={dateObjects.length - 1}
-                                    step={1}
-                                    value={sliderValue}
-                                    onChange={(value) => setSliderValue(value)}
-                                >
-                                    <SliderTrack bg="gray.200">
-                                        <SliderFilledTrack bg="blue.450"/>
-                                    </SliderTrack>
-                                    <SliderThumb boxSize={30} bg="blue.450"/>
-                                </Slider>
+                                <Box mt={2}>
+                                    <p>
+
+                                            Seleccione el período entre: {" "}
+                                            {dateObjects?.[0] && getSeasonLabel(dateObjects[0])} -{" "}
+                                            {dateObjects?.length > 0 && getSeasonLabel(dateObjects[dateObjects.length - 1])}
+
+                                    </p>
+                                </Box>
+                                
+   
+                                    <>
+                                        <Slider
+                                            min={0}
+                                            max={dateObjects.length - 1}
+                                            step={1}
+                                            value={sliderValue}
+                                            onChange={(value) => setSliderValue(value)}
+                                        >
+                                            <SliderTrack bg="gray.200">
+                                                <SliderFilledTrack bg="blue.450"/>
+                                            </SliderTrack>
+                                            <SliderThumb boxSize={30} bg="blue.450"/>
+                                        </Slider>
+                                    </>
+
+
+                                    
+                               
+                                    
+
 
                                 <Box mt={2} textAlign="center" fontSize="lg" fontWeight="bold">
                                     {getSeasonLabel(dateObjects[sliderValue])}

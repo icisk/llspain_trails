@@ -14,7 +14,7 @@ messages:
       precip: Precipitación 
       precip_cum:  Precipitación acumulada mensual 
       uncertainty: Grado de incertidumbre
-      SPEI: SPEI
+      SPEI: Índice de sequía 3 meses
       year: año
       month: mes
       date: Fecha
@@ -23,7 +23,7 @@ messages:
       sel_month: Seleccione el mes 
       sel_year: Seleccione el año
       sel_var: Seleccione la variable
-      sel_prediction: Seleccione la prediction
+      sel_prediction: Fecha de inicio de la predicción
       toggle_stations: alternar estaciones
     map:
       coord_clicked: coordenadas clicadas {x} & {y} #bsp mit dynamischen inputs
@@ -61,7 +61,7 @@ messages:
   forecast:
     nav: Mapas previsión a 6 meses
     heading: Pronósticos meteorológicos mensuales a medio plazo (hasta 6 meses)
-    heading_descr: Predicciones climáticas para planificar actividades económicas - monterías, explotaciones ganaderas y agrícolas, actividades forestales y de formación.
+    heading_descr: ' '
   historic_compare:
     nav: Mapas climáticos históricos
     heading: Mapas climáticos históricos
@@ -98,15 +98,16 @@ messages:
     heading: Proyecciones climáticas
     heading_descr: Proyecciones climáticas hasta 2100
   phenology:
-    nav: Indicadores fenológicos y modelo de aceite
+    nav: Indicadores agroclimáticos
     heading: Número máximo de días secos consecutivos.
     heading_descr: "Período más largo de días consecutivos dentro de un trimestre con suma de precipitación diaria inferior a 1 mm. Las fechas corresponden a los días centrales de los trimestres:\n\n• Dic, Ene, Feb (invierno)\n• Mar, Abr, May (primavera)\n• Jun, Jul, Ago (verano)\n• Sep, Oct, Nov (otoño)"
     plot:
       title: Número de días secos consecutivos por trimestre
-      xAxis: Fecha central del trimestre
-      yAxis: Dias
+      xAxis: Número de días secos
+      yAxis: Número de días
+      popupvar: Número de días secos consecutivos
   hydro_service:
-    nav: Informatión hidrológica
+    nav: Información hidrológica
     heading: Información hidrológica de la comarca de Los Pedroches (norte de Córdoba)
     heading_descr: En esta página pueden encontrarse las fuentes de información hidrológica de la región, así como la información recopilada durante las campañas de muestreo del proyecto ICISK (2023-2025)
     selection_options:
@@ -116,6 +117,7 @@ messages:
         land_use: Usos del suelo
         geological: Mapa geológico
         groundwater: Profundidad del nivel freático
+        authorities: authorities
         opacity: 'Transparencia:'
       hydro_data:
         title: 'Datos hidrológicos:'
@@ -123,6 +125,7 @@ messages:
         authorities_boundaries: Límite las demarcaciones dentro de la comarca
         municipalities: Municipios
         network: Red hidrográfica
+        springs: pozos
       aquifer_info: 'Chismorreos del acuífero'
   historic_stations:
     nav: Estaciones Climáticas Históricas

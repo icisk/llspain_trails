@@ -102,10 +102,9 @@ export const precipColorGradient = [
     ...boundaries_precip.flatMap((boundary) => [boundary, colorScale_precip(boundary).hex()])
 ];
 
-const boundaries_spei = [-10, -8, -3.0, -2.25, -1.5, -0.75, 0.0, 0.75, 1.5, 2.25, 3.0]
+const boundaries_spei = [-10, -2.0, -1.5, -1, -0.25, 0.25, 1, 1.5, 2.0]
 const gradientColors_spei = [
     tempColors.black,
-    '#000000',
     speicolors.extrem_dry,
     speicolors.very_dry,
     speicolors.dry,

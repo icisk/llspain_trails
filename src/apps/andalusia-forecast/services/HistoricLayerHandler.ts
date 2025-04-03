@@ -199,7 +199,7 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
         }  if (this.#currentVarLeft.value === "precip") {
              historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/precip/COG_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}_precipitation_v1.tif`;
         } if (this.#currentVarLeft.value === "spei") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_3months/COG_SPEI3_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}.tif`
+            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_3months/COG_SPEI3_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tif`
         }
 
         try {
