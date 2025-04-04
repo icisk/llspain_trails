@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import {Box, HStack, Select} from "@chakra-ui/react";
 import {useReactiveSnapshot} from "@open-pioneer/reactivity";
-import {useService} from "open-pioneer:react-hooks";
+import {useIntl, useService} from "open-pioneer:react-hooks";
 import {ChangeEvent, useEffect} from "react";
 import {enumKeys} from "../components/utils/helper";
 import {PrecipitationLayerHandler, Variable} from "../services/PrecipitationLayerHandler";
@@ -11,6 +11,7 @@ import {PrecipitationLayerHandler, Variable} from "../services/PrecipitationLaye
 export function ChangeVariable() {
     const prepSrvc = useService<PrecipitationLayerHandler>("app.PrecipitationLayerHandler");
     const def = 'pc50';
+    const intl = useIntl();
 
     // useEffect(() => {
     //     if (!prepSrvc.currentVariable) {
@@ -32,8 +33,8 @@ export function ChangeVariable() {
     
     return (
         <HStack>
-            <Box whiteSpace={"nowrap"}>Select Variable: </Box>
-            <Select placeholder="Select option" value={currentVariable || def} onChange={updateVariable}>
+            <Box whiteSpace={"nowrap"}>{intl.formatMessage({id: "global.controls.sel_var"})} </Box>
+            <Select placeholder={intl.formatMessage({id: "global.controls.sel_var"})} value={currentVariable || def} onChange={updateVariable}>
                 {createOptions()}
             </Select>
         </HStack>

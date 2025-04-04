@@ -4,7 +4,7 @@ import {MapRegistry, SimpleLayer} from "@open-pioneer/map";
 import WebGLTileLayer from "ol/layer/WebGLTile";
 import {reactive, Reactive} from "@conterra/reactivity-core";
 import {MAP_ID} from "./HistoricClimateMapProvider";
-import {precipColorGradient, tempColorGradient} from "../components/utils/globals";
+import {precipColorGradient, tempColorGradient, speiColorGradient} from "../components/utils/globals";
 import {GeoTIFF} from "ol/source";
 
 
@@ -30,6 +30,7 @@ export enum Year  { "dummy" = 2000,
 export enum Variable {
     Precipitation = "precip",
     Temperature = "temp",
+    SPEI = "spei",
 }
 // console.log(tempColorGradient)
 // console.log(precipColorGradient)
@@ -79,10 +80,10 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
     private mapRegistry: MapRegistry;
     private layerLeft: WebGLTileLayer | undefined;
     private layerRight: WebGLTileLayer | undefined;
-    #currentMonthLeft: Reactive<Month> = reactive(Month.March);
+    #currentMonthLeft: Reactive<Month> = reactive(8); //Month.March
     #currentYearLeft: Reactive<Year> = reactive(Year.dummy);
     #currentVarLeft: Reactive<Variable> = reactive("temp");
-    #currentMonthRight: Reactive<Month> = reactive(Month.August);
+    #currentMonthRight: Reactive<Month> = reactive(1);
     #currentYearRight: Reactive<Year> = reactive(Year.dummy2);
     #currentVarRight: Reactive<Variable> = reactive("temp");
    
@@ -176,13 +177,17 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
             return tempColorGradient;
         }  if (this.#currentVarLeft.value === "precip") {
             return precipColorGradient;
-        }        
+        }  if (this.#currentVarLeft.value === "spei") {
+            return speiColorGradient;
+        }
     }
     getColorStyleRight() {
         if (this.#currentVarRight.value === "temp") {
             return tempColorGradient;
         }  if (this.#currentVarRight.value === "precip") {
             return precipColorGradient;
+        } if (this.#currentVarRight.value === "spei") {
+            return speiColorGradient;
         }
     }
 
@@ -193,6 +198,8 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
              historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}_MeanTemperature_v0.tif`;
         }  if (this.#currentVarLeft.value === "precip") {
              historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/precip/COG_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}_precipitation_v1.tif`;
+        } if (this.#currentVarLeft.value === "spei") {
+            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_3months/COG_SPEI3_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tif`
         }
 
         try {
@@ -222,6 +229,8 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
             historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}_MeanTemperature_v0.tif`;
         }  if (this.#currentVarRight.value === "precip") {
             historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/precip/COG_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}_precipitation_v1.tif`;
+        } if (this.#currentVarRight.value === "spei") {
+            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_3months/COG_SPEI3_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}.tif`
         }
 
         try {

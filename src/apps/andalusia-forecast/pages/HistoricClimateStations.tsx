@@ -16,6 +16,7 @@ import {CompareTwoStations} from "../components/CompareTwoStations/CompareTwoSta
 import {StationDataHandler} from "../services/StationDataHandler";
 import {useReactiveSnapshot} from "@open-pioneer/reactivity";
 import {mesesEnEspanol} from "../components/utils/globals";
+import { Overlay } from 'ol';
 
 const HistoricClimateStations = () => {
     const intl = useIntl();
@@ -80,32 +81,71 @@ const HistoricClimateStations = () => {
         stationDataService.selectedYear2,
     ], [stationDataService]);
 
-    // Add interaction to map for MAP_ID
-    useEffect(() => {        
+    
+    const [selectInteraction, setSelectInteraction] = useState(null);
+
+    useEffect(() => {
         if (mapState?.map?.olMap) {
             const olMap = mapState.map.olMap;
-            const selectInteraction = new SelectInteraction({
+
+            // Find the "Stations" layer
+            const vectorLayer = olMap.getLayers().getArray().find(layer => layer.get("title") === "Stations");
+            if (!vectorLayer) return;
+
+            const source = vectorLayer.getSource();
+            if (!source) return;
+
+            // Create the click-based selection interaction
+            const interaction = new SelectInteraction({
                 condition: click,
                 layers: (layer) => layer.get("title") === "Stations",
             });
-            olMap.addInteraction(selectInteraction);
-            selectInteraction.on("select", (event) => {
+
+            olMap.addInteraction(interaction);
+
+            interaction.on("select", (event) => {
                 const selectedFeatures = event.selected;
                 if (selectedFeatures.length > 0) {
                     const feature = selectedFeatures[0];
                     const properties = feature?.getProperties();
                     setSelectedFeatureId(properties?.ID);
-                    // console.log(properties?.NAME_EST)
-                    stationDataService.setStationLeft(properties?.NAME_EST)
+                    stationDataService.setStationLeft(properties?.NAME_EST);
                 }
             });
-            
+
+            // Store interaction for programmatic selection
+            setSelectInteraction(interaction);
+
             return () => {
-                olMap.removeInteraction(selectInteraction);
+                olMap.removeInteraction(interaction);
             };
         }
     }, [mapState]);
-  
+
+// Programmatic selection when stationId changes
+    useEffect(() => {
+        if (mapState?.map?.olMap && selectedStationId && selectInteraction) {
+            const vectorLayer = mapState.map.olMap.getLayers().getArray().find(layer => layer.get("title") === "Stations");
+            if (!vectorLayer) return;
+
+            const source = vectorLayer.getSource();
+            if (!source) return;
+
+            // Find feature by selectedStationId
+            const feature = source.getFeatures().find(f => f.get("ID") === selectedStationId);
+            if (!feature) return;
+
+            // This ensures OpenLayers correctly triggers selection events
+            selectInteraction.getFeatures().clear(); // Clear previous selection
+            selectInteraction.getFeatures().push(feature); // Select new feature
+            selectInteraction.dispatchEvent({ type: "select", selected: [feature], deselected: [] });
+
+            // Update the state
+            setSelectedFeatureId(selectedStationId);
+            stationDataService.setStationLeft(feature.get("NAME_EST"));
+        }
+    }, [selectedStationId, selectInteraction]);
+
     
     const prevValues = useRef({ selectedFeatureId, selectedStationId });
     useEffect(() => {
@@ -166,6 +206,7 @@ const HistoricClimateStations = () => {
             intl.formatMessage({ id: "global.months.jun" }),
             intl.formatMessage({ id: "global.months.jul" }),
             intl.formatMessage({ id: "global.months.aug" }),
+            intl.formatMessage({ id: "global.months.sep" }),
             intl.formatMessage({ id: "global.months.sep" }),
             intl.formatMessage({ id: "global.months.oct" }),
             intl.formatMessage({ id: "global.months.nov" }),
@@ -566,12 +607,12 @@ const HistoricClimateStations = () => {
                         <StationValueLegend/>
                         {/* Removed DynamicPrecipitationLegend */}
                         <Box position="absolute" bottom="10px" left="10px">
-                            <Switch
-                                isChecked={stationsVisible}
-                                onChange={() => setStationsVisible(!stationsVisible)}
-                            >
-                                {intl.formatMessage({ id: "global.controls.toggle_stations" })}
-                            </Switch>
+                            {/*<Switch*/}
+                            {/*    isChecked={stationsVisible}*/}
+                            {/*    onChange={() => setStationsVisible(!stationsVisible)}*/}
+                            {/*>*/}
+                            {/*    {intl.formatMessage({ id: "global.controls.toggle_stations" })}*/}
+                            {/*</Switch>*/}
                         </Box>
                     </Box>
                     <Box width="100000%" pt={6}> {/* no idea why, but when i dont move it out of view the buttons are rendered twice */}

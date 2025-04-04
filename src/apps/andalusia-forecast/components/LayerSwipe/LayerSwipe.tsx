@@ -119,7 +119,7 @@ export const LayerSwipe = (props: LayerSwipeProps) => {
         const width = Math.round(mapSize[0]! * (sliderValueRef.current / 100));
         const topLeft = getRenderPixel(event, [width, 0]);
         const topRight = getRenderPixel(event, [mapSize[0]!, 0]);
-        console.log(mapSize)
+        //console.log(mapSize)
         const bottomLeft = getRenderPixel(event, [width, mapSize[1]!]);
         const bottomRight = getRenderPixel(event, mapSize);
 
@@ -151,7 +151,7 @@ export const LayerSwipe = (props: LayerSwipeProps) => {
     }
 
     return (
-        <Box>
+        <Box height={"40px"}>
             <Slider aria-label={intl.formatMessage({ id: "global.layerswipe.slider.title" })}  value={sliderValueRef.current}  onChange={(value) => {handleSliderValueChanged(value)}} min={0} max={100}>
                 <SliderTrack>
                     <SliderFilledTrack />

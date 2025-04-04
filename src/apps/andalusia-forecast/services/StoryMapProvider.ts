@@ -5,6 +5,8 @@ import TileLayer from "ol/layer/Tile";
 import { register } from "ol/proj/proj4";
 import OSM from "ol/source/OSM";
 import proj4 from "proj4";
+import WebGLTileLayer from "ol/layer/WebGLTile";
+import XYZ from "ol/source/XYZ";
 
 proj4.defs(
     "EPSG:25830",
@@ -27,10 +29,13 @@ export class StoryMapProvider implements MapConfigProvider {
             projection: "EPSG:3857",
             layers: [
                 new SimpleLayer({
-                    title: "OpenStreetMap",
-                    olLayer: new TileLayer({
-                        source: new OSM(),
-                        properties: { title: "OSM" }
+                    title: "ESRI Gray",
+                    olLayer: new WebGLTileLayer({
+                        source: new XYZ({
+                            url: 'https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+                            attributions: '&copy; Esri, HERE, Garmin, OpenStreetMap contributors'
+                        }),
+                        properties: { title: "ESRI Gray" }
                     }),
                     isBaseLayer: true
                 })

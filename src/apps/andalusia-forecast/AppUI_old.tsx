@@ -133,7 +133,7 @@ export function AppUI() {
 
     const handleMapClick = (event: MapBrowserEvent<MouseEvent>) => {
         const coordinatesEPSG3857 = event.coordinate;
-        console.log(coordinatesEPSG3857);
+        //console.log(coordinatesEPSG3857);
         const coordinatesEPSG25830 = transform(coordinatesEPSG3857, "EPSG:3857", "EPSG:25830");
         setClickedCoordinates(coordinatesEPSG25830);
 

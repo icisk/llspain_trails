@@ -11,7 +11,7 @@ export function CompareTwoStations() {
     const stationDataService = useService<StationDataHandler>("app.StationDataHandler");
     const [loading, setLoading] = useState(true);
     const [selectedStationLeft, setSelectedStationLeft] = useState(stationDataService.selectedStationLeft);
-    const [selectedStationId, setSelectedStationId] = useState(stationDataService.selectedStationId);
+    //const [selectedStationId, setSelectedStationId] = useState(stationDataService.selectedStationId);
 
     
     const [selectedModus, setSelectedModus] = useState<string>("");
@@ -30,14 +30,20 @@ export function CompareTwoStations() {
         }
         loadData();
     }, []);
-    
-    const [selectedFromTimeRange, selectedToTimeRange, selectedStation, availableYears] = useReactiveSnapshot(()=> [
+
+   
+    const [selectedFromTimeRange, selectedToTimeRange, selectedStation, availableYears, selectedStationId] = useReactiveSnapshot(()=> [
         stationDataService.selectedFromTimeRange,
         stationDataService.selectedToTimeRange,
         stationDataService.selectedStationLeft,
-        stationDataService.availableYears
+        stationDataService.availableYears,
+        stationDataService.selectedStationId
     ], [stationDataService])
-    
+
+    useEffect(() => {
+        setSelectedStationLeft(stationDataService.selectedStationLeft);
+
+    }, [selectedStationId, selectedStationLeft]);
     
     useEffect(() => {
         setFromYear(selectedFromTimeRange)

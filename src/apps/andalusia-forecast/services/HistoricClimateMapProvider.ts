@@ -9,6 +9,7 @@ import proj4 from "proj4";
 import {createCazorlaLayer, createLosPedrochesLayer} from "../components/utils/regionLayers";
 import {tempColorGradient} from "../components/utils/globals";
 import {transformExtent} from 'ol/proj';
+import XYZ from "ol/source/XYZ";
 
 
 // Registrierung von EPSG:25830
@@ -53,11 +54,13 @@ export class HistoricClimateMapProvider implements MapConfigProvider {
             layers: [
                 // OpenStreetMap als Hintergrund
                 new SimpleLayer({
-                    title: "OpenStreetMap",
-                    id: "osm",
+                    title: "ESRI Gray",
                     olLayer: new WebGLTileLayer({
-                        source: new OSM(),
-                        properties: { title: "OSM" }
+                        source: new XYZ({
+                            url: 'https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+                            attributions: '&copy; Esri, HERE, Garmin, OpenStreetMap contributors'
+                        }),
+                        properties: { title: "ESRI Gray" }
                     }),
                     isBaseLayer: true
                 }),
@@ -70,7 +73,7 @@ export class HistoricClimateMapProvider implements MapConfigProvider {
                             normalize: false,
                             sources: [
                                 {
-                                    url: "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_2004_07_MeanTemperature_v0.tif",
+                                    url: "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_2000_08_MeanTemperature_v0.tif",
                                     nodata: -5.3e+37
                                     
                                 }
@@ -92,7 +95,7 @@ export class HistoricClimateMapProvider implements MapConfigProvider {
                             normalize: false,
                             sources: [
                                 {
-                                    url: "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_2000_02_MeanTemperature_v0.tif",
+                                    url: "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_2005_01_MeanTemperature_v0.tif",
                                     nodata: -5.3e+37
                                 }
                             ]

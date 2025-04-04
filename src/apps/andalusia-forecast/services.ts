@@ -8,8 +8,9 @@ export { PrecipitationLayerHandlerImpl } from "./services/PrecipitationLayerHand
 export { BioindicatorMapProvider } from "./services/BioindicatorMapProvider"
 export { HydrologicalMapProvider } from "./services/HydrologicalMapProvider"
 export { ProjectionMapProvider } from "./services/ProjectionMapProvider"
-export {HistoricLayerHandlerImpl} from "./services/HistoricLayerHandler";
+export { HistoricLayerHandlerImpl } from "./services/HistoricLayerHandler";
 export { HistoricClimateMapProvider } from "./services/HistoricClimateMapProvider"
 export { HistoricClimateMapProvider2 } from "./services/HistoricClimateMapProvider2"
 export { HistoricClimateStationsMapProvider } from "./services/HistoricClimateStationsMapProvider" 
 export { StationDataHandlerImpl } from "./services/StationDataHandler"
+export { BioindicatorLayerHandlerImpl } from "./services/BioindicatorLayerHandler"

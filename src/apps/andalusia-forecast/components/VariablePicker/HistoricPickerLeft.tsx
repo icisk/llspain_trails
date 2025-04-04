@@ -11,7 +11,7 @@ interface HistoricPickerProps {
     onChange: (field: string, value: number|string) => void
 }
 
-export interface Selection{
+export interface SelectionLeft{
     year: number,
     month: number,
     var: string
@@ -26,7 +26,8 @@ export function HistoricPickerLeft(props: HistoricPickerProps) {
         histLayerHandler.currentMonthLeft,
         histLayerHandler.currentVarLeft
     ], [histLayerHandler]);
-    
+
+    const [error, setError] = useState(null);
     const [years, setYears] = useState<number[]>([]);
     const [months, setMonths] = useState<number[]>([]);
     const [selectedYear, setSelectedYear] = useState<number | undefined>(undefined);
@@ -67,6 +68,64 @@ export function HistoricPickerLeft(props: HistoricPickerProps) {
             .catch((error) => console.error("Error fetching data:", error));
     }, [currentYear, currentVar]);
 
+    useEffect(() => {
+        function coords2TS(startISO, endISO, steps) {
+            const startDate = new Date(startISO);
+            const endDate = new Date(endISO);
+            if (steps === 1) {
+                return [startDate.getTime()];
+            }
+            const timeSeries = [];
+            const monthsInterval = Math.floor((endDate.getFullYear() - startDate.getFullYear()) * 12 + endDate.getMonth() - startDate.getMonth());
+
+            for (let i = 0; i < steps; i++) {
+                const currentDate = new Date(startDate);
+                currentDate.setMonth(startDate.getMonth() + Math.round((monthsInterval * i) / (steps - 1)));
+                timeSeries.push(currentDate.getTime());
+            }
+
+            return timeSeries;
+        }
+
+        if (currentVar === 'spei') {
+            fetch('https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_3months/position?coords=POINT(0 0)&f=json')
+                .then((res) => res.json())
+                .then((speiMetadata) => {
+                    const speiMetrics = speiMetadata?.domain?.axes?.time;
+                    if (!speiMetrics) throw new Error('Missing SPEI time axis data.');
+
+                    // Use coords2TS to generate Unix timestamps from start, stop, and number of steps
+                    const speiTimeSeries = coords2TS(speiMetrics.start, speiMetrics.stop, speiMetrics.num);
+
+                    const yearMonthMap: Record<number, Set<number>> = {};
+
+                    speiTimeSeries.forEach((timestamp) => {
+                        const date = new Date(timestamp);
+                        const year = date.getFullYear();
+                        const month = date.getMonth() + 1;
+
+                        if (!yearMonthMap[year]) {
+                            yearMonthMap[year] = new Set<number>();
+                        }
+                        yearMonthMap[year].add(month);
+                    });
+                    console.log(yearMonthMap)
+
+                    const availableYears = Object.keys(yearMonthMap).map(Number);
+                    setYears(availableYears);
+
+                    if (availableYears.length > 0) {
+                        //setSelectedYear(availableYears[0]);
+                        setMonths(Array.from(yearMonthMap[currentYear]));
+                    }
+
+                    setYearMonthMap(yearMonthMap);
+                })
+                .catch((error) => {
+                    setError(error.message);
+                });
+        }
+    }, [currentVar, currentYear]);
 
     
     return (
@@ -121,6 +180,10 @@ export function HistoricPickerLeft(props: HistoricPickerProps) {
                     <HStack>
                         <Radio value="precip">{intl.formatMessage({ id: "global.vars.precip" })}</Radio>
                         <InfoTooltip i18n_path="historic_compare.info.precip" />
+                    </HStack>
+                    <HStack>
+                        <Radio value="spei">{intl.formatMessage({ id: "global.vars.SPEI" })}</Radio>
+                        <InfoTooltip i18n_path="historic_compare.info.SPEI" />
                     </HStack>
                 </VStack>
             </RadioGroup>

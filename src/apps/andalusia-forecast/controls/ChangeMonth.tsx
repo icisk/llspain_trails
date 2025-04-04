@@ -28,7 +28,7 @@ export function ChangeMonth() {
     return (
         <HStack>
             <Box whiteSpace={"nowrap"}>{intl.formatMessage({id: "global.controls.sel_month"})} </Box>
-            <Select placeholder="Select option" value={currentMonth} onChange={updateMonth}>
+            <Select placeholder={intl.formatMessage({id: "global.controls.sel_month"})} value={currentMonth} onChange={updateMonth}>
                 {createOptions()}
             </Select>
         </HStack>
