@@ -5,6 +5,7 @@ import React, {useEffect, useState} from "react";
 import {useIntl, useService} from "open-pioneer:react-hooks";
 import {useReactiveSnapshot} from "@open-pioneer/reactivity";
 import {mesesEnEspanol} from "../utils/globals";
+import {HistoricLayerHandler} from "../../services/HistoricLayerHandler";
 
 
 interface HistoricPickerProps {
@@ -36,36 +37,38 @@ export function HistoricPickerLeft(props: HistoricPickerProps) {
     const meta_temp: string = 'https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/creaf_historic_temperature_metrics.zarr/.zmetadata'
 
     useEffect(() => {
-        const link = currentVar === 'temp' ? meta_temp : meta_precip;
-        fetch(link)
-            .then((response) => response.json())
-            .then((data) => {
-                const metrics = data.metadata[".zattrs"].metrics;
-                const yearMonthMap: Record<number, Set<number>> = {};
-                
+        if (currentVar != "spei3" || currentVar != "spei24") {
+            const link = currentVar === 'temp' ? meta_temp : meta_precip;
+            fetch(link)
+                .then((response) => response.json())
+                .then((data) => {
+                    const metrics = data.metadata[".zattrs"].metrics;
+                    const yearMonthMap: Record<number, Set<number>> = {};
 
-                Object.keys(metrics).forEach((dateString) => {
-                    const date = new Date(dateString);                    
-                    const year = date.getFullYear();
-                    const month = date.getMonth() + 1;
-                    
 
-                    if (!yearMonthMap[year]) {
-                        yearMonthMap[year] = new Set<number>();
+                    Object.keys(metrics).forEach((dateString) => {
+                        const date = new Date(dateString);
+                        const year = date.getFullYear();
+                        const month = date.getMonth() + 1;
+
+
+                        if (!yearMonthMap[year]) {
+                            yearMonthMap[year] = new Set<number>();
+                        }
+                        yearMonthMap[year].add(month);
+                    });
+                    const availableYears = Object.keys(yearMonthMap).map(Number);
+                    setYears(availableYears);
+
+                    if (availableYears.length > 0) {
+                        //setSelectedYear(availableYears[0]);  // Set default selected year
+                        setMonths(Array.from(yearMonthMap[currentYear]));  // Set months for the selected year
                     }
-                    yearMonthMap[year].add(month);
-                });
-                const availableYears = Object.keys(yearMonthMap).map(Number);
-                setYears(availableYears);
-
-                if (availableYears.length > 0) {
-                    //setSelectedYear(availableYears[0]);  // Set default selected year
-                    setMonths(Array.from(yearMonthMap[currentYear]));  // Set months for the selected year
-                }
-                // console.log(yearMonthMap)
-                setYearMonthMap(yearMonthMap); // Store yearMonthMap in state
-            })
-            .catch((error) => console.error("Error fetching data:", error));
+                    // console.log(yearMonthMap)
+                    setYearMonthMap(yearMonthMap); // Store yearMonthMap in state
+                })
+                .catch((error) => console.error("Error fetching data:", error));
+        }
     }, [currentYear, currentVar]);
 
     useEffect(() => {
@@ -87,8 +90,14 @@ export function HistoricPickerLeft(props: HistoricPickerProps) {
             return timeSeries;
         }
 
-        if (currentVar === 'spei') {
-            fetch('https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_3months/position?coords=POINT(0 0)&f=json')
+        if (currentVar === 'spei3' || currentVar === 'spei24') {
+            let link
+            if (currentVar === 'spei3'){
+                link = 'https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_3months/position?coords=POINT(0 0)&f=json'
+            } if (currentVar === 'spei24'){
+                link = 'https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_24months/position?coords=POINT(0 0)&f=json'
+            }
+            fetch(link)
                 .then((res) => res.json())
                 .then((speiMetadata) => {
                     const speiMetrics = speiMetadata?.domain?.axes?.time;
@@ -182,7 +191,11 @@ export function HistoricPickerLeft(props: HistoricPickerProps) {
                         <InfoTooltip i18n_path="historic_compare.info.precip" />
                     </HStack>
                     <HStack>
-                        <Radio value="spei">{intl.formatMessage({ id: "global.vars.SPEI" })}</Radio>
+                        <Radio value="spei3">{intl.formatMessage({ id: "global.vars.SPEI3" })}</Radio>
+                        <InfoTooltip i18n_path="historic_compare.info.SPEI" />
+                    </HStack>
+                    <HStack>
+                        <Radio value="spei24">{intl.formatMessage({ id: "global.vars.SPEI24" })}</Radio>
                         <InfoTooltip i18n_path="historic_compare.info.SPEI" />
                     </HStack>
                 </VStack>

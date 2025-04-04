@@ -8,7 +8,7 @@ import proj4 from "proj4";
 import { createCazorlaLayer, createLosPedrochesLayer } from "../components/utils/regionLayers";
 import WebGLTileLayer from "ol/layer/WebGLTile";
 import GeoTIFF from "ol/source/GeoTIFF";
-import {tempColorGradient} from "../components/utils/globals";
+import {phenoColorGradient, tempColorGradient} from "../components/utils/globals";
 import XYZ from "ol/source/XYZ";
 
 
@@ -25,22 +25,7 @@ const ex = [
     -194771.63,
     4757383.53
 ] //epsg 3857
-const getColorStyle = () => {
-    return [
-        "case",
-        ["<=", ["band", 1], 10], [255, 0, 0, 0.75],    // Red
-        ["<=", ["band", 1], 20], [255, 127, 0, 0.75],  // Orange
-        ["<=", ["band", 1], 30], [255, 255, 0, 0.75],  // Yellow
-        ["<=", ["band", 1], 40], [0, 255, 0, 0.75],    // Green
-        ["<=", ["band", 1], 50], [0, 255, 255, 0.75],  // Turquoise
-        ["<=", ["band", 1], 60], [0, 0, 255, 0.75],    // Blue
-        ["<=", ["band", 1], 70], [75, 0, 130, 0.75],   // Indigo
-        ["<=", ["band", 1], 80], [139, 0, 255, 0.75],  // Violet
-        ["<=", ["band", 1], 90], [255, 105, 180, 0.75],// Pink
-        ["<=", ["band", 1], 100], [128, 0, 128, 0.75], // Purple
-        [0, 0, 0, 0] // Default (transparent)
-    ];
-};
+
 export class BioindicatorMapProvider implements MapConfigProvider {
     mapId = MAP_ID;
 
@@ -80,7 +65,7 @@ export class BioindicatorMapProvider implements MapConfigProvider {
                             ]
                         }),
                         style: {
-                            color: getColorStyle()
+                            color: phenoColorGradient
                         },
                         extent: ex,
                         properties: { title: "CDD" }

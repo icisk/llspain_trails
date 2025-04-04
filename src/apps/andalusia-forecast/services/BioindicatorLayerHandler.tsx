@@ -4,7 +4,10 @@ import {MapRegistry, SimpleLayer} from "@open-pioneer/map";
 import WebGLTileLayer from "ol/layer/WebGLTile";
 import {reactive, Reactive} from "@conterra/reactivity-core";
 import {MAP_ID} from "./BioindicatorMapProvider";
-import {precipColorGradient, tempColorGradient} from "../components/utils/globals";
+import {
+    phenoColorGradient,
+
+} from "../components/utils/globals";
 import {GeoTIFF} from "ol/source";
 import appUI from "../AppUI";
 import {HistoricLayerHandler} from "./HistoricLayerHandler";
@@ -19,22 +22,6 @@ interface References {
     mapRegistry: MapRegistry;
 }
 
-const getColorStyle = () => {
-    return [
-        "case",
-        ["<=", ["band", 1], 10], [255, 0, 0, 0.75],    // Red
-        ["<=", ["band", 1], 20], [255, 127, 0, 0.75],  // Orange
-        ["<=", ["band", 1], 30], [255, 255, 0, 0.75],  // Yellow
-        ["<=", ["band", 1], 40], [0, 255, 0, 0.75],    // Green
-        ["<=", ["band", 1], 50], [0, 255, 255, 0.75],  // Turquoise
-        ["<=", ["band", 1], 60], [0, 0, 255, 0.75],    // Blue
-        ["<=", ["band", 1], 70], [75, 0, 130, 0.75],   // Indigo
-        ["<=", ["band", 1], 80], [139, 0, 255, 0.75],  // Violet
-        ["<=", ["band", 1], 90], [255, 105, 180, 0.75],// Pink
-        ["<=", ["band", 1], 100], [128, 0, 128, 0.75], // Purple
-        [0, 0, 0, 0] // Default (transparent)
-    ];
-};
 
 export class BioindicatorLayerHandlerImpl implements BioindicatorLayerHandler {
     private mapRegistry: MapRegistry;
@@ -60,7 +47,7 @@ export class BioindicatorLayerHandlerImpl implements BioindicatorLayerHandler {
         const newSource = await this.createSource();
         if (newSource) {
             this.tiflayer?.setSource(newSource);
-            this.tiflayer?.setStyle({ color: getColorStyle()});
+            this.tiflayer?.setStyle({ color: phenoColorGradient});
         }
     }
 

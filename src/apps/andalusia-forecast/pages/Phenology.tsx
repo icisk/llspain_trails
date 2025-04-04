@@ -34,6 +34,7 @@ import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
 import {PhenologyLegend} from "../components/Legends/PhenologyLegend";
 import React, {useEffect, useState} from "react";
+import {DynamicLegend} from "../components/Legends/DynamicLegend";
 
 
 function getSeasonLabel(date) {
@@ -51,6 +52,7 @@ function getSeasonLabel(date) {
 
 
 export function Phenology() {
+    const variable = "CDD"
     const intl = useIntl();
     const [sliderValue, setSliderValue] = useState(0);
     const [metadata, setMetadata] = useState({"time": []});
@@ -166,7 +168,7 @@ export function Phenology() {
     return (
         <Box>
             <InfoBoxComponent
-                header={intl.formatMessage({id: "phenology.heading"})}
+                header={intl.formatMessage({ id: "phenology.heading" })}
                 description={intl.formatMessage({ id: "phenology.heading_descr" }).split("\n").map((line, index) => (
                     <p key={index}>{line}</p>
                 ))}
@@ -179,35 +181,43 @@ export function Phenology() {
                             <>
                                 <Box mt={2}>
                                     <p>
-
-                                            Seleccione el período entre: {" "}
-                                            {dateObjects?.[0] && getSeasonLabel(dateObjects[0])} -{" "}
-                                            {dateObjects?.length > 0 && getSeasonLabel(dateObjects[dateObjects.length - 1])}
-
+                                        Seleccione el período entre: {" "}
+                                        {dateObjects?.[0] && getSeasonLabel(dateObjects[0])} -{" "}
+                                        {dateObjects?.length > 0 && getSeasonLabel(dateObjects[dateObjects.length - 1])}
                                     </p>
                                 </Box>
-                                
-   
-                                    <>
-                                        <Slider
-                                            min={0}
-                                            max={dateObjects.length - 1}
-                                            step={1}
-                                            value={sliderValue}
-                                            onChange={(value) => setSliderValue(value)}
-                                        >
-                                            <SliderTrack bg="gray.200">
-                                                <SliderFilledTrack bg="blue.450"/>
-                                            </SliderTrack>
-                                            <SliderThumb boxSize={30} bg="blue.450"/>
-                                        </Slider>
-                                    </>
 
+                                <Slider
+                                    min={0}
+                                    max={dateObjects.length - 1}
+                                    step={1}
+                                    value={sliderValue}
+                                    onChange={(value) => setSliderValue(value)}
+                                >
+                                    <SliderTrack bg="gray.200">
+                                        <SliderFilledTrack bg="blue.450" />
+                                        {dateObjects.map((date, index) => {
+                                            const year = date.getFullYear();
+                                            const isFirstOfYear = index === 0 || dateObjects[index - 1].getFullYear() !== year;
+                                            const isFifthYear = isFirstOfYear && year % 5 === 0;
+                                            return (
+                                                isFirstOfYear && (
+                                                    <Box
+                                                        key={year}
+                                                        position="absolute"
+                                                        left={`${(index / (dateObjects.length - 1)) * 100}%`}
+                                                        bottom="-8px"
+                                                        width="2px"
+                                                        height={isFifthYear ? "30px" : "10px"}
+                                                        bg="black"
+                                                    />
+                                                )
+                                            );
+                                        })}
+                                    </SliderTrack>
+                                    <SliderThumb boxSize={30} bg="blue.450" />
 
-                                    
-                               
-                                    
-
+                                </Slider>
 
                                 <Box mt={2} textAlign="center" fontSize="lg" fontWeight="bold">
                                     {getSeasonLabel(dateObjects[sliderValue])}
@@ -216,33 +226,38 @@ export function Phenology() {
                         )}
                     </VStack>
                 </Box>
+
                 <Box width="100%" height="540px" position="relative">
-                    <Box height={"500px"} pt={2} overflow={"visable"}>
+                    <Box height={"500px"} pt={2} overflow={"visible"}>
                         <MapContainer mapId={MAP_ID} role="main">
                             <MapAnchor position="bottom-right" horizontalGap={10} verticalGap={30}>
                                 <Flex role="bottom-right" direction="column" gap={1} padding={1}>
-                                    <ZoomIn mapId={MAP_ID}/>
-                                    <ZoomOut mapId={MAP_ID}/>
+                                    <ZoomIn mapId={MAP_ID} />
+                                    <ZoomOut mapId={MAP_ID} />
                                 </Flex>
                             </MapAnchor>
                         </MapContainer>
                     </Box>
                     <Box mb={4}>
-                        <CoordsScaleBar MAP_ID={MAP_ID}/>
+                        <CoordsScaleBar MAP_ID={MAP_ID} />
                     </Box>
-                    <PhenologyLegend/>
+                    <DynamicLegend position={"right"} variable={"CDD"} />
+
                 </Box>
+
                 <Box>
-                    <RegionZoom MAP_ID={MAP_ID}/>
+                    <RegionZoom MAP_ID={MAP_ID} />
                 </Box>
+
                 {!chartLoading && (
-                    <div style={{marginTop: "50px"}}>
-                        <HighchartsReact highcharts={Highcharts} options={chartOptions}/>
+                    <div style={{ marginTop: "50px" }}>
+                        <HighchartsReact highcharts={Highcharts} options={chartOptions} />
                     </div>
                 )}
             </Container>
         </Box>
-    )
+    );
+
 }
 
 export default Phenology;

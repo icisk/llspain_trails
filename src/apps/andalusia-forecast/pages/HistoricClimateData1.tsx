@@ -8,9 +8,9 @@ import {MainMap} from "../components/MainComponents/MainMap";
 import {HistoricClimateHook2} from '../hooks/HistoricClimatehook';
 import Layer from "ol/layer/Layer";
 import {MAP_ID} from '../services/HistoricClimateMapProvider';
-import {DynamicPrecipitationLegend} from "../components/Legends/DynamicLegend";
+import {DynamicLegend, DynamicPrecipitationLegend} from "../components/Legends/DynamicLegend";
 import {LayerSwipe} from '../components/LayerSwipe/LayerSwipe';
-import Highcharts from 'highcharts';
+import Highcharts, {ChartOptions} from 'highcharts';
 import {HistoricPickerLeft, SelectionLeft} from "../components/VariablePicker/HistoricPickerLeft";
 import {HistoricPickerRight, SelectionRight} from "../components/VariablePicker/HistoricPickerRight";
 import {Knecht} from "../components/Legends/Knecht";
@@ -27,6 +27,13 @@ import {useReactiveSnapshot} from "@open-pioneer/reactivity";
 import {ZoomIn, ZoomOut} from "@open-pioneer/map-navigation";
 import {CoordsScaleBar} from "../components/CoordsScaleBar/CoordsScaleBar";
 import {RegionZoom} from "../components/RegionZoom/RegionZoom";
+import {
+    espanolChartOptions,
+    CS02_initChartOptions,
+    CS02_compareChartOptions,
+    CS02_TPfullTimeSeriesChartOptions, 
+    CS02_SPEIfullTimeSeriesChartOptions
+} from "../components/Charts/ChartOptions";
 
 
 // Marker layer for displaying clicks
@@ -34,39 +41,11 @@ const markerSource = new VectorSource();
 const markerLayer = new VectorLayer({ source: markerSource, zIndex: 100 });
 
 
-Highcharts.setOptions({
-    lang: {
-        // Basic Date/Time Names
-        months: [
-            'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio',
-            'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-        ],
-        shortMonths: [
-            'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul',
-            'Ago', 'Sep', 'Oct', 'Nov', 'Dic'
-        ],
-        weekdays: [
-            'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'
-        ],
-
-        // Other common texts you might want to translate
-        loading: 'Cargando...',
-        contextButtonTitle: 'Menú contextual del gráfico',
-        downloadJPEG: 'Descargar imagen JPEG',
-        downloadPDF: 'Descargar documento PDF',
-        downloadPNG: 'Descargar imagen PNG',
-        downloadSVG: 'Descargar imagen vectorial SVG',
-        printChart: 'Imprimir gráfico',
-        resetZoom: 'Restablecer zoom',
-        resetZoomTitle: 'Restablecer nivel de zoom 1:1',
-        thousandsSep: '.', // Often '.' for thousands in Spanish
-        decimalPoint: ','   // Often ',' for decimal point in Spanish
-        // Add any other lang options you need from the Highcharts API documentation
-    }
-});
 
 const HistoricClimateData1 = () => {
     const intl = useIntl();
+    Highcharts.setOptions(espanolChartOptions(intl));
+
     const histLayerHandler = useService<HistoricLayerHandler>("app.HistoricLayerHandler");
 
     const months = [
@@ -103,9 +82,13 @@ const HistoricClimateData1 = () => {
     const [tempData2, setTempData2] = useState(null);
 
     //states for single mode
+    // const [tempprecipData, setTempPrecipData] = useState(null);
+    // const [speiData, setSpeiData] = useState(null);
+    
     const [precipData, setPrecipData] = useState(null);
     const [tempData, setTempData] = useState(null);
-    const [speiData, setSpeiData] = useState(null);
+    const [spei3Data, setSpei3Data] = useState(null);
+    const [spei24Data, setSpei24Data] = useState(null);
     const [spiData, setSpiData] = useState(null);
 
     const [loading, setLoading] = useState(false);
@@ -113,60 +96,23 @@ const HistoricClimateData1 = () => {
     
     const [precipTimeSeries, setPrecipTimeSeries] = useState<String>(null)
     const [tempTimeSeries, setTempTimeSeries] = useState<String>(null)
-    const [speiTimeSeries, setSpeiTimeSeries] = useState<String>(null)
+    const [spei3TimeSeries, setSpei3TimeSeries] = useState<String>(null)
+    const [spei24TimeSeries, setSpei24TimeSeries] = useState<String>(null)
     const [spiTimeSeries, setSpiTimeSeries] = useState<String>(null)
     
     const [precipTSDATA, setPrecipTSDATA] = useState<String>(null)
     const [tempTSDATA, setTempTSDATA] = useState<String>(null)
-    const [speiTSDATA, setSpeiTSDATA] = useState<String>(null)
+    const [spei3TSDATA, setSpei3TSDATA] = useState<String>(null)
+    const [spei24TSDATA, setSpei24TSDATA] = useState<String>(null)
+
     const [spiTSDATA, setSpiTSDATA] = useState<String>(null)
     
     const [chartInstance, setChartInstance] = useState(null);
 
     const [isComparisonMode, setIsComparisonMode] = useState(false);
 
-    const [chartOptions, setChartOptions] = useState({
-        chart: { type: "column", zoomType: "x" },
-        title: { text: intl.formatMessage({ id: "global.plot.header_temp_precip" }) },
-        xAxis: { 
-            title: { text: intl.formatMessage({ id: "global.vars.date" }) }
-        },
-        yAxis: [
-            {
-                title: { text: intl.formatMessage({ id: "global.vars.precip" }) + " (mm)" },
-                min: 0,
-                max: 400,
-                opposite: false,
-            },
-            {
-                title: { text: intl.formatMessage({ id: "global.vars.temp" }) + " (°C)" },
-                min: -10,
-                max: 40,
-                opposite: true,
-            }
-        ],
-        tooltip: { valueDecimals: 1 },
-        series: [
-            {
-                name: intl.formatMessage({ id: "global.vars.precip" }),
-                data: new Array(12).fill(null),
-                type: "column",
-                color: "blue",
-                yAxis: 0,
-                showInLegend: false
-            },
-            {
-                name: intl.formatMessage({ id: "global.vars.temp" }),
-                data: new Array(12).fill(null),
-                type: "line",
-                color: "orange",
-                yAxis: 1,
-                marker: { symbol: "circle" },
-                lineWith: 0,
-                showInLegend: false
-            }
-        ]
-    });
+    const [chartOptions, setChartOptions] = useState(CS02_initChartOptions(intl));
+    const [speiChartOptions, setSpeiChartOptions] = useState<ChartOptions>();
     
     
     const mapModel = useMapModel(MAP_ID);
@@ -195,28 +141,35 @@ const HistoricClimateData1 = () => {
         }
         
         const fetchMetaData = async () => {
+
             const tempMetadataUrl = "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/creaf_historic_temperature_metrics.zarr/.zmetadata";
-            const precipMetadataUrl = "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/creaf_historic_precip_metrics.zarr/.zmetadata";
-            const speiMetaDataUrl = "https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_3months/position?coords=POINT(0 0)&f=json";
+            const precipMetadataUrl = "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/creaf_historic_precip_metrics.zarr/.zmetadata";           
+
+            const spei3MetaDataUrl = "https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_3months/position?coords=POINT(0 0)&f=json";
+            const spei24MetaDataUrl = "https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_24months/position?coords=POINT(0 0)&f=json";
 
             try {
-                const [precipMetadata, tempMetadata, speiMetadata] = await Promise.all([
+                const [precipMetadata, tempMetadata, spei3Metadata, spei24Metadata] = await Promise.all([
                     fetch(precipMetadataUrl).then((res) => res.json()),
                     fetch(tempMetadataUrl).then((res) => res.json()),
-                    fetch(speiMetaDataUrl).then((res) => res.json())
+                    fetch(spei3MetaDataUrl).then((res) => res.json()),
+                    fetch(spei24MetaDataUrl).then((res) => res.json())
                 ]);
 
                 const tempMetrics = tempMetadata.metadata[".zattrs"].metrics;
                 const precipMetrics = precipMetadata.metadata[".zattrs"].metrics;
-                const speiMetrics = speiMetadata?.domain.axes.time;
+                const spei3Metrics = spei3Metadata?.domain.axes.time;
+                const spei24Metrics = spei24Metadata?.domain.axes.time;
                 
                 const tempTimeSeries = meta2TS(tempMetrics)
                 const precipTimeSeries = meta2TS(precipMetrics)
-                const speiTimeSeries = coords2TS(speiMetrics.start, speiMetrics.stop, speiMetrics.num);
+                const spei3TimeSeries = coords2TS(spei3Metrics.start, spei3Metrics.stop, spei3Metrics.num);
+                const spei24TimeSeries = coords2TS(spei24Metrics.start, spei24Metrics.stop, spei24Metrics.num);
                                 
                 setTempTimeSeries(tempTimeSeries)
                 setPrecipTimeSeries(precipTimeSeries)
-                setSpeiTimeSeries(speiTimeSeries)
+                setSpei3TimeSeries(spei3TimeSeries)
+                setSpei24TimeSeries(spei24TimeSeries)
                 
             } catch (err) {
                 setError(err.message);
@@ -235,31 +188,28 @@ const HistoricClimateData1 = () => {
         const fetchData = async (x, y) => {
             const precipUrl = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_precip/position?coords=POINT(${x}%20${y})`;
             const tempUrl = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_temperature/position?coords=POINT(${x}%20${y})`;
-            const speiUrl = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_3months/position?coords=POINT(${x}%20${y})`;
+            const spei3Url = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_3months/position?coords=POINT(${x}%20${y})`;
+            const spei24Url = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_24months/position?coords=POINT(${x}%20${y})`;
             
             try {                
-                const [precipResponse, tempResponse, speiResponse] = await Promise.all([
+                const [precipResponse, tempResponse, spei3Response, spei24Response] = await Promise.all([
                     fetch(precipUrl),
                     fetch(tempUrl),
-                    fetch(speiUrl)
+                    fetch(spei3Url),
+                    fetch(spei24Url)
                 ]);
-                if (!precipResponse.ok || !tempResponse.ok || !speiResponse.ok) throw new Error("Network response was not ok");
+                if (!precipResponse.ok || !tempResponse.ok || !spei3Response.ok || !spei24Response.ok) throw new Error("Network response was not ok");
 
                 const precipJsonData =  await precipResponse.json();
                 const tempJsonData =  await tempResponse.json();
-                const speiJsonData = await speiResponse.json();
-                
+                const spei3JsonData = await spei3Response.json();
+                const spei24JsonData = await spei24Response.json();
                 
                 setPrecipData(precipJsonData?.ranges.historic_precip.values);
                 setTempData(tempJsonData?.ranges.historic_temperature.values);
-                setSpeiData(speiJsonData?.ranges.historic_SPEI_3months.values);
+                setSpei3Data(spei3JsonData?.ranges.historic_SPEI_3months.values);
+                setSpei24Data(spei24JsonData?.ranges.historic_SPEI_24months.values);
                 
-                // setTempTSDATA(tempTimeSeries?.map((val, i) => [val, tempData[i]]));
-                // setPrecipTSDATA(precipTimeSeries?.map((val, i) => [val, precipData[i]]));
-                // setTempData1(filterTimeSeriesByYear(tempTSDATA, yearLeft));
-                // setTempData2(filterTimeSeriesByYear(tempTSDATA, yearRight));
-                // setPrecipData1(filterTimeSeriesByYear(precipTSDATA, yearLeft));
-                // setPrecipData2(filterTimeSeriesByYear(precipTSDATA, yearRight));
 
             } catch (err) {
                 setError(err.message);
@@ -271,25 +221,17 @@ const HistoricClimateData1 = () => {
         
         fetchData(x, y);
         // console.log(speiData)
-    }, [clickedCoordinates, isComparisonMode, yearRight, yearLeft, precipTimeSeries, tempTimeSeries, speiTimeSeries]);
-
-    // useEffect(() => {
-    //     if (!tempData || !precipData || !speiData || !tempTimeSeries || !precipTimeSeries || !speiTimeSeries) return;
-    //
-    //     setTempTSDATA(tempTimeSeries.map((val, i) => [val, tempData[i]]));
-    //     setPrecipTSDATA(precipTimeSeries.map((val, i) => [val, precipData[i]]));
-    //     setSpeiTSDATA(speiTimeSeries.map((val, i) => [val, speiData[i]]));
-    //    
-    // }, [tempData, precipData, speiData, tempTimeSeries, precipTimeSeries, speiTimeSeries]);
-
+    }, [clickedCoordinates, isComparisonMode, yearRight, yearLeft, precipTimeSeries, tempTimeSeries, spei3TimeSeries, spei24TimeSeries]);
+    
 
     useEffect(() => {
-        if (!tempData || !precipData || !speiData || !tempTimeSeries || !precipTimeSeries || !speiTimeSeries) return;
+        if (!tempData || !precipData || !spei3Data || !tempTimeSeries || !precipTimeSeries || !spei3TimeSeries) return;
 
         setTempTSDATA(tempTimeSeries.map((val, i) => [val, tempData[i]]));
         setPrecipTSDATA(precipTimeSeries.map((val, i) => [val, precipData[i]]));
-        setSpeiTSDATA(speiTimeSeries.map((val, i) => [val, speiData[i]]));
-    }, [tempData, precipData, speiData, tempTimeSeries, precipTimeSeries, speiTimeSeries]);
+        setSpei3TSDATA(spei3TimeSeries.map((val, i) => [val, spei3Data[i]]));
+        setSpei24TSDATA(spei24TimeSeries.map((val, i) => [val, spei24Data[i]]));
+    }, [tempData, precipData, spei3Data, tempTimeSeries, precipTimeSeries, spei3TimeSeries, spei24TimeSeries]);
 
     useEffect(() => {
         if (!tempTSDATA || !precipTSDATA) return;
@@ -303,160 +245,41 @@ const HistoricClimateData1 = () => {
         setPrecipData2(filterTimeSeriesByYear(precipTSDATA, yearRight));
     }, [tempTSDATA, precipTSDATA, yearLeft, yearRight, isComparisonMode]);
 
-    // useEffect(() => {
-    //     // console.log(precipTimeSeries, tempTimeSeries , tempData , precipData);
-    //     if (precipTimeSeries && tempTimeSeries && tempData && precipData) {
-    //         setTempTSDATA(tempTimeSeries?.map((val, i) => [val, tempData[i]]));
-    //         setPrecipTSDATA(precipTimeSeries?.map((val, i) => [val, precipData[i]]));
-    //     }
-    //            
-    // }, [tempData, precipData]);
-    //
-    //
-    // // comparison mode: fetch data when coordinates are clicked
-    // useEffect(() => {
-    //     if (!tempTSDATA || !precipTSDATA) return;
-    //     if (!clickedCoordinates) return;
-    //    
-    //     const filterTimeSeriesByYear = (timeSeries, selectedYear) =>
-    //         timeSeries.filter(entry => new Date(entry[0]).getFullYear() === selectedYear)
-    //         .map((e) => [new Date(e[0]).getMonth(), e[1]]);
-    //
-    //     setTempData1(filterTimeSeriesByYear(tempTSDATA, yearLeft));
-    //     setTempData2(filterTimeSeriesByYear(tempTSDATA, yearRight));
-    //     setPrecipData1(filterTimeSeriesByYear(precipTSDATA, yearLeft));
-    //     setPrecipData2(filterTimeSeriesByYear(precipTSDATA, yearRight));
-    //    
-    // }, [clickedCoordinates, yearLeft, yearRight, tempTSDATA, precipTSDATA]);
 
-    // useEffect(() => {        
-    //     console.log(speiTimeSeries);
-    //     console.log(precipTimeSeries);
-    //     console.log(tempTimeSeries);
-    //     console.log(speiData);
-    //     console.log(precipData);
-    //     console.log(tempData);
-    //     console.log(speiTSDATA);
-    //     console.log(precipTSDATA);
-    //     console.log(tempTSDATA);
-    // }, [speiTSDATA, speiData, speiTimeSeries, precipTSDATA, precipTimeSeries, tempTimeSeries, precipTimeSeries]);
 
     // comparison mode: update chart options when data is updated
     useEffect(() => {
         if (isComparisonMode){
             if (!precipData1 || !precipData2 || !tempData1 || !tempData2) return;
 
-            setChartOptions({
-                chart: { type: "column", zoomType: "x" },
-                title: { text: intl.formatMessage({ id: "global.plot.header_temp_precip" }) },
-                xAxis: { type: 'categories',
-                    title: { text: intl.formatMessage({ id: "global.vars.date" }) },
-                    categories: months,
-                    min: null,
-                    max: null},
-                yAxis: [
-                    {
-                        title: { text: intl.formatMessage({ id: "global.vars.precip" }) + " (mm)" },
-                        min: 0,
-                        max: 400,
-                        opposite: false,
-                    },
-                    {
-                        title: { text: intl.formatMessage({ id: "global.vars.temp" }) + " (°C)" },
-                        min: -10,
-                        max: 40,
-                        opposite: true,
-                    }
-                ],
-                tooltip: { valueDecimals: 1,
-                    shared: true,
-                },
-                series: [
-                    {
-                        name: `${yearLeft} ${intl.formatMessage({ id: "global.vars.precip" })}`,
-                        data: precipData1,
-                        type: "column",
-                        color: "blue",
-                        yAxis: 0,
-                        showInLegend: true
-                    },
-                    {
-                        name: `${yearRight} ${intl.formatMessage({ id: "global.vars.precip" })}`,
-                        data: precipData2,
-                        type: "column",
-                        color: "lightblue",
-                        yAxis: 0,
-                        showInLegend: true
-                    },
-                    {
-                        name: `${yearLeft} ${intl.formatMessage({ id: "global.vars.temp" })}`,
-                        data: tempData1,
-                        type: "line",
-                        color: "orange",
-                        yAxis: 1,
-                        marker: { symbol: "circle" },
-                        lineWith: 0,
-                        showInLegend: true
-                    },
-                    {
-                        name: `${yearRight} ${intl.formatMessage({ id: "global.vars.temp" })}`,
-                        data: tempData2,
-                        type: "line",
-                        color: "red",
-                        yAxis: 1,
-                        marker: { symbol: "circle" },
-                        lineWith: 0,
-                        showInLegend: true
-                    }
-                ]
-            });
+            setChartOptions(CS02_compareChartOptions(
+                intl, 
+                months, 
+                yearLeft,
+                yearRight,
+                tempData1,
+                tempData2,
+                precipData1,
+                precipData2))
         } else {
-
-            setChartOptions({
-                chart: { type: "column", zoomType: "x" },
-                title: { text: intl.formatMessage({ id: "global.plot.header_temp_precip" }) },
-                xAxis: { type: 'datetime',
-                    title: {text: intl.formatMessage({ id: "global.vars.date" })},
-                    categories: undefined,
-                    min: null,
-                    max: null},
-                yAxis: [
-                    {title: {text: intl.formatMessage({ id: "global.vars.precip" }) + " (mm)" }, min: 0, max: 400, opposite: false},
-                    {title: {text: intl.formatMessage({ id: "global.vars.temp" }) + " (°C)" }, min: -10, max: 40, opposite: true}
-                ],
-                tooltip: {
-                    valueDecimals: 1,
-                    xDateFormat: '%Y-%m-%d',
-                },
-                series: [
-                    {
-                        name: intl.formatMessage({ id: "global.vars.precip" }),
-                        data: precipTSDATA || [],
-                        type: "column",
-                        color: "blue",
-                        yAxis: 0
-                    },
-                    {
-                        name: intl.formatMessage({ id: "global.vars.SPEI" }),
-                        data: speiTSDATA || [],
-                        type: "spline",
-                        color: "red",
-                        yAxis: 1
-                    },
-                    {
-                        name: intl.formatMessage({ id: "global.vars.temp" }),
-                        data: tempTSDATA || [],
-                        type: "spline",
-                        color: "orange",
-                        yAxis: 1
-                    },
-                ]
-            });
+            
+            setChartOptions(CS02_TPfullTimeSeriesChartOptions(
+                intl,
+                precipTSDATA,
+                tempTSDATA,
+                spei3TSDATA,
+                spei24TSDATA
+            ));
         }
-        
-        
+                
     }, [isComparisonMode, precipData1, precipData2, tempData1, tempData2, tempTSDATA, precipTSDATA, yearLeft, yearRight]);
-
+    
+    useEffect(() => {
+        setSpeiChartOptions(CS02_SPEIfullTimeSeriesChartOptions(
+            intl,
+            spei3TSDATA,
+            spei24TSDATA))
+    }, [spei24TSDATA, spei3TSDATA]);
 
     
     useEffect(() => {
@@ -516,8 +339,7 @@ const HistoricClimateData1 = () => {
             histLayerHandler.setYearRight(value as number);
             setYearRight(value as number);
         } else if (field === 'month') {
-            // histLayerHandler.setYearRight(histLayerHandler.currentYearRight)
-            // histLayerHandler.setVarRight(histLayerHandler.currentVarRight)
+
             histLayerHandler.setMonthRight(value as number);
             
         } else if (field === 'var') {
@@ -560,15 +382,8 @@ const HistoricClimateData1 = () => {
                         <CoordsScaleBar MAP_ID={MAP_ID} />
                     </Box>                   
 
-                {
-                    (varLeft === 'temp' || varRight === 'temp') &&
-                    <DynamicPrecipitationLegend/>
-                }
-                {
-                    (varLeft=== 'precip' || varRight === 'precip') &&
-                    <Knecht/>
-                }
-                {/*<Knecht/>*/}
+                    <DynamicLegend variable={varLeft} position={'left'} />
+                    <DynamicLegend variable={varRight} position={'right'} />
                 
             </Box>
 
@@ -585,6 +400,7 @@ const HistoricClimateData1 = () => {
                 <RegionZoom MAP_ID={MAP_ID} />
             </Box>
             <Box mt={4}>
+
                 <RadioGroup
                     onChange={(value) => {
                         setIsComparisonMode(value === "true");
@@ -592,13 +408,13 @@ const HistoricClimateData1 = () => {
                     value={isComparisonMode ? "true" : "false"}
                 >
                     <Box>
-                        {intl.formatMessage({ id: "historic_compare.radio_buttons.heading" })}
+                        {intl.formatMessage({id: "historic_compare.radio_buttons.heading"})}
                     </Box>
                     <Stack direction="row">
                         <Radio
-                            value="true">{intl.formatMessage({ id: "historic_compare.radio_buttons.compare" })}</Radio>
+                            value="true">{intl.formatMessage({id: "historic_compare.radio_buttons.compare"})}</Radio>
                         <Radio
-                            value="false">{intl.formatMessage({ id: "historic_compare.radio_buttons.full_series" })}</Radio>
+                            value="false">{intl.formatMessage({id: "historic_compare.radio_buttons.full_series"})}</Radio>
                     </Stack>
                 </RadioGroup>
                 <div>
@@ -607,6 +423,12 @@ const HistoricClimateData1 = () => {
                         options={chartOptions}
                     />
                 </div>
+                <div>                    
+                        <HighchartsReact
+                            highcharts={Highcharts}
+                            options={speiChartOptions}
+                        />
+                                  </div>
             </Box>
         </Container>
     </Box>

@@ -2,6 +2,7 @@
 import React from "react";
 import { Box, Text } from "@open-pioneer/chakra-integration";
 import {useIntl} from "open-pioneer:react-hooks";
+import {speicolors} from "../utils/globals";
 
 //temperature colors
 const pink = '#eb7fe9BC'
@@ -39,7 +40,7 @@ const colorMapping = [
     //{ value: 300, color: p_09, label: "> 100 mm" },
 ];
 
-export const Knecht = () => {
+export const LeftLegend = () => {
     const intl = useIntl();
 
     return (

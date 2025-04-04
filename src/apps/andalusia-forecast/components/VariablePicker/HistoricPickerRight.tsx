@@ -37,7 +37,7 @@ export function HistoricPickerRight(props: HistoricPickerProps) {
     
     
     useEffect(() => {
-        if (currentVar != "spei"){
+        if (currentVar != "spei3" || currentVar != "spei24") {
             const link = currentVar === 'temp' ? meta_temp : meta_precip;
             fetch(link)
                 .then((response) => response.json())
@@ -93,8 +93,14 @@ export function HistoricPickerRight(props: HistoricPickerProps) {
             return timeSeries;
         }
         
-        if (currentVar === 'spei') {
-            fetch('https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_3months/position?coords=POINT(0 0)&f=json')
+        if (currentVar === 'spei3' || currentVar === 'spei24') {
+            let link
+            if (currentVar === 'spei3'){
+                link = 'https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_3months/position?coords=POINT(0 0)&f=json'
+            } if (currentVar === 'spei24'){
+                link = 'https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_24months/position?coords=POINT(0 0)&f=json'
+            }
+            fetch(link)
                 .then((res) => res.json())
                 .then((speiMetadata) => {
                     const speiMetrics = speiMetadata?.domain?.axes?.time;
@@ -189,7 +195,11 @@ export function HistoricPickerRight(props: HistoricPickerProps) {
                             <InfoTooltip i18n_path="historic_compare.info.precip" />
                         </HStack>
                         <HStack>
-                            <Radio value="spei">{intl.formatMessage({ id: "global.vars.SPEI" })}</Radio>
+                            <Radio value="spei3">{intl.formatMessage({ id: "global.vars.SPEI3" })}</Radio>
+                            <InfoTooltip i18n_path="historic_compare.info.SPEI" />
+                        </HStack>
+                        <HStack>
+                            <Radio value="spei24">{intl.formatMessage({ id: "global.vars.SPEI24" })}</Radio>
                             <InfoTooltip i18n_path="historic_compare.info.SPEI" />
                         </HStack>
                     </VStack>

@@ -14,11 +14,13 @@ messages:
       precip: Precipitación 
       precip_cum:  Precipitación acumulada mensual 
       uncertainty: Grado de incertidumbre
-      SPEI: Índice de sequía 3 meses
+      SPEI: Índice de sequía
+      SPEI3: Índice de sequía 3 meses 
+      SPEI24: Índice de sequía 24 meses 
       year: año
       month: mes
       date: Fecha
-      csd: Días secos consecutivos.
+      csd: Días secos consecutivos
     controls:
       sel_month: Seleccione el mes 
       sel_year: Seleccione el año
@@ -32,6 +34,7 @@ messages:
       header_temp_precip: Precipitación (acumulada mensual) y temperatura media mensual
       header_precip: Datos de precipitación
       header_temp: Temperatura Data
+      header_spei: Índice de sequía de SPEI
     legend:
       uncertainty:
         red: alta

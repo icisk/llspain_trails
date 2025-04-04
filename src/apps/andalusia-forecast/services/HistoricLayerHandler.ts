@@ -177,7 +177,7 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
             return tempColorGradient;
         }  if (this.#currentVarLeft.value === "precip") {
             return precipColorGradient;
-        }  if (this.#currentVarLeft.value === "spei") {
+        }  if (this.#currentVarLeft.value.startsWith("spei")) {
             return speiColorGradient;
         }
     }
@@ -186,7 +186,7 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
             return tempColorGradient;
         }  if (this.#currentVarRight.value === "precip") {
             return precipColorGradient;
-        } if (this.#currentVarRight.value === "spei") {
+        } if (this.#currentVarRight.value.startsWith("spei")) {
             return speiColorGradient;
         }
     }
@@ -198,8 +198,10 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
              historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}_MeanTemperature_v0.tif`;
         }  if (this.#currentVarLeft.value === "precip") {
              historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/precip/COG_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}_precipitation_v1.tif`;
-        } if (this.#currentVarLeft.value === "spei") {
+        } if (this.#currentVarLeft.value === "spei3") {
             historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_3months/COG_SPEI3_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tif`
+        } if (this.#currentVarLeft.value === "spei24") {
+            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_24months/COG_SPEI24_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tif`
         }
 
         try {
@@ -229,8 +231,10 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
             historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}_MeanTemperature_v0.tif`;
         }  if (this.#currentVarRight.value === "precip") {
             historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/precip/COG_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}_precipitation_v1.tif`;
-        } if (this.#currentVarRight.value === "spei") {
+        } if (this.#currentVarRight.value === "spei3") {
             historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_3months/COG_SPEI3_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}.tif`
+        } if (this.#currentVarRight.value === "spei24") {
+            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_24months/COG_SPEI24_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tif`
         }
 
         try {
