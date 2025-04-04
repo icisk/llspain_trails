@@ -106,7 +106,7 @@ export function HydrologicalService() {
                         <Checkbox isChecked={activeVectorLayers.includes("groundwater")} onChange={() => toggleVectorLayer("groundwater")}>
                             {intl.formatMessage({ id: "hydro_service.selection_options.hydro_data.groundwater" })}
                         </Checkbox>
-                        <Checkbox isChecked={activeVectorLayers.includes("authorities")} onChange={() => toggleVectorLayer("authorities_boundaries")}>
+                        <Checkbox isChecked={activeVectorLayers.includes("authorities_boundaries")} onChange={() => toggleVectorLayer("authorities_boundaries")}>
                             {intl.formatMessage({ id: "hydro_service.selection_options.hydro_data.authorities_boundaries" })}
                         </Checkbox>
                         <Checkbox isChecked={activeVectorLayers.includes("municipalities")} onChange={() => toggleVectorLayer("municipalities")}>
