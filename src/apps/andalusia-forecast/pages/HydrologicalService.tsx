@@ -28,11 +28,11 @@ export function HydrologicalService() {
         });
 
         if (thematicMap) {
-            const selectedLayer = mapLayers.find((layer) => layer.get("id") === `thematic-${thematicMap}`);
-            if (selectedLayer) {
-                selectedLayer.setVisible(true);
-                selectedLayer.setOpacity(opacity);
-            }
+            const selectedLayers = mapLayers.filter((layer) => layer.get("id") === `thematic-${thematicMap}`);
+            selectedLayers.forEach((layer) => {
+                layer.setVisible(true);
+                layer.setOpacity(opacity);
+            });
         }
 
         // Vector layer control
