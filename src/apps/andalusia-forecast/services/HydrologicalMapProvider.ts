@@ -10,7 +10,7 @@ import { register } from "ol/proj/proj4";
 import OSM from "ol/source/OSM";
 import proj4 from "proj4";
 import { createCazorlaLayer, createLosPedrochesLayer } from "../components/utils/regionLayers";
-import { getGeologicalPolygonColor, getGeologicalLineColor } from "../components/utils/geologicalLayersColorHandler";
+import { getGeologicalPolygonStyle, getGeologicalLineStyle } from "../components/utils/geologicalLayersColorHandler";
 import { pedrochesPoint } from "../components/utils/globals";
 import { TileWMS } from "ol/source";
 import { Vector as VectorLayer } from "ol/layer";
@@ -161,11 +161,7 @@ export class HydrologicalMapProvider implements MapConfigProvider {
             style: function (feature) {
                 const type = feature.getProperties().CODE_COTR;
                 
-                return new Style({
-                    fill: new Fill({
-                        color: getGeologicalPolygonColor(type),
-                    }),
-                });
+                return getGeologicalPolygonStyle(type)
             }
 
         });
@@ -184,12 +180,7 @@ export class HydrologicalMapProvider implements MapConfigProvider {
             style: function (feature) {
                 const lineType = feature.getProperties().CODE_LINE1;
 
-                return new Style({
-                    stroke: new Stroke({
-                        color: getGeologicalLineColor(lineType),
-                        width: 1,
-                    }),
-                });
+                return getGeologicalLineStyle(lineType);
             }
         });
 
