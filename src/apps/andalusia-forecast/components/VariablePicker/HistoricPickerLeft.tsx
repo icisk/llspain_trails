@@ -118,7 +118,7 @@ export function HistoricPickerLeft(props: HistoricPickerProps) {
                         }
                         yearMonthMap[year].add(month);
                     });
-                    console.log(yearMonthMap)
+                    //console.log(yearMonthMap)
 
                     const availableYears = Object.keys(yearMonthMap).map(Number);
                     setYears(availableYears);

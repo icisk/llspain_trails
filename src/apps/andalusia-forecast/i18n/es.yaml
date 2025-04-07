@@ -33,7 +33,7 @@ messages:
     plot:
       header_temp_precip: Precipitación (acumulada mensual) y temperatura media mensual
       header_precip: Datos de precipitación
-      header_temp: Temperatura Data
+      header_temp: Datos de temperatura
       header_spei: Índice de sequía de SPEI
     legend:
       uncertainty:

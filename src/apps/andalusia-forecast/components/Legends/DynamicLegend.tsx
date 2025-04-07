@@ -2,7 +2,7 @@
 import React from "react";
 import {Box, Text} from "@open-pioneer/chakra-integration";
 import {useIntl} from "open-pioneer:react-hooks";
-import {phenoColors, speicolors} from "../utils/globals";
+import {phenoColors, speicolors, uncertaintyColors} from "../utils/globals";
 
 //temperature colors
 const pink = '#eb7fe9BC'
@@ -83,6 +83,13 @@ export const DynamicLegend = ({ variable, position }: { variable: string, positi
             { value: 60, color: phenoColors.cdd_04, label: "61 - 80 días" },
             { value: 80, color: phenoColors.cdd_05, label: "81 - 100 días" },
         ];
+    } else if (variable === "uncertainty"){
+        text = intl.formatMessage({id: "global.vars.uncertainty"})
+        colorMapping = [
+            { value: 1, color: uncertaintyColors.red, label: intl.formatMessage({id: "global.legend.uncertainty.red"})},
+            { value: 2, color: uncertaintyColors.yellow, label: intl.formatMessage({id: "global.legend.uncertainty.yellow"})},
+            { value: 3, color: uncertaintyColors.green, label: intl.formatMessage({id: "global.legend.uncertainty.green"})},
+        ]
     }
     
     

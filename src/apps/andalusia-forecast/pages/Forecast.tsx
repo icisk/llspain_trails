@@ -19,7 +19,9 @@ import {MainMap} from "../components/MainComponents/MainMap";
 import {StaticPrecipitationLegend} from "../components/Legends/StaticPrecipitationLegend"; // Correct import statement
 import {UncertaintyLegend} from "../components/Legends/uncertainty";
 import {useReactiveSnapshot} from "@open-pioneer/reactivity";
-import {Select} from "@chakra-ui/react";
+import {Select, Switch, Text} from "@chakra-ui/react";
+import {DynamicLegend} from "../components/Legends/DynamicLegend";
+import {espanolChartOptions} from "../components/Charts/ChartOptions";
 
 // Marker layer for displaying clicks
 const markerSource = new VectorSource();
@@ -29,34 +31,66 @@ const markerLayer = new VectorLayer({ source: markerSource, zIndex: 1 });
 export function Forecast() {
     const intl = useIntl();
     const [clickedCoordinates, setClickedCoordinates] = useState<number[] | null>(null);
-    const { data, loading, error } = useFetchData(clickedCoordinates);
+    
     const mapState = useMapModel(MAP_ID);
     const precipitationService = useService<PrecipitationLayerHandler>("app.PrecipitationLayerHandler");
     const prepSrvc = useService<PrecipitationLayerHandler>("app.PrecipitationLayerHandler");
-    const [curVar] = useReactiveSnapshot(() =>[prepSrvc.currentVariable], [prepSrvc])
+    const   [curVar,
+            curForecast,
+            curForecastMonths,
+            showUncert] = useReactiveSnapshot(() =>
+        [prepSrvc.currentVariable, 
+        prepSrvc.currentForecast,
+        prepSrvc.currentForecastMonths,
+        prepSrvc.showUncert], [prepSrvc])
+    const { data, loading, error } = useFetchData(clickedCoordinates, curVar);
     const currentVariable = precipitationService?.currentVariable;
     
     // State for managing chart options
     const [chartOptions, setChartOptions] = useState({
-        title: { text: intl.formatMessage({ id: "global.plot.header_precip" }) },
-        xAxis: { categories: ["Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto"] },
-        tooltip: { valueDecimals: 1 },
-        yAxis: { title: { text: intl.formatMessage({ id: "global.vars.precip" }) + " " + intl.formatMessage({ id: "global.units.mm" }) }, min: 0, max: 350 },
+        title: { text: "" },
+        xAxis: { type: "datetime" },
+        tooltip: { valueDecimals: 1,
+            formatter: function() {
+                const date = new Date(this.x);
+                date.setDate(date.getDate() + 1); // Add one day
+                return Highcharts.dateFormat('%b %Y', date); // Show Month and Year
+            }},
+        yAxis: { title: { text: ""}},
         series: []
     });
+    Highcharts.setOptions(espanolChartOptions());
 
+
+    const variables = [
+        { temp: "Temperatura" },
+        { precip: "Precipitación" }
+    ];
+    
     useEffect(() => {
+        prepSrvc.setForecast("2025-01")
+        prepSrvc.setVariable("temp")
+        prepSrvc.setShowUncert(false)
+        //console.log(prepSrvc)
+    }, []);
+    
+    useEffect(() => {
+        let newOpts = {}
+        if (curVar === "temp"){
+            newOpts = {title: {text: intl.formatMessage({ id: "global.plot.header_temp" })},
+                        yAxis: {title: { text: intl.formatMessage({ id: "global.vars.temp" }) + " (ºC)"},}}
+        } else if (curVar === "precip"){
+            newOpts = {title: {text: intl.formatMessage({ id: "global.plot.header_precip" })},
+                yAxis: {title: { text: intl.formatMessage({ id: "global.vars.precip" }) + " (mm)"},}}
+        }
         if (data) {
-            const seriesData = Object.keys(data.ranges).map((param) => ({
-                name: param,
-                data: data.ranges[param].values || []
-            }));
             setChartOptions((prevOptions :any) => ({
                 ...prevOptions,
-                series: seriesData
+                ...newOpts,
+                series: data
             }));
         }
-    }, [data]);
+    }, [data, curVar]);
     
     useEffect(() => {
         if (precipitationService) {
@@ -98,6 +132,23 @@ export function Forecast() {
         markerSource.addFeature(marker);
     };
 
+    const handleForecastMonthChange = (event) => {
+        const selectedDate = new Date(event.target.value); 
+        prepSrvc.setMonth(selectedDate.toISOString()); 
+    };
+    const handleVariableChange = (event) => {
+        //console.log(event.target.value)
+        prepSrvc.setVariable(event.target.value);
+    }
+    const handleUncertChange = (event) => {
+        prepSrvc.setShowUncert(event.target.checked); 
+        //console.log(event.target.checked); 
+    }
+
+    useEffect(() => {
+        
+    }, []);
+
     //console.log(curVar)
     return (
         <Container minWidth={"container.xl"}>            
@@ -109,24 +160,49 @@ export function Forecast() {
                         <Box
                             whiteSpace={"nowrap"}>{intl.formatMessage({id: "global.controls.sel_prediction"})} </Box>
                         <Select>
-                            <option value="february">Febrero</option>
+                            <option value="2025-01">{curForecast}</option>
                         </Select>
                     </HStack>
-                    <ChangeMonth/>
-                    <ChangeVariable/>
+                    <HStack>
+                        <Box whiteSpace={"nowrap"}>{intl.formatMessage({id: "global.controls.sel_month"})} </Box>
+                        <Select onChange={handleForecastMonthChange}>
+                            {curForecastMonths.map((date, index) => {
+                                const label = date.toLocaleString('es-ES', { month: 'long', year: 'numeric' });
+                                const capitalized = label.charAt(0).toUpperCase() + label.slice(1);
+                                const dateString = date.toISOString(); 
+
+                                return (
+                                    <option key={index} value={dateString}>
+                                        {capitalized} ({index})
+                                    </option>
+                                );
+                            })}
+                        </Select>                       
+                    </HStack>
+                    <HStack>
+                        <Box whiteSpace={"nowrap"}>{intl.formatMessage({id: "global.controls.sel_var"})} </Box>
+                        <Select onChange={handleVariableChange}>
+                            {variables.map((variable, index) => (
+                                <option key={index} value={Object.keys(variable)[0]}>
+                                    {Object.values(variable)[0]}
+                                </option>
+                            ))}
+                        </Select>
+                    </HStack>
+                    <HStack>
+                        <Switch size="lg" isChecked={showUncert} onChange={handleUncertChange} />
+                        <Text>Mostrar incertidumbre</Text>
+                    </HStack>
                 </HStack>
             </Center>
 
             <Box position="relative">
                 <MainMap MAP_ID={MAP_ID} />
-                {(curVar === 'pc50') &&
-                    <StaticPrecipitationLegend />                
-                }
 
-                {(curVar === 'UNCERTAINTY') &&                   
-                    <UncertaintyLegend />
+                <DynamicLegend variable={curVar} position={"right"} />
+                {
+                    showUncert && <DynamicLegend variable={'uncertainty'} position={"left"} />
                 }
-                
                 
             </Box>
             <Box p={4}>
