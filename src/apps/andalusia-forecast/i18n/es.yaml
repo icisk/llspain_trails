@@ -34,7 +34,7 @@ messages:
       header_temp_precip: Precipitación (acumulada mensual) y temperatura media mensual
       header_precip: Datos de precipitación
       header_temp: Datos de temperatura
-      header_spei: Índice de sequía de SPEI
+      header_spei: Índice de sequía SPEI
     legend:
       uncertainty:
         red: alta
@@ -64,7 +64,7 @@ messages:
   forecast:
     nav: Mapas previsión a 6 meses
     heading: Pronósticos meteorológicos mensuales a medio plazo (hasta 6 meses)
-    heading_descr: ' '
+    heading_descr: 'Este servicio ofrece pronósticos estacionales de precipitación y temperatura para los próximos seis meses. Los mapas muestran el percentil 50 de 51 miembros del pronóstico, con corrección de sesgo a nivel estacional seguida de una regresión lineal múltiple con interpolación de residuos, con una resolución espacial de 231m. Al seleccionar un píxel, se visualiza gráficamente la serie temporal con los percentiles 5 a 95, facilitando el análisis de incertidumbre.'
   historic_compare:
     nav: Mapas climáticos históricos
     heading: Mapas climáticos históricos
@@ -120,7 +120,7 @@ messages:
         land_use: Usos del suelo
         geological: Mapa geológico
         groundwater: Profundidad del nivel freático
-        authorities: authorities
+        authorities: Demarcaciones hidrográficas
         opacity: 'Transparencia:'
       hydro_data:
         title: 'Datos hidrológicos:'

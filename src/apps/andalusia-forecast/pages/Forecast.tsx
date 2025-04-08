@@ -53,8 +53,9 @@ export function Forecast() {
         tooltip: { valueDecimals: 1,
             formatter: function() {
                 const date = new Date(this.x);
-                date.setDate(date.getDate() + 1); // Add one day
-                return Highcharts.dateFormat('%b %Y', date); // Show Month and Year
+                date.setDate(date.getDate() + 1); 
+                const formattedDate = Highcharts.dateFormat('%b %Y', date); 
+                return `${this.series.name}: ${formattedDate}: ${this.y.toFixed(1)}`; 
             }},
         yAxis: { title: { text: ""}},
         series: []

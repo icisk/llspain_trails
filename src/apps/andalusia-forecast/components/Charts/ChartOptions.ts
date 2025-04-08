@@ -217,7 +217,7 @@ export const CS02_SPEIfullTimeSeriesChartOptions =(
             name: intl.formatMessage({ id: "global.vars.SPEI24" }),
             data: spei24TSDATA || [],
             type: "spline",
-            color: "#FF7700",
+            color: "#0066ff",
             yAxis: 0
         },
     ]

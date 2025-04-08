@@ -76,6 +76,8 @@ export function HydrologicalService() {
                             <Radio value="2">{intl.formatMessage({ id: "hydro_service.selection_options.thematic_maps.geological" })}</Radio>
                             <Radio value="3">{intl.formatMessage({ id: "hydro_service.selection_options.thematic_maps.groundwater" })}</Radio>
                             <Radio value="4">{intl.formatMessage({ id: "hydro_service.selection_options.thematic_maps.authorities" })}</Radio>
+                            <Radio value="5">{intl.formatMessage({ id: "hydro_service.selection_options.thematic_maps.geological" }) + " WMS"}</Radio>
+
                         </VStack>
                     </RadioGroup>
 
@@ -118,6 +120,7 @@ export function HydrologicalService() {
                         <Checkbox isChecked={activeVectorLayers.includes("springs")} onChange={() => toggleVectorLayer("springs")}>
                             {intl.formatMessage({ id: "hydro_service.selection_options.hydro_data.springs" })}
                         </Checkbox>
+                        
                     </VStack>
                 </VStack>
 

@@ -145,6 +145,7 @@ export class HydrologicalMapProvider implements MapConfigProvider {
                     width: 1.5,
                 }),
             }),
+            zIndex: 15
         });
         
 
@@ -238,6 +239,22 @@ export class HydrologicalMapProvider implements MapConfigProvider {
 
         authoritiesLayerVector.set("id", "authorities_boundaries");
         authoritiesLayerVector.set("vector", true);
+        
+        
+        const geoWMS = new TileLayer({
+            source: new TileWMS({
+                url: 'https://mapas.igme.es/gis/services/Cartografia_Geologica/IGME_Geode_50/MapServer/WMSServer',
+                params: {'layers': '1'},
+                serverType: "mapserver",
+                transition: 0
+            }),
+            zIndex: 5
+        })
+
+        geoWMS.set("id", "thematic-5");
+        geoWMS.set("vector", false);
+            
+       
 
         return {
             initialView: {
@@ -263,6 +280,11 @@ export class HydrologicalMapProvider implements MapConfigProvider {
                 new SimpleLayer({
                     title: "Cazorla",
                     olLayer: createCazorlaLayer(),
+                    isBaseLayer: false
+                }),
+                new SimpleLayer({
+                    title: "xxx",
+                    olLayer: geoWMS,
                     isBaseLayer: false
                 }),
                 new SimpleLayer({
@@ -324,6 +346,7 @@ export class HydrologicalMapProvider implements MapConfigProvider {
                     olLayer: springsLayer,
                     isBaseLayer: false
                 }),
+
             ]
         };
     }
