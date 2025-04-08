@@ -88,16 +88,29 @@ export class HydrologicalMapProvider implements MapConfigProvider {
 
         // springs layer (VECTOR)
         // funktioniert noch nicht
-        const springsLayer = new TileLayer({
-            source: new TileWMS({
-                url: 'http://mapas.igme.es/gis/services/BasesDatos/IGME_PuntosAgua/MapServer/WMSServer?Version=1.3.0',
-                params: {'LAYERS': 'default'},
-                serverType: 'mapserver',
-                transition: 0,
+        // const springsLayer = new TileLayer({
+        //     source: new TileWMS({
+        //         url: 'http://mapas.igme.es/gis/services/BasesDatos/IGME_PuntosAgua/MapServer/WMSServer?Version=1.3.0',
+        //         params: {'LAYERS': 'default'},
+        //         serverType: 'mapserver',
+        //         transition: 0,
+        //     }),
+        //     opacity: 1,
+        // });
+        const springsLayer = new VectorLayer({
+            source: new VectorSource({
+                url: "https://i-cisk.dev.52north.org/data/collections/ll_spain_springs/items?f=json",
+                format: new GeoJSON(),
             }),
-            opacity: 1,
+            visible: false,
+            style: new Style({
+                image: new CircleStyle({
+                    radius: 6,
+                    fill: new Fill({ color: 'blue' }),
+                    stroke: new Stroke({ color: 'white', width: 1 }),
+                }),
+            }),
         });
-
 
         springsLayer.set("id", "springs");
         springsLayer.set("vector", true);
