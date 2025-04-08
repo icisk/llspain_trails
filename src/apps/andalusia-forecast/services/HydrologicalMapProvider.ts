@@ -21,6 +21,7 @@ import { Style, Circle as CircleStyle, Fill, Stroke } from "ol/style";
 import WebGLTileLayer from "ol/layer/WebGLTile";
 import XYZ from "ol/source/XYZ";
 import { get } from "http";
+import { Tile } from "ol";
 
 proj4.defs(
     "EPSG:25830",
@@ -86,24 +87,15 @@ export class HydrologicalMapProvider implements MapConfigProvider {
         groundwaterLayerVector.set("vector", true);
 
         // springs layer (VECTOR)
-        const springsLayer = new VectorLayer({
-            source: new VectorSource({
-                url: "https://i-cisk.dev.52north.org/data/collections/ll_spain_springs/items?f=json&limit=150",
-                format: new GeoJSON(),
+        // funktioniert noch nicht
+        const springsLayer = new TileLayer({
+            source: new TileWMS({
+                url: 'http://mapas.igme.es/gis/services/BasesDatos/IGME_PuntosAgua/MapServer/WMSServer?Version=1.3.0',
+                params: {'LAYERS': 'default'},
+                serverType: 'mapserver',
+                transition: 0,
             }),
-            visible: false,
-            style: new Style({
-                image: new CircleStyle({
-                    radius: 6,
-                    fill: new Fill({
-                        color: "rgba(0, 0, 255, 1)",
-                    }),
-                    stroke: new Stroke({
-                        color: "rgba(255, 255, 255, 1)",
-                        width: 1,
-                    }),
-                }),
-            }),
+            opacity: 1,
         });
 
 
@@ -112,18 +104,15 @@ export class HydrologicalMapProvider implements MapConfigProvider {
 
 
         // hydro network layer (VECTOR)
-        const networkLayer = new VectorLayer({
-            source: new VectorSource({
-                url: "https://i-cisk.dev.52north.org/data/collections/ll_spain_hydro_network/items?f=json&limit=555",
-                format: new GeoJSON(),
+        const networkLayer = new TileLayer({
+            source: new TileWMS({
+                url: 'https://www.juntadeandalucia.es/medioambiente/mapwms/REDIAM_masas_agua_andalucia_phc_2022_27',
+                params: {'layers': 'red_hidrografica'},
+                serverType: 'mapserver',
+                transition: 0,
             }),
-            visible: false,
-            style: new Style({
-                stroke: new Stroke({
-                    color: "#00008B",
-                    width: 1.5,
-                }),
-            }),
+            opacity: 1,
+            zIndex: 10,
         });
    
         networkLayer.set("id", "network");
@@ -244,15 +233,15 @@ export class HydrologicalMapProvider implements MapConfigProvider {
         const geoWMS = new TileLayer({
             source: new TileWMS({
                 url: 'https://mapas.igme.es/gis/services/Cartografia_Geologica/IGME_Geode_50/MapServer/WMSServer',
-                params: {'layers': '1'},
+                params: {'LAYERS': '1'},
                 serverType: "mapserver",
                 transition: 0
             }),
-            zIndex: 5
+            visible: false,
         })
 
         geoWMS.set("id", "thematic-5");
-        geoWMS.set("vector", false);
+        geoWMS.set("thematic", true);
             
        
 
