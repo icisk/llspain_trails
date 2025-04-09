@@ -128,7 +128,13 @@ messages:
         authorities_boundaries: Límite las demarcaciones dentro de la comarca
         municipalities: Municipios
         network: Red hidrográfica
-        springs: pozos
+        springs: Manantiales
+        aforos: Aforos
+        aguas_subter: Aguas Subterain
+        puntos_acui: Puntos Acuiferos
+        catchmentGuadiana: Captaciones Guadiana
+        catchmentGuadalquivir: Captaciones Guadalquivir
+        
       aquifer_info: 'Chismorreos del acuífero'
   historic_stations:
     nav: Estaciones Climáticas Históricas

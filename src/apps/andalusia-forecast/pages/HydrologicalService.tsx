@@ -120,7 +120,21 @@ export function HydrologicalService() {
                         <Checkbox isChecked={activeVectorLayers.includes("springs")} onChange={() => toggleVectorLayer("springs")}>
                             {intl.formatMessage({ id: "hydro_service.selection_options.hydro_data.springs" })}
                         </Checkbox>
-                        
+                        <Checkbox isChecked={activeVectorLayers.includes("aforos")} onChange={() => toggleVectorLayer("aforos")}>
+                            {intl.formatMessage({ id: "hydro_service.selection_options.hydro_data.aforos" })}
+                        </Checkbox>
+                        <Checkbox isChecked={activeVectorLayers.includes("aguas_subter")} onChange={() => toggleVectorLayer("aguas_subter")}>
+                            {intl.formatMessage({ id: "hydro_service.selection_options.hydro_data.aguas_subter" })}
+                        </Checkbox>
+                        <Checkbox isChecked={activeVectorLayers.includes("puntos_acui")} onChange={() => toggleVectorLayer("puntos_acui")}>
+                            {intl.formatMessage({ id: "hydro_service.selection_options.hydro_data.puntos_acui" })}
+                        </Checkbox>
+                        <Checkbox isChecked={activeVectorLayers.includes("catchmentGuadiana")} onChange={() => toggleVectorLayer("catchmentGuadiana")}>
+                            {intl.formatMessage({ id: "hydro_service.selection_options.hydro_data.catchmentGuadiana" })}
+                        </Checkbox>
+                        <Checkbox isChecked={activeVectorLayers.includes("catchmentGuadalquivir")} onChange={() => toggleVectorLayer("catchmentGuadalquivir")}>
+                            {intl.formatMessage({ id: "hydro_service.selection_options.hydro_data.catchmentGuadalquivir" })}
+                        </Checkbox>
                     </VStack>
                 </VStack>
 

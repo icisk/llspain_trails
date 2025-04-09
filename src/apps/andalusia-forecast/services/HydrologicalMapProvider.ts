@@ -28,6 +28,18 @@ proj4.defs(
     "+proj=utm +zone=30 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs"
 );
 register(proj4);
+const ext = [
+        -5.392816586767803,
+        38.088551680000016,
+        -4.193883430000028,
+        38.72908738000001
+    ];
+const ext3857 = [
+    38.088551680000016,
+    -5.392816586767803,
+    38.72908738000001,
+    -4.193883430000028
+]
 
 export const MAP_ID = "hydrological-forecast";
 
@@ -40,12 +52,7 @@ export class HydrologicalMapProvider implements MapConfigProvider {
         const landUseLayer = new ImageLayer({
             source: new Static({
                 url: 'https://i-cisk.dev.52north.org/data/collections/maps_api_ll_spain_landuse_dissolved/map?f=png',
-                imageExtent: [
-                    -5.392816586767803,
-                    38.088551680000016,
-                    -4.193883430000028,
-                    38.72908738000001
-                ],
+                imageExtent: ext,
                 projection: 'EPSG:4326',
             })
         });
@@ -114,22 +121,7 @@ export class HydrologicalMapProvider implements MapConfigProvider {
 
         springsLayer.set("id", "springs");
         springsLayer.set("vector", true);
-
-
-        // hydro network layer (VECTOR)
-        const networkLayer = new TileLayer({
-            source: new TileWMS({
-                url: 'https://www.juntadeandalucia.es/medioambiente/mapwms/REDIAM_masas_agua_andalucia_phc_2022_27',
-                params: {'layers': 'red_hidrografica'},
-                serverType: 'mapserver',
-                transition: 0,
-            }),
-            opacity: 1,
-            zIndex: 10,
-        });
-   
-        networkLayer.set("id", "network");
-        networkLayer.set("vector", true);
+        
 
         // municipalities layer (VECTOR)
         const municipalityLayer = new VectorLayer({
@@ -251,12 +243,96 @@ export class HydrologicalMapProvider implements MapConfigProvider {
                 transition: 0
             }),
             visible: false,
+            // extent: ext3857
         })
 
         geoWMS.set("id", "thematic-5");
         geoWMS.set("thematic", true);
-            
-       
+        
+        // hydro network layer (WMS)
+        const networkLayer = new TileLayer({
+            source: new TileWMS({
+                url: 'https://www.juntadeandalucia.es/medioambiente/mapwms/REDIAM_masas_agua_andalucia_phc_2022_27',
+                params: {'layers': 'red_hidrografica'},
+                serverType: 'mapserver',
+                transition: 0,
+            }),
+            opacity: 1,
+            zIndex: 10,
+        });
+
+        networkLayer.set("id", "network");
+        networkLayer.set("vector", true);
+
+        const aforos = new TileLayer({
+            source: new TileWMS({
+                url: 'https://wms.mapama.gob.es/sig/agua/aforos/wms.aspx',
+                params: {'layers': 'EF.EnvironmentalMonitoringFacilities'},
+                serverType: 'mapserver',
+                transition: 0,
+            }),
+            opacity: 1,
+            zIndex: 10,
+        });
+
+        aforos.set("id", "aforos");
+        aforos.set("vector", true);
+
+        const aguas_subter = new TileLayer({
+            source: new TileWMS({
+                url: 'https://wms.mapama.gob.es/sig/agua/Piezometria/wms.aspx',
+                params: {'layers': 'EF.EnvironmentalMonitoringFacilities'},
+                serverType: 'mapserver',
+                transition: 0,
+            }),
+            opacity: 1,
+            zIndex: 10,
+        });
+
+        aguas_subter.set("id", "aguas_subter");
+        aguas_subter.set("vector", true);
+
+        const puntos_acui = new TileLayer({
+            source: new TileWMS({
+                url: 'http://mapas.igme.es/gis/services/BasesDatos/IGME_PuntosAgua/MapServer/WMSServer',
+                params: {'layers': '1'},
+                serverType: 'mapserver',
+                transition: 0,
+            }),
+            opacity: 1,
+            zIndex: 10,
+        });
+
+        puntos_acui.set("id", "puntos_acui");
+        puntos_acui.set("vector", true);
+
+        const catchmentGuadiana = new TileLayer({
+            source: new TileWMS({
+                url: 'https://geoguadiana.chguadiana.es/geoserver/usos/wms',
+                params: {'layers': 'captaciones'},
+                serverType: 'mapserver',
+                transition: 0,
+            }),
+            opacity: 1,
+            zIndex: 10,
+        });
+
+        catchmentGuadiana.set("id", "catchmentGuadiana");
+        catchmentGuadiana.set("vector", true);
+
+        const catchmentGuadalquivir = new TileLayer({
+            source: new TileWMS({
+                url: 'https://idechg.chguadalquivir.es/inspire/wms',
+                params: {'layers': 'captaciones'},
+                serverType: 'mapserver',
+                transition: 0,
+            }),
+            opacity: 1,
+            zIndex: 10,
+        });
+
+        catchmentGuadalquivir.set("id", "catchmentGuadalquivir");
+        catchmentGuadalquivir.set("vector", true);
 
         return {
             initialView: {
@@ -348,7 +424,31 @@ export class HydrologicalMapProvider implements MapConfigProvider {
                     olLayer: springsLayer,
                     isBaseLayer: false
                 }),
-
+                new SimpleLayer({
+                    title: "aforos",
+                    olLayer: aforos,
+                    isBaseLayer: false
+                }),
+                new SimpleLayer({
+                    title: "aguas_subter",
+                    olLayer: aguas_subter,
+                    isBaseLayer: false
+                }),
+                new SimpleLayer({
+                    title: "puntos_acui",
+                    olLayer: puntos_acui,
+                    isBaseLayer: false
+                }),
+                new SimpleLayer({
+                    title: "catchmentGuadiana",
+                    olLayer: catchmentGuadiana,
+                    isBaseLayer: false
+                }),
+                new SimpleLayer({
+                    title: "catchmentGuadalquivir",
+                    olLayer: catchmentGuadalquivir,
+                    isBaseLayer: false
+                }),
             ]
         };
     }
