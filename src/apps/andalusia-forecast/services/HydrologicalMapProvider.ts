@@ -34,12 +34,10 @@ const ext = [
         -4.193883430000028,
         38.72908738000001
     ];
-const ext3857 = [
-    38.088551680000016,
-    -5.392816586767803,
-    38.72908738000001,
-    -4.193883430000028
-]
+
+const extent3857 = transformExtent(ext, 'EPSG:4326', 'EPSG:3857');
+
+
 
 export const MAP_ID = "hydrological-forecast";
 
@@ -49,16 +47,16 @@ export class HydrologicalMapProvider implements MapConfigProvider {
     async getMapConfig(): Promise<MapConfig> {
         
         //landuse layer
-        const landUseLayer = new ImageLayer({
-            source: new Static({
-                url: 'https://i-cisk.dev.52north.org/data/collections/maps_api_ll_spain_landuse_dissolved/map?f=png',
-                imageExtent: ext,
-                projection: 'EPSG:4326',
-            })
-        });
-        
-        landUseLayer.set("id", "thematic-1");
-        landUseLayer.set("thematic", true);
+        // const landUseLayer = new ImageLayer({
+        //     source: new Static({
+        //         url: 'https://i-cisk.dev.52north.org/data/collections/maps_api_ll_spain_landuse_dissolved/map?f=png',
+        //         imageExtent: ext,
+        //         projection: 'EPSG:4326',
+        //     })
+        // });
+        //
+        // landUseLayer.set("id", "thematic-1");
+        // landUseLayer.set("thematic", true);
         
         // groundwater layer
         const groundwaterLayer = new VectorLayer({
@@ -242,6 +240,8 @@ export class HydrologicalMapProvider implements MapConfigProvider {
                 serverType: "mapserver",
                 transition: 0
             }),
+            minResolution: 0.01,
+            extent: extent3857,
             visible: false,
             // extent: ext3857
         })
@@ -257,6 +257,7 @@ export class HydrologicalMapProvider implements MapConfigProvider {
                 serverType: 'mapserver',
                 transition: 0,
             }),
+            extent: extent3857,
             opacity: 1,
             zIndex: 10,
         });
@@ -271,6 +272,7 @@ export class HydrologicalMapProvider implements MapConfigProvider {
                 serverType: 'mapserver',
                 transition: 0,
             }),
+            extent: extent3857,
             opacity: 1,
             zIndex: 10,
         });
@@ -285,6 +287,7 @@ export class HydrologicalMapProvider implements MapConfigProvider {
                 serverType: 'mapserver',
                 transition: 0,
             }),
+            extent: extent3857,
             opacity: 1,
             zIndex: 10,
         });
@@ -299,6 +302,7 @@ export class HydrologicalMapProvider implements MapConfigProvider {
                 serverType: 'mapserver',
                 transition: 0,
             }),
+            extent: extent3857,
             opacity: 1,
             zIndex: 10,
         });
@@ -313,6 +317,7 @@ export class HydrologicalMapProvider implements MapConfigProvider {
                 serverType: 'mapserver',
                 transition: 0,
             }),
+            extent: extent3857,
             opacity: 1,
             zIndex: 10,
         });
@@ -327,12 +332,28 @@ export class HydrologicalMapProvider implements MapConfigProvider {
                 serverType: 'mapserver',
                 transition: 0,
             }),
+            extent: extent3857,
             opacity: 1,
             zIndex: 10,
         });
 
         catchmentGuadalquivir.set("id", "catchmentGuadalquivir");
         catchmentGuadalquivir.set("vector", true);
+
+        const landUseLayer = new TileLayer({
+            source: new TileWMS({
+                url: 'https://www.juntadeandalucia.es/medioambiente/mapwms/REDIAM_siose_2020',
+                params: {'layers': 'raster_recon_siose20'},
+                serverType: 'mapserver',
+                transition: 0,
+            }),
+            extent: extent3857,
+            opacity: 1,
+            zIndex: 10,
+        });
+
+        landUseLayer.set("id", "thematic-1");
+        landUseLayer.set("thematic", true);
 
         return {
             initialView: {

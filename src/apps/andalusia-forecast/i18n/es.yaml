@@ -118,7 +118,7 @@ messages:
         title: 'Mapas temáticos:'
         none: Sin selección
         land_use: Usos del suelo
-        geological: Mapa geológico
+        geological: Mapa geológico 
         groundwater: Profundidad del nivel freático
         authorities: Demarcaciones hidrográficas
         opacity: 'Transparencia:'
