@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useMapModel } from "@open-pioneer/map";
 import { MainMap } from "../components/MainComponents/MainMap";
 import { MAP_ID } from "../services/HydrologicalMapProvider";
-import { Container, Flex, Box, VStack, Checkbox, Radio, RadioGroup, Slider, SliderTrack, SliderFilledTrack, SliderThumb, Text, HStack } from "@open-pioneer/chakra-integration";
+import {
+    Container, Flex, Box, VStack, Checkbox, Radio, RadioGroup, Slider,
+    SliderTrack, SliderFilledTrack, SliderThumb, Text, HStack, Button
+} from "@open-pioneer/chakra-integration";
 import { InfoBoxComponent } from "info-box";
 import { useIntl } from "open-pioneer:react-hooks";
 
@@ -14,48 +17,79 @@ export function HydrologicalService() {
     const [activeVectorLayers, setActiveVectorLayers] = useState<string[]>([]);
     const [opacity, setOpacity] = useState(1);
     const [chismorreosActive, setChismorreosActive] = useState(false);
+    const [visibleLegends, setVisibleLegends] = useState<string[]>([]);
+    const [showLegends, setShowLegends] = useState(true);
+
+    const legendUrls: Record<string, string> = {
+        groundwater: "",
+        authorities_boundaries: "",
+        municipalities: "",
+        network: "https://www.juntadeandalucia.es/medioambiente/mapwms/REDIAM_masas_agua_andalucia_phc_2022_27?language=spa&version=1.3.0&service=WMS&request=GetLegendGraphic&sld_version=1.1.0&layer=red_hidrografica&format=image/png&STYLE=default",
+        springs: "",
+        aforos: "",
+        aguas_subter: "https://wms.mapama.gob.es/sig/Agua/Piezometria/Leyenda/Piezometria.png",
+        puntos_acui: "http://mapas.igme.es/gis/services/BasesDatos/IGME_PuntosAgua/MapServer/WmsServer?request=GetLegendGraphic%26version=1.3.0%26format=image/png%26layer=1",
+        catchmentGuadiana: "https://geoguadiana.chguadiana.es/geoserver/usos/ows?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=captaciones",
+        catchmentGuadalquivir: "http://idechg.chguadalquivir.es/inspire/wms?language=spa&version=1.3.0&service=WMS&request=GetLegendGraphic&sld_version=1.1.0&layer=CaptacionesDPH&format=image/png&STYLE=default",
+        "thematic-1": "https://www.juntadeandalucia.es/medioambiente/mapwms/REDIAM_siose_2020?language=spa&version=1.3.0&service=WMS&request=GetLegendGraphic&sld_version=1.1.0&layer=raster_recon_siose20&format=image/png&STYLE=default",
+        "thematic-5": "https://mapas.igme.es/gis/services/Cartografia_Geologica/IGME_Geode_50/MapServer/WmsServer?request=GetLegendGraphic%26version=1.3.0%26format=image/png%26layer=1"
+    };
+
+    const updateVisibleLegends = (layerId: string, show: boolean) => {
+        const legendUrl = legendUrls[layerId];
+        if (!legendUrl) return;
+
+        setVisibleLegends((prev) => {
+            if (show) {
+                return prev.includes(legendUrl) ? prev : [...prev, legendUrl];
+            } else {
+                return prev.filter((url) => url !== legendUrl);
+            }
+        });
+    };
 
     useEffect(() => {
         if (!mapModel || !mapModel.map?.olMap) return;
-
         const mapLayers = mapModel.map.olMap.getLayers().getArray();
 
-        // Raster layer control
         mapLayers.forEach((layer) => {
             if (layer.get("thematic")) {
-                layer.setVisible(false);
+                const isActive = layer.get("id") === `thematic-${thematicMap}`;
+                layer.setVisible(isActive);
+                if (isActive) {
+                    layer.setOpacity(opacity);
+                }
             }
         });
 
-        if (thematicMap) {
-            const selectedLayers = mapLayers.filter((layer) => layer.get("id") === `thematic-${thematicMap}`);
-            selectedLayers.forEach((layer) => {
-                layer.setVisible(true);
-                layer.setOpacity(opacity);
+        Object.keys(legendUrls)
+            .filter((id) => id.startsWith("thematic-"))
+            .forEach((id) => {
+                updateVisibleLegends(id, id === `thematic-${thematicMap}`);
             });
-        }
 
-        // Vector layer control
         mapLayers.forEach((layer) => {
             if (layer.get("vector")) {
-                const layerId = layer.get("id");
-                layer.setVisible(activeVectorLayers.includes(layerId));
+                const id = layer.get("id");
+                const isActive = activeVectorLayers.includes(id);
+                layer.setVisible(isActive);
+                updateVisibleLegends(id, isActive);
             }
         });
 
-        // Toggle "Chismorreos del Acuífero" visibility
         const chismorreosLayer = mapLayers.find((layer) => layer.get("id") === "chismorreos");
         if (chismorreosLayer) {
             chismorreosLayer.setVisible(chismorreosActive);
         }
-
     }, [thematicMap, activeVectorLayers, opacity, chismorreosActive, mapModel]);
 
-    // Toggle vector layer visibility
     const toggleVectorLayer = (layerId: string) => {
-        setActiveVectorLayers((prev) =>
-            prev.includes(layerId) ? prev.filter((id) => id !== layerId) : [...prev, layerId]
-        );
+        setActiveVectorLayers((prev) => {
+            const isActive = prev.includes(layerId);
+            return isActive
+                ? prev.filter((id) => id !== layerId)
+                : [...prev, layerId];
+        });
     };
 
     return (
@@ -66,22 +100,21 @@ export function HydrologicalService() {
             />
 
             <Flex gap={8} p={4} bg="white" borderRadius="md" mb={4}>
-                {/* Thematic Maps Selection */}
+                {/* Thematic Maps */}
                 <VStack align="start" flex="1">
                     <p>{intl.formatMessage({ id: "hydro_service.selection_options.thematic_maps.title" })}</p>
                     <RadioGroup onChange={setThematicMap} value={thematicMap}>
                         <VStack align="start">
-                            <Radio value="">{intl.formatMessage({ id: "hydro_service.selection_options.thematic_maps.none" })}</Radio>
-                            <Radio value="1">{intl.formatMessage({ id: "hydro_service.selection_options.thematic_maps.land_use" })}</Radio>
-                            <Radio value="2">{intl.formatMessage({ id: "hydro_service.selection_options.thematic_maps.geological" })}</Radio>
-                            <Radio value="3">{intl.formatMessage({ id: "hydro_service.selection_options.thematic_maps.groundwater" })}</Radio>
-                            <Radio value="4">{intl.formatMessage({ id: "hydro_service.selection_options.thematic_maps.authorities" })}</Radio>
-                            <Radio value="5">{intl.formatMessage({ id: "hydro_service.selection_options.thematic_maps.geological" }) + " WMS"}</Radio>
-
+                            {["", "1", "2", "3", "4", "5"].map((value) => {
+                                const legendKey = value ? `thematic-${value}` : null;
+                                const hasLegend = legendKey && !!legendUrls[legendKey];
+                                const labelId = value === "" ? "none" : ["land_use", "geological", "groundwater", "authorities", "geological"][+value - 1];
+                                const label = `${intl.formatMessage({ id: `hydro_service.selection_options.thematic_maps.${labelId}` })}${hasLegend ? " 🗺️" : ""}`;
+                                return <Radio key={value} value={value}>{label}</Radio>;
+                            })}
                         </VStack>
                     </RadioGroup>
 
-                    {/* Transparency Slider */}
                     {thematicMap && (
                         <VStack align="start" mt={4} w="full">
                             <p>{intl.formatMessage({ id: "hydro_service.selection_options.thematic_maps.opacity" })}</p>
@@ -101,44 +134,36 @@ export function HydrologicalService() {
                     )}
                 </VStack>
 
-                {/* Vector Layers & Chismorreos Selection */}
+                {/* Vector Layers */}
                 <VStack align="start" flex="1">
                     <p>{intl.formatMessage({ id: "hydro_service.selection_options.hydro_data.title" })}</p>
                     <VStack align="start">
-                        <Checkbox isChecked={activeVectorLayers.includes("groundwater")} onChange={() => toggleVectorLayer("groundwater")}>
-                            {intl.formatMessage({ id: "hydro_service.selection_options.hydro_data.groundwater" })}
-                        </Checkbox>
-                        <Checkbox isChecked={activeVectorLayers.includes("authorities_boundaries")} onChange={() => toggleVectorLayer("authorities_boundaries")}>
-                            {intl.formatMessage({ id: "hydro_service.selection_options.hydro_data.authorities_boundaries" })}
-                        </Checkbox>
-                        <Checkbox isChecked={activeVectorLayers.includes("municipalities")} onChange={() => toggleVectorLayer("municipalities")}>
-                            {intl.formatMessage({ id: "hydro_service.selection_options.hydro_data.municipalities" })}
-                        </Checkbox>
-                        <Checkbox isChecked={activeVectorLayers.includes("network")} onChange={() => toggleVectorLayer("network")}>
-                            {intl.formatMessage({ id: "hydro_service.selection_options.hydro_data.network" })}
-                        </Checkbox>
-                        <Checkbox isChecked={activeVectorLayers.includes("springs")} onChange={() => toggleVectorLayer("springs")}>
-                            {intl.formatMessage({ id: "hydro_service.selection_options.hydro_data.springs" })}
-                        </Checkbox>
-                        <Checkbox isChecked={activeVectorLayers.includes("aforos")} onChange={() => toggleVectorLayer("aforos")}>
-                            {intl.formatMessage({ id: "hydro_service.selection_options.hydro_data.aforos" })}
-                        </Checkbox>
-                        <Checkbox isChecked={activeVectorLayers.includes("aguas_subter")} onChange={() => toggleVectorLayer("aguas_subter")}>
-                            {intl.formatMessage({ id: "hydro_service.selection_options.hydro_data.aguas_subter" })}
-                        </Checkbox>
-                        <Checkbox isChecked={activeVectorLayers.includes("puntos_acui")} onChange={() => toggleVectorLayer("puntos_acui")}>
-                            {intl.formatMessage({ id: "hydro_service.selection_options.hydro_data.puntos_acui" })}
-                        </Checkbox>
-                        <Checkbox isChecked={activeVectorLayers.includes("catchmentGuadiana")} onChange={() => toggleVectorLayer("catchmentGuadiana")}>
-                            {intl.formatMessage({ id: "hydro_service.selection_options.hydro_data.catchmentGuadiana" })}
-                        </Checkbox>
-                        <Checkbox isChecked={activeVectorLayers.includes("catchmentGuadalquivir")} onChange={() => toggleVectorLayer("catchmentGuadalquivir")}>
-                            {intl.formatMessage({ id: "hydro_service.selection_options.hydro_data.catchmentGuadalquivir" })}
-                        </Checkbox>
+                        {["groundwater",
+                        "authorities_boundaries",
+                        "municipalities",
+                        "network",
+                        "springs",
+                        "aforos",
+                        "aguas_subter",
+                        "puntos_acui",
+                        "catchmentGuadiana",
+                        "catchmentGuadalquivir"].map((layerId) => {
+                                const hasLegend = !!legendUrls[layerId];
+                                const label = `${intl.formatMessage({ id: `hydro_service.selection_options.hydro_data.${layerId}` })}${hasLegend ? " 🗺️" : ""}`;
+                                return (
+                                    <Checkbox
+                                        key={layerId}
+                                        isChecked={activeVectorLayers.includes(layerId)}
+                                        onChange={() => toggleVectorLayer(layerId)}
+                                    >
+                                        {label}
+                                    </Checkbox>
+                                );
+                            })}
                     </VStack>
                 </VStack>
 
-                {/* Chismorreos del Acuífero Checkbox */}
+                {/* Chismorreos */}
                 <VStack align="start">
                     <HStack>
                         <Checkbox isChecked={chismorreosActive} onChange={() => setChismorreosActive(!chismorreosActive)}>
@@ -148,9 +173,28 @@ export function HydrologicalService() {
                 </VStack>
             </Flex>
 
-            {/* Map Container */}
-            <Box height={"500px"}>
+            {/* Kartencontainer */}
+            <Box position="relative" height="500px">
                 <MainMap MAP_ID={MAP_ID} />
+
+                {/* Legenden-Anzeige */}
+                <Box position="absolute" top="10px" right="10px" bg="rgba(255, 255, 255, 0.8)" p={2} borderRadius="md" boxShadow="md" zIndex={10}>
+                    <Button size="sm" onClick={() => setShowLegends(!showLegends)} mb={2}>
+                        {showLegends
+                            ? intl.formatMessage({ id: "hydro_service.legend.hide" }) || "Legende ausblenden"
+                            : intl.formatMessage({ id: "hydro_service.legend.show" }) || "Legende einblenden"}
+                    </Button>
+
+                    {showLegends && (
+                        <Box maxHeight="300px" overflowY="auto">
+                            {visibleLegends.map((url, index) => (
+                                <Box key={index} mb={2}>
+                                    <img src={url} alt={`Legend ${index}`} style={{ maxWidth: "200px" }} />
+                                </Box>
+                            ))}
+                        </Box>
+                    )}
+                </Box>
             </Box>
         </Container>
     );

@@ -17,9 +17,9 @@ export function createCazorlaLayer(): VectorLayer<Feature<Geometry>> {
           color: 'rgba(105, 105, 105, 1)',
           width: 2,
         }),
-        fill: new Fill({
-          color: createHatchPattern(),
-        }),
+        // fill: new Fill({
+        //   color: createHatchPattern(),
+        // }),
       }),
       zIndex: 100,
     });
@@ -34,11 +34,11 @@ export function createCazorlaLayer(): VectorLayer<Feature<Geometry>> {
       style: new Style({
         stroke: new Stroke({
           color: 'rgba(105, 105, 105, 1)',
-          width: 2,
+          width: 3,
         }),
-        fill: new Fill({
-          color: createHatchPattern(),
-        }),
+        // fill: new Fill({
+        //   color: createHatchPattern(),
+        // }),
       }),
       zIndex: 100,
     });

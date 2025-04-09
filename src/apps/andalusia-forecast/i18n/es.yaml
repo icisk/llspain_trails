@@ -110,6 +110,9 @@ messages:
       yAxis: Número de días
       popupvar: Número de días secos consecutivos
   hydro_service:
+    legend:
+        hide: ocultar leyenda
+        show: mostrar leyenda
     nav: Información hidrológica
     heading: Información hidrológica de la comarca de Los Pedroches (norte de Córdoba)
     heading_descr: En esta página pueden encontrarse las fuentes de información hidrológica de la región, así como la información recopilada durante las campañas de muestreo del proyecto ICISK (2023-2025)

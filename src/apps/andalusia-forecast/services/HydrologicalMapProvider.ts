@@ -375,23 +375,6 @@ export class HydrologicalMapProvider implements MapConfigProvider {
                     isBaseLayer: true
                 }),
 
-                //Region Layers
-                new SimpleLayer({
-                    title: "Cazorla",
-                    olLayer: createCazorlaLayer(),
-                    isBaseLayer: false
-                }),
-                new SimpleLayer({
-                    title: "xxx",
-                    olLayer: geoWMS,
-                    isBaseLayer: false
-                }),
-                new SimpleLayer({
-                    title: "Los Pedroches",
-                    olLayer: createLosPedrochesLayer(),
-                    isBaseLayer: false
-                }),
-
                 // Thematic Layers
                 new SimpleLayer({
                     title: "Land Use",
@@ -418,11 +401,16 @@ export class HydrologicalMapProvider implements MapConfigProvider {
                     olLayer: authoritiesLayer,
                     isBaseLayer: false
                 }),
+                new SimpleLayer({
+                    title: "xxx",
+                    olLayer: geoWMS,
+                    isBaseLayer: false
+                }),
 
                 // Additional Layers
                 new SimpleLayer({
-                    title: "Municipalities",
-                    olLayer: municipalityLayer,
+                    title: "Groundwater (VECTOR)",
+                    olLayer: groundwaterLayerVector,
                     isBaseLayer: false
                 }),
                 new SimpleLayer({
@@ -431,13 +419,18 @@ export class HydrologicalMapProvider implements MapConfigProvider {
                     isBaseLayer: false
                 }),
                 new SimpleLayer({
-                    title: "Groundwater (VECTOR)",
-                    olLayer: groundwaterLayerVector,
+                    title: "Municipalities",
+                    olLayer: municipalityLayer,
                     isBaseLayer: false
                 }),
                 new SimpleLayer({
                     title: "Hydro Network",
                     olLayer: networkLayer,
+                    isBaseLayer: false
+                }),
+                new SimpleLayer({
+                    title: "catchmentGuadalquivir",
+                    olLayer: catchmentGuadalquivir,
                     isBaseLayer: false
                 }),
                 new SimpleLayer({
@@ -465,9 +458,16 @@ export class HydrologicalMapProvider implements MapConfigProvider {
                     olLayer: catchmentGuadiana,
                     isBaseLayer: false
                 }),
+
+                //Region Layers
                 new SimpleLayer({
-                    title: "catchmentGuadalquivir",
-                    olLayer: catchmentGuadalquivir,
+                    title: "Cazorla",
+                    olLayer: createCazorlaLayer(),
+                    isBaseLayer: false
+                }),
+                new SimpleLayer({
+                    title: "Los Pedroches",
+                    olLayer: createLosPedrochesLayer(),
                     isBaseLayer: false
                 }),
             ]
