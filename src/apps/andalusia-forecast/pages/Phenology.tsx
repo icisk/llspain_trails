@@ -35,6 +35,9 @@ import Highcharts from "highcharts";
 import {PhenologyLegend} from "../components/Legends/PhenologyLegend";
 import React, {useEffect, useState} from "react";
 import {DynamicLegend} from "../components/Legends/DynamicLegend";
+import {header} from "typedoc/dist/lib/output/themes/default/partials/header";
+import description = meta.docs.description;
+import {InfoTooltip} from "../components/InfoTooltip/InfoTooltip";
 
 
 function getSeasonLabel(date) {
@@ -167,12 +170,22 @@ export function Phenology() {
 
     return (
         <Box>
-            <InfoBoxComponent
-                header={intl.formatMessage({ id: "phenology.heading" })}
-                description={intl.formatMessage({ id: "phenology.heading_descr" }).split("\n").map((line, index) => (
+            {/*<InfoBoxComponent*/}
+            {/*    header={intl.formatMessage({ id: "phenology.heading" })}*/}
+            {/*    description={intl.formatMessage({ id: "phenology.heading_descr" }).split("\n").map((line, index) => (*/}
+            {/*        <p key={index}>{line}</p>*/}
+            {/*    ))}*/}
+            {/*/>*/}
+
+            <Box  border="2px solid #3498DB" borderRadius="10px" padding={3}>
+                <HStack>
+                    <Box fontSize="xl">{intl.formatMessage({ id: "phenology.heading" })}</Box>
+                    <InfoTooltip i18n_path="phenology.info" />
+                </HStack>
+                <Box pt={1}>{intl.formatMessage({ id: "phenology.heading_descr" }).split("\n").map((line, index) => (
                     <p key={index}>{line}</p>
-                ))}
-            />
+                ))}</Box>
+            </Box>
 
             <Container flex={2} minWidth={"container.xl"}>
                 <Box mt={5}>
