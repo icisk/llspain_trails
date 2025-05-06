@@ -534,8 +534,8 @@ const HistoricClimateStations = () => {
                         },
                     ],
                     series: [
-                        ...filteredSeriesYear1,
-                        ...filteredSeriesYear2
+                        ...filteredSeriesYear1.map(s => ({ ...s, year: filteredSeriesYear1.year })),
+                        ...filteredSeriesYear2.map(s => ({ ...s, year: filteredSeriesYear2.year }))
                     ],
                     tooltip: {
                         shared: true,
