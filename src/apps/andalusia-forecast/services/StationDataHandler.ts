@@ -29,8 +29,8 @@ export interface StationDataHandler extends DeclaredService<"app.StationDataHand
     modus: string;
 }
 function getStationId(stationName, data) {
-    const entry = data.find(item => item.NAME_EST === stationName);
-    return entry ? entry.ID : null;
+    const entry = data.find(item => item.NAME_STATION === stationName);
+    return entry ? entry.CODE_INM : null;
 }
 export class StationDataHandlerImpl implements StationDataHandler {
     #data: object;
@@ -48,7 +48,7 @@ export class StationDataHandlerImpl implements StationDataHandler {
     
     async fetchStationsData(): Promise<any> {
         try {
-            const response = await fetch("https://i-cisk.dev.52north.org/data/collections/ll_spain_creaf_in_boundary/items?f=json&limit=1000");
+            const response = await fetch("https://i-cisk.dev.52north.org/data/collections/ll_spain_aemet_stations/items?f=json&limit=1000");
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
@@ -68,10 +68,10 @@ export class StationDataHandlerImpl implements StationDataHandler {
     }
     setStations() {
         this.#allStations = this.#data.features
-            .map(e => ({ NAME_EST: e.properties.NAME_EST, ID: e.properties.ID }))
+            .map(e => ({ NAME_STATION: e.properties.NAME_STATION, CODE_INM: e.properties.CODE_INM }))
             .sort((a, b) => {
-                const nameA = a.NAME_EST || ''; 
-                const nameB = b.NAME_EST || ''; 
+                const nameA = a.NAME_STATION || ''; 
+                const nameB = b.NAME_STATION || ''; 
                 return nameA.localeCompare(nameB);
             })
     } 

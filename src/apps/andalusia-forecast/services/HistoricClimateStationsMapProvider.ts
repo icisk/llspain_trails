@@ -32,12 +32,12 @@ export class HistoricClimateStationsMapProvider implements MapConfigProvider {
     constructor() {
         this.stationsLayer = new VectorLayer({
             source: new VectorSource({
-                url: 'https://i-cisk.dev.52north.org/data/collections/ll_spain_creaf_in_boundary/items?f=json&limit=1000',
+                url: 'https://i-cisk.dev.52north.org/data/collections/ll_spain_aemet_stations/items?f=json&limit=1000',
                 format: new GeoJSON(),
                 projection: 'EPSG:4326'
             }),
             style: (feature) => {
-                const val = feature.get('val');
+                const val = feature.get('VARS');
                 let color;
         
                 if (val === "both") {

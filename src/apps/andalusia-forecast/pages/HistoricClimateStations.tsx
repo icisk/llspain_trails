@@ -108,8 +108,8 @@ const HistoricClimateStations = () => {
                 if (selectedFeatures.length > 0) {
                     const feature = selectedFeatures[0];
                     const properties = feature?.getProperties();
-                    setSelectedFeatureId(properties?.ID);
-                    stationDataService.setStationLeft(properties?.NAME_EST);
+                    setSelectedFeatureId(properties?.CODE_INM);
+                    stationDataService.setStationLeft(properties?.NAME_STATION);
                 }
             });
 
@@ -132,7 +132,7 @@ const HistoricClimateStations = () => {
             if (!source) return;
 
             // Find feature by selectedStationId
-            const feature = source.getFeatures().find(f => f.get("ID") === selectedStationId);
+            const feature = source.getFeatures().find(f => f.get("CODE_INM") === selectedStationId);
             if (!feature) return;
 
             // This ensures OpenLayers correctly triggers selection events
@@ -142,7 +142,7 @@ const HistoricClimateStations = () => {
 
             // Update the state
             setSelectedFeatureId(selectedStationId);
-            stationDataService.setStationLeft(feature.get("NAME_EST"));
+            stationDataService.setStationLeft(feature.get("NAME_STATION"));
         }
     }, [selectedStationId, selectInteraction]);
 
