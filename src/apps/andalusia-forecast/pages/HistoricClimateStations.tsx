@@ -502,12 +502,16 @@ const HistoricClimateStations = () => {
                         : selectedCategory === "3"
                             ? seriesYear2.filter((s) => s.name === intl.formatMessage({ id: "global.vars.precip" }))
                             : [];
+            
+            filteredSeriesYear1.year = selectedYear1
+            filteredSeriesYear2.year = selectedYear2
             //console.log(selectedCategory, "Filtered Series:", filteredSeries);
             // Update the chart options
             if (modus === 'two_years' && chartControl === 'two_years'){
                 // console.log(mesesEnEspanol)
-                // console.log(filteredSeriesYear1)
-                
+
+                console.log(filteredSeriesYear1)
+
                 setChartOptions({
                     chart: {
                         type: "column",
@@ -532,8 +536,16 @@ const HistoricClimateStations = () => {
                     series: [
                         ...filteredSeriesYear1,
                         ...filteredSeriesYear2
-                    ]
-
+                    ],
+                    tooltip: {
+                        shared: true,
+                        pointFormatter: function () {
+                            let year = this.series.userOptions.year;
+                    
+                            const value = this.y !== null ? Highcharts.numberFormat(this.y, 2) : '–';
+                            return `<span style="color:${this.color}">\u25CF</span> ${year}: <b>${value}</b><br/>`;
+                        }
+                    }
                 });
             } else{
                 setChartOptions({

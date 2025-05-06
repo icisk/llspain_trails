@@ -15,7 +15,7 @@ export const StationValueLegend = () => {
     const colorMapping = [
         { value: 1, color: v_01, label: intl.formatMessage({id: "historic_climate_stations.radio_buttons.temp_precip"}) },
         { value: 2, color: v_02, label: intl.formatMessage({id: "historic_climate_stations.radio_buttons.precip"}) },
-        { value: 3, color: v_03, label: intl.formatMessage({id: "historic_climate_stations.radio_buttons.temp"}) }
+        // { value: 3, color: v_03, label: intl.formatMessage({id: "historic_climate_stations.radio_buttons.temp"}) }
     ];
 
     return (
