@@ -126,7 +126,7 @@ jobs:
       name: Post results to slack channel
       uses: MeilCli/slack-upload-file@v4
       with:
-        slack_token: ${{ secrets.SLACK_TOKEN }}
+        slack_token: ${{ secrets.SLACK_TOKEN_52N }}
         file_path: trivy-results.txt
         file_type: text
         title: trivy scan results of ${{ github.repository }}
