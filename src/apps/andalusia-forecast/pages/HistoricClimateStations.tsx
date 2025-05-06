@@ -17,6 +17,7 @@ import {StationDataHandler} from "../services/StationDataHandler";
 import {useReactiveSnapshot} from "@open-pioneer/reactivity";
 import {mesesEnEspanol} from "../components/utils/globals";
 import { Overlay } from 'ol';
+import { set } from 'ol/transform';
 
 const HistoricClimateStations = () => {
     const intl = useIntl();
@@ -25,7 +26,7 @@ const HistoricClimateStations = () => {
     const mapState = useMapModel(MAP_ID);
     const [stationsVisible, setStationsVisible] = useState(true);
     const [selectedFeatureId, setSelectedFeatureId] = useState(null);
-    const [lastChangedID, setlastChangedID] = useState(null);
+    const [lastChangedID, setlastChangedID] = useState("");
     const [lastChangedElement, setlastChangedElement] = useState(null);
     // const [selectedStationId, setSelectedStationId] = useState(stationDataService.selectedStationId);
 
@@ -108,8 +109,8 @@ const HistoricClimateStations = () => {
                 if (selectedFeatures.length > 0) {
                     const feature = selectedFeatures[0];
                     const properties = feature?.getProperties();
-                    setSelectedFeatureId(properties?.ID);
-                    stationDataService.setStationLeft(properties?.NAME_EST);
+                    setSelectedFeatureId(properties?.CODE_INM);
+                    stationDataService.setStationLeft(properties?.NAME_STATION);
                 }
             });
 
@@ -132,7 +133,7 @@ const HistoricClimateStations = () => {
             if (!source) return;
 
             // Find feature by selectedStationId
-            const feature = source.getFeatures().find(f => f.get("ID") === selectedStationId);
+            const feature = source.getFeatures().find(f => f.get("CODE_INM") === selectedStationId);
             if (!feature) return;
 
             // This ensures OpenLayers correctly triggers selection events
@@ -142,7 +143,7 @@ const HistoricClimateStations = () => {
 
             // Update the state
             setSelectedFeatureId(selectedStationId);
-            stationDataService.setStationLeft(feature.get("NAME_EST"));
+            stationDataService.setStationLeft(feature.get("STATION_NAME"));
         }
     }, [selectedStationId, selectInteraction]);
 
@@ -161,10 +162,83 @@ const HistoricClimateStations = () => {
     }, [selectedFeatureId, selectedStationId]);
     
     useEffect(() => {
-        if (selectedFeatureId !== null || selectedStationId !== null) {           
-            const fetchData = async (type: string, id: any) => {
+        if (selectedFeatureId !== null || selectedStationId !== null) {   
+            
+            // function to transform the data to the old format
+            const transformData = (features: any[]) => {
+                const precip: any[] = [];
+                const t_mean: any[] = [];
+                const t_max: any[] = [];
+                const t_min: any[] = [];
+
+                features.forEach((feature) => {
+                    const { id, geometry } = feature;
+                    const featureProperties = feature.properties;
+                    const commonFields = {
+                        id,
+                        geometry,
+                        properties: {
+                            DATE: featureProperties.TIMESTAMP,
+                        }                        
+                    };
+
+                    if (featureProperties.PL_mm !== undefined) {
+                        precip.push({
+                            ...commonFields,
+                            properties: {
+                                ...commonFields.properties,
+                                PL_monthly: featureProperties.PL_mm,
+                            },
+                        })
+                    }
+
+                    if (featureProperties.MT_C !== undefined) {
+                        t_mean.push({
+                            ...commonFields,
+                            properties: {
+                                ...commonFields.properties,
+                                MT_monthly: featureProperties.MT_C,
+                            },
+                        })
+                    }
+
+                    if (featureProperties.MX_C !== undefined) {
+                        t_max.push({
+                            ...commonFields,
+                            properties: {
+                                ...commonFields.properties,
+                                MX_monthly: featureProperties.MX_C,
+                            },
+                        })
+                    }
+
+                    if (featureProperties.MN_C !== undefined) {
+                        t_min.push({
+                            ...commonFields,
+                            properties: {
+                                ...commonFields.properties,
+                                MN_monthly: featureProperties.MN_C,
+                            },
+                        })
+                    }
+
+                });
+
+                return {
+                    precip,
+                    t_mean,
+                    t_max,
+                    t_min,
+                };
+            }
+
+
+
+            // const fetchData = async (type: string, id: any) => {
+            const fetchData = async (id: any) => {
                 let fetchedData = null;
-                const url = `https://i-cisk.dev.52north.org/data/collections/AEMET_stations_${type}/items?f=json&limit=2500&CODI_INM=${id}`;
+                // const url = `https://i-cisk.dev.52north.org/data/collections/AEMET_stations_${type}/items?f=json&limit=2500&CODI_INM=${id}`;
+                const url = `https://i-cisk.dev.52north.org/data/collections/AEMET_stations_all/items?f=json&limit=2500&CODE_INM=${id}`;
                 try {
                     setLoading(true);
                     const response = await fetch(url);
@@ -177,16 +251,23 @@ const HistoricClimateStations = () => {
                     setLoading(false);
                 }
                 if (fetchedData) {
+                    // setData((prevData) => ({
+                    //     ...prevData,
+                    //     [type]: fetchedData,
+                    // }));
+                    const transformedData = transformData(fetchedData.features);
                     setData((prevData) => ({
                         ...prevData,
-                        [type]: fetchedData,
+                        ...transformedData,
                     }));
                 }
             };
 
             if (lastChangedID !== null) {
-                const types = ["precip", "t_mean", "t_max", "t_min"];
-                types.forEach((type) => fetchData(type, lastChangedID));
+                // const types = ["precip", "t_mean", "t_max", "t_min"];
+                // types.forEach((type) => fetchData(type, lastChangedID));
+                fetchData(lastChangedID);
+                console.log(data)
             }
             
         }

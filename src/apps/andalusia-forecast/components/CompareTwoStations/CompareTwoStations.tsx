@@ -127,8 +127,8 @@ export function CompareTwoStations() {
                     onChange={handleStationLeftChange}
                 >
                     {stationDataService.allStations.map((e: any) => (
-                        <option key={e.ID} value={e.NAME_EST}>
-                            {` ${e.NAME_EST ?? "no station name"} | ID:  ${e.ID}`}
+                        <option key={e.ID} value={e.NAME_STATION}>
+                            {` ${e.NAME_STATION ?? "no station name"} | ID:  ${e.ID}`}
                         </option>
                     ))}
                 </Select>
