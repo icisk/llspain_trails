@@ -32,7 +32,7 @@ const HistoricClimateStations = () => {
 
     // State for managing data
     interface DataState {
-        precip?: any;
+        features?: any;
     }
 
     // Hook to manage selected category from Radio buttons
@@ -162,9 +162,9 @@ const HistoricClimateStations = () => {
     
     useEffect(() => {
         if (selectedFeatureId !== null || selectedStationId !== null) {           
-            const fetchData = async (type: string, id: any) => {
+            const fetchData = async (id: any) => {
                 let fetchedData = null;
-                const url = `https://i-cisk.dev.52north.org/data/collections/AEMET_stations_${type}/items?f=json&limit=2500&CODI_INM=${id}`;
+                const url = `https://i-cisk.dev.52north.org/data/collections/AEMET_stations_all/items?f=json&limit=2500&CODE_INM=${id}`;
                 try {
                     setLoading(true);
                     const response = await fetch(url);
@@ -177,23 +177,19 @@ const HistoricClimateStations = () => {
                     setLoading(false);
                 }
                 if (fetchedData) {
-                    setData((prevData) => ({
-                        ...prevData,
-                        [type]: fetchedData,
-                    }));
+                    setData(fetchedData)
                 }
             };
 
             if (lastChangedID !== null) {
-                const types = ["precip", "t_mean", "t_max", "t_min"];
-                types.forEach((type) => fetchData(type, lastChangedID));
+                fetchData(lastChangedID);
             }
             
         }
     }, [lastChangedID]);
     
     useEffect(() => {
-        //console.log('Current data:', data);
+        // console.log('Current data:', data);
     }, [data]); 
     
     useEffect(() => {
@@ -212,27 +208,25 @@ const HistoricClimateStations = () => {
             intl.formatMessage({ id: "global.months.nov" }),
             intl.formatMessage({ id: "global.months.dec" }),
         ];
-        if (data.precip && data.t_mean && data.t_max && data.t_min) {
+        if (data?.features) {
             // Initialize a common time interval based on all data types
-            const allFeatures = [
-                ...(data.precip?.features || []),
-                ...(data.t_mean?.features || []),
-                ...(data.t_max?.features || []),
-                ...(data.t_min?.features || []),
-            ];
+            const allFeatures = data.features;
+
             // Sort all features by date and find the earliest and latest date
             const sortedAllFeatures = allFeatures.sort((a, b) => {
-                const dateA = new Date(a.properties.DATE);
-                const dateB = new Date(b.properties.DATE);
+                const dateA = new Date(a.properties.TIMESTAMP);
+                const dateB = new Date(b.properties.TIMESTAMP);
                 return dateA - dateB;
             });
             if (sortedAllFeatures.length === 0) return; // No data available
             
-            const firstDate = new Date(sortedAllFeatures[0].properties.DATE);
-            const lastDate = new Date(sortedAllFeatures[sortedAllFeatures.length - 1].properties.DATE);
+            const firstDate = new Date(sortedAllFeatures[0].properties.TIMESTAMP);
+            const lastDate = new Date(sortedAllFeatures[sortedAllFeatures.length - 1].properties.TIMESTAMP);
+
             // Create the categories (time axis) for the x-axis (months)
             const categories = [];
             const currentDate = new Date(firstDate);
+
             while (currentDate <= lastDate) {
                 const month = currentDate.toISOString().split("T")[0].slice(0, 7); // Format: YYYY-MM
                 if (!categories.includes(month)) {
@@ -250,40 +244,29 @@ const HistoricClimateStations = () => {
             const meanTempSeriesData = new Array(categories.length).fill(null);
             const maxTempSeriesData = new Array(categories.length).fill(null);
             const minTempSeriesData = new Array(categories.length).fill(null);
+
             // Fill the series with the respective data
-            const mapFeaturesToSeries = (features, property, seriesData) => {
-                features.forEach((feature) => {
-                    const date = new Date(feature.properties.DATE).toISOString().split("T")[0].slice(0, 7); // Format: YYYY-MM
+            if (data?.features) {
+                data.features.forEach((feature) => {
+                    const date = new Date(feature.properties.TIMESTAMP).toISOString().split("T")[0].slice(0, 7); // Format: YYYY-MM
                     const index = categories.indexOf(date);
                     if (index !== -1) {
-                        seriesData[index] = feature.properties[property];
+                        precipSeriesData[index] = feature.properties.PL_mm ?? null;
+                        meanTempSeriesData[index] = feature.properties.MT_C ?? null;
+                        maxTempSeriesData[index] = feature.properties.MX_C ?? null;
+                        minTempSeriesData[index] = feature.properties.MN_C ?? null;
                     } else {
-                        // console.log(`Date ${date} not found in categories`);
+                        //console.error(`Date ${date} not found in categories`);
                     }
                 });
-            };
-            // Process the different data types
-            if (data.precip?.features) {
-                // console.log("Mapping Precipitation Data:", data.precip.features);
-                mapFeaturesToSeries(data.precip.features, "PL_monthly", precipSeriesData);
             }
-            if (data.t_mean?.features) {
-                // console.log("Mapping Mean Temperature Data:", data.t_mean.features);
-                mapFeaturesToSeries(data.t_mean.features, "MT_monthly", meanTempSeriesData);
-            }
-            if (data.t_max?.features) {
-                // console.log("Mapping Max Temperature Data:", data.t_max.features);
-                mapFeaturesToSeries(data.t_max.features, "MX_monthly", maxTempSeriesData);
-            }
-            if (data.t_min?.features) {
-                // console.log("Mapping Min Temperature Data:", data.t_min.features);
-                mapFeaturesToSeries(data.t_min.features, "MN_monthly", minTempSeriesData);
-            }
+
             // Log the series data to debug
             // console.log("Precipitation Series Data:", precipSeriesData);
             // console.log("Mean Temperature Series Data:", meanTempSeriesData);
             // console.log("Max Temperature Series Data:", maxTempSeriesData);
             // console.log("Min Temperature Series Data:", minTempSeriesData);
+
             let allSeries = [
                 {
                     name: intl.formatMessage({ id: "global.vars.temp_mean" }),
