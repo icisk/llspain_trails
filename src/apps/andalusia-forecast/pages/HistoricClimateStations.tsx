@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Box, Container, Switch} from "@open-pioneer/chakra-integration";
+import {Box, Container, Switch, Text} from "@open-pioneer/chakra-integration";
 import {Radio, RadioGroup, Stack, VStack} from "@chakra-ui/react";
 import {useIntl, useService} from "open-pioneer:react-hooks";
 import {Header} from "../components/MainComponents/Header";
@@ -28,7 +28,7 @@ const HistoricClimateStations = () => {
     const [lastChangedID, setlastChangedID] = useState(null);
     const [lastChangedElement, setlastChangedElement] = useState(null);
     // const [selectedStationId, setSelectedStationId] = useState(stationDataService.selectedStationId);
-
+    const [hoveredStationName, setHoveredStationName] = useState<string | null>(null);
 
     // State for managing data
     interface DataState {
@@ -543,7 +543,9 @@ const HistoricClimateStations = () => {
                             let year = this.series.userOptions.year;
                     
                             const value = this.y !== null ? Highcharts.numberFormat(this.y, 2) : '–';
-                            return `<span style="color:${this.color}">\u25CF</span> ${year}: <b>${value}</b><br/>`;
+                            // return `<span style="color:${this.color}">\u25CF</span> ${year}: <b>${value}</b><br/>`;
+                            return `${year}: <b>${value}</b><br/>`;
+
                         }
                     }
                 });
@@ -588,6 +590,27 @@ const HistoricClimateStations = () => {
         }
     }, [stationsVisible, mapState]);
 
+    // Stationname on mouseover
+    useEffect(() => {
+        if (!mapState?.map?.olMap) return;
+
+        const handlePointerMove = (event: any) => {
+            mapState.map.olMap.forEachFeatureAtPixel(event.pixel, (feature: any) => {
+                const name = feature.get('NAME_STATION');
+                if (name) {
+                    setHoveredStationName(name);
+                }  
+            });
+        }
+
+        mapState.map.olMap.on('pointermove', handlePointerMove);
+
+        return () => {
+            mapState.map.olMap.un('pointermove', handlePointerMove);
+        }
+
+    }, [mapState]);
+
     return (
         <Container minWidth={"container.xl"}>
             <Header subpage={'historic_stations'} />
@@ -599,6 +622,11 @@ const HistoricClimateStations = () => {
                     </div>
                     <Box width="100%" height="500px" position="relative">
                         <MainMap MAP_ID={MAP_ID} />
+                        <Box position="absolute" top="10px" left="10px" bg="white" p={2} borderRadius="md" boxShadow="md" zIndex={1000}>
+                            <Text>
+                                {hoveredStationName ? hoveredStationName : intl.formatMessage({ id: "historic_climate_stations.mouseoverInfo" })}
+                            </Text>
+                        </Box>
                         <StationValueLegend/>
                         {/* Removed DynamicPrecipitationLegend */}
                         <Box position="absolute" bottom="10px" left="10px">

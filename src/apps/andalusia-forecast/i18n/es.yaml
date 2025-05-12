@@ -87,6 +87,7 @@ messages:
     heading_descr: Datos históricos de estaciones climáticas
     heading_legend: Conjuntos de datos disponibles
     select_stations: Seleccione estación
+    mouseoverInfo: Pase el cursor sobre una estación
     radio_buttons:
       temp: Temperatura
       precip: Precipitación
