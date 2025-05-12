@@ -136,7 +136,7 @@ export function Phenology() {
 
              //console.log (x, y)
              //console.log(`https://i-cisk.dev.52north.org/data/collections/sis-agroclimatic-indicators_2011-04-16%2000:00:00+00:00_None_CDD/position?f=json&coords=POINT(${x}%20${y})&parameter-name=CDD`)
-             fetch(`https://i-cisk.dev.52north.org/data/collections/sis-agroclimatic-indicators_2011-04-16%2000:00:00+00:00_None_CDD/position?f=json&coords=POINT(${x}%20${y})&parameter-name=CDD`)
+             fetch(`https://i-cisk.dev.52north.org/data/collections/sis-agroclimatic-indicators_201104_spain_CDD/position?f=json&coords=POINT(${x}%20${y})&parameter-name=CDD`)
                  .then(response => response.json())
                  .then(data => setCDDValues(data.ranges.CDD.values))
                  .catch(error => console.error('Error fetching data:', error))
