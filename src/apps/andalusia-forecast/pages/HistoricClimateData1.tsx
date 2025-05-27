@@ -89,6 +89,7 @@ const HistoricClimateData1 = () => {
     const [tempData, setTempData] = useState(null);
     const [spei3Data, setSpei3Data] = useState(null);
     const [spei24Data, setSpei24Data] = useState(null);
+    const [spei9Data, setSpei9Data] = useState(null);
     const [spiData, setSpiData] = useState(null);
 
     const [loading, setLoading] = useState(false);
@@ -98,12 +99,15 @@ const HistoricClimateData1 = () => {
     const [tempTimeSeries, setTempTimeSeries] = useState<String>(null)
     const [spei3TimeSeries, setSpei3TimeSeries] = useState<String>(null)
     const [spei24TimeSeries, setSpei24TimeSeries] = useState<String>(null)
+    const [spei9TimeSeries, setSpei9TimeSeries] = useState<String>(null)
+
     const [spiTimeSeries, setSpiTimeSeries] = useState<String>(null)
     
     const [precipTSDATA, setPrecipTSDATA] = useState<String>(null)
     const [tempTSDATA, setTempTSDATA] = useState<String>(null)
     const [spei3TSDATA, setSpei3TSDATA] = useState<String>(null)
     const [spei24TSDATA, setSpei24TSDATA] = useState<String>(null)
+    const [spei9TSDATA, setSpei9TSDATA] = useState<String>(null)
 
     const [spiTSDATA, setSpiTSDATA] = useState<String>(null)
     
@@ -147,29 +151,34 @@ const HistoricClimateData1 = () => {
 
             const spei3MetaDataUrl = "https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_3months/position?coords=POINT(0 0)&f=json";
             const spei24MetaDataUrl = "https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_24months/position?coords=POINT(0 0)&f=json";
+            const spei9MetaDataUrl = "https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_9months/position?coords=POINT(0 0)&f=json";
 
             try {
-                const [precipMetadata, tempMetadata, spei3Metadata, spei24Metadata] = await Promise.all([
+                const [precipMetadata, tempMetadata, spei3Metadata, spei24Metadata, spei9Metadata] = await Promise.all([
                     fetch(precipMetadataUrl).then((res) => res.json()),
                     fetch(tempMetadataUrl).then((res) => res.json()),
                     fetch(spei3MetaDataUrl).then((res) => res.json()),
-                    fetch(spei24MetaDataUrl).then((res) => res.json())
+                    fetch(spei24MetaDataUrl).then((res) => res.json()),
+                    fetch(spei9MetaDataUrl).then((res) => res.json())
                 ]);
 
                 const tempMetrics = tempMetadata.metadata[".zattrs"].metrics;
                 const precipMetrics = precipMetadata.metadata[".zattrs"].metrics;
                 const spei3Metrics = spei3Metadata?.domain.axes.time;
                 const spei24Metrics = spei24Metadata?.domain.axes.time;
+                const spei9Metrics = spei9Metadata?.domain.axes.time;
                 
                 const tempTimeSeries = meta2TS(tempMetrics)
                 const precipTimeSeries = meta2TS(precipMetrics)
                 const spei3TimeSeries = coords2TS(spei3Metrics.start, spei3Metrics.stop, spei3Metrics.num);
                 const spei24TimeSeries = coords2TS(spei24Metrics.start, spei24Metrics.stop, spei24Metrics.num);
+                const spei9TimeSeries = coords2TS(spei9Metrics.start, spei9Metrics.stop, spei9Metrics.num);
                                 
                 setTempTimeSeries(tempTimeSeries)
                 setPrecipTimeSeries(precipTimeSeries)
                 setSpei3TimeSeries(spei3TimeSeries)
                 setSpei24TimeSeries(spei24TimeSeries)
+                setSpei9TimeSeries(spei9TimeSeries);
                 
             } catch (err) {
                 setError(err.message);
@@ -190,25 +199,29 @@ const HistoricClimateData1 = () => {
             const tempUrl = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_temperature/position?coords=POINT(${x}%20${y})`;
             const spei3Url = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_3months/position?coords=POINT(${x}%20${y})`;
             const spei24Url = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_24months/position?coords=POINT(${x}%20${y})`;
+            const spei9Url = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_9months/position?coords=POINT(${x}%20${y})`;
             
             try {                
-                const [precipResponse, tempResponse, spei3Response, spei24Response] = await Promise.all([
+                const [precipResponse, tempResponse, spei3Response, spei24Response, spei9Response] = await Promise.all([
                     fetch(precipUrl),
                     fetch(tempUrl),
                     fetch(spei3Url),
-                    fetch(spei24Url)
+                    fetch(spei24Url),
+                    fetch(spei9Url)
                 ]);
-                if (!precipResponse.ok || !tempResponse.ok || !spei3Response.ok || !spei24Response.ok) throw new Error("Network response was not ok");
+                if (!precipResponse.ok || !tempResponse.ok || !spei3Response.ok || !spei24Response.ok || !spei9Response.ok) throw new Error("Network response was not ok");
 
                 const precipJsonData =  await precipResponse.json();
                 const tempJsonData =  await tempResponse.json();
                 const spei3JsonData = await spei3Response.json();
                 const spei24JsonData = await spei24Response.json();
+                const spei9JsonData = await spei9Response.json();
                 
                 setPrecipData(precipJsonData?.ranges.historic_precip.values);
                 setTempData(tempJsonData?.ranges.historic_temperature.values);
                 setSpei3Data(spei3JsonData?.ranges.historic_SPEI_3months.values);
                 setSpei24Data(spei24JsonData?.ranges.historic_SPEI_24months.values);
+                setSpei9Data(spei9JsonData?.ranges.historic_SPEI_9months.values);
                 
 
             } catch (err) {
@@ -221,17 +234,18 @@ const HistoricClimateData1 = () => {
         
         fetchData(x, y);
         // console.log(speiData)
-    }, [clickedCoordinates, isComparisonMode, yearRight, yearLeft, precipTimeSeries, tempTimeSeries, spei3TimeSeries, spei24TimeSeries]);
+    }, [clickedCoordinates, isComparisonMode, yearRight, yearLeft, precipTimeSeries, tempTimeSeries, spei3TimeSeries, spei24TimeSeries, spei9TimeSeries]);
     
 
     useEffect(() => {
-        if (!tempData || !precipData || !spei3Data || !tempTimeSeries || !precipTimeSeries || !spei3TimeSeries) return;
+        if (!tempData || !precipData || !spei3Data || !tempTimeSeries || !precipTimeSeries || !spei3TimeSeries || !spei9TimeSeries) return;
 
         setTempTSDATA(tempTimeSeries.map((val, i) => [val, tempData[i]]));
         setPrecipTSDATA(precipTimeSeries.map((val, i) => [val, precipData[i]]));
         setSpei3TSDATA(spei3TimeSeries.map((val, i) => [val, spei3Data[i]]));
         setSpei24TSDATA(spei24TimeSeries.map((val, i) => [val, spei24Data[i]]));
-    }, [tempData, precipData, spei3Data, tempTimeSeries, precipTimeSeries, spei3TimeSeries, spei24TimeSeries]);
+        setSpei9TSDATA(spei9TimeSeries.map((val, i) => [val, spei9Data[i]]));
+    }, [tempData, precipData, spei3Data, tempTimeSeries, precipTimeSeries, spei3TimeSeries, spei24TimeSeries, spei9TimeSeries]);
 
     useEffect(() => {
         if (!tempTSDATA || !precipTSDATA) return;
@@ -268,7 +282,8 @@ const HistoricClimateData1 = () => {
                 precipTSDATA,
                 tempTSDATA,
                 spei3TSDATA,
-                spei24TSDATA
+                spei24TSDATA,
+                spei9TSDATA,
             ));
         }
                 
@@ -278,8 +293,9 @@ const HistoricClimateData1 = () => {
         setSpeiChartOptions(CS02_SPEIfullTimeSeriesChartOptions(
             intl,
             spei3TSDATA,
-            spei24TSDATA))
-    }, [spei24TSDATA, spei3TSDATA]);
+            spei24TSDATA,
+            spei9TSDATA,))
+    }, [spei24TSDATA, spei3TSDATA, spei9TSDATA]);
 
     
     useEffect(() => {
@@ -428,7 +444,7 @@ const HistoricClimateData1 = () => {
                             highcharts={Highcharts}
                             options={speiChartOptions}
                         />
-                                  </div>
+                </div>
             </Box>
         </Container>
     </Box>
