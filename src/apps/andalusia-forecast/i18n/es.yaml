@@ -15,8 +15,10 @@ messages:
       precip_cum:  Precipitación acumulada mensual 
       uncertainty: Grado de incertidumbre
       SPEI: Índice de sequía
-      SPEI3: Índice de sequía 3 meses 
+      SPEI3: Índice de sequía 3 meses
+      SPEI6: Índice de sequía 6 meses 
       SPEI9: Índice de sequía 9 meses
+      SPEI12: Índice de sequía 12 meses
       SPEI24: Índice de sequía 24 meses 
       year: año
       month: mes

@@ -204,6 +204,10 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
             historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_24months/COG_SPEI24_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tif`
         } if (this.#currentVarLeft.value === "spei9") {
             historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_9months/COG_SPEI_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tif`
+        } if (this.#currentVarLeft.value === "spei12") {
+            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_12months/COG_SPEI12_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tif`
+        } if (this.#currentVarLeft.value === "spei6") {
+            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_6months/COG_SPEI6_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tif`
         }
 
         try {
@@ -239,6 +243,10 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
             historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_24months/COG_SPEI24_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tif`
         } if (this.#currentVarRight.value === "spei9") {
             historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_9months/COG_SPEI_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}.tif`
+        } if (this.#currentVarRight.value === "spei12") {
+            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_12months/COG_SPEI12_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}.tif`
+        } if (this.#currentVarRight.value === "spei6") {
+            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_6months/COG_SPEI6_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}.tif`
         }
 
         try {

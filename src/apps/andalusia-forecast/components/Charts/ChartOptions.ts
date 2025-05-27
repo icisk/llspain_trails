@@ -190,7 +190,9 @@ export const CS02_TPfullTimeSeriesChartOptions =(
 export const CS02_SPEIfullTimeSeriesChartOptions =(
     intl,
     spei3TSDATA,
+    spei6TSDATA,
     spei9TSDATA,
+    spei12TSDATA,
     spei24TSDATA) => ({
     chart: { type: "column", zoomType: "x" },
     title: { text: intl.formatMessage({ id: "global.plot.header_spei" }) },
@@ -215,10 +217,24 @@ export const CS02_SPEIfullTimeSeriesChartOptions =(
             yAxis: 0
         },
         {
+            name: intl.formatMessage({ id: "global.vars.SPEI6" }),
+            data: spei6TSDATA || [],
+            type: "spline",
+            color: "#77DD77",
+            yAxis: 0
+        },    
+        {
             name: intl.formatMessage({ id: "global.vars.SPEI9" }),
             data: spei9TSDATA || [],
             type: "spline",
             color: "#FFB347",
+            yAxis: 0
+        },
+        {
+            name: intl.formatMessage({ id: "global.vars.SPEI12" }),
+            data: spei12TSDATA || [],
+            type: "spline",
+            color: "#AEC6CF",
             yAxis: 0
         },
         {

@@ -37,7 +37,7 @@ export function HistoricPickerLeft(props: HistoricPickerProps) {
     const meta_temp: string = 'https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/creaf_historic_temperature_metrics.zarr/.zmetadata'
 
     useEffect(() => {
-        if (currentVar != "spei3" || currentVar != "spei24" || currentVar != "spei9") {
+        if (currentVar != "spei3" || currentVar != "spei24" || currentVar != "spei9" || currentVar != "spei12" || currentVar != "spei6") {
             const link = currentVar === 'temp' ? meta_temp : meta_precip;
             fetch(link)
                 .then((response) => response.json())
@@ -195,9 +195,17 @@ export function HistoricPickerLeft(props: HistoricPickerProps) {
                         <InfoTooltip i18n_path="historic_compare.info.SPEI" />
                     </HStack>
                     <HStack>
+                        <Radio value="spei6">{intl.formatMessage({ id: "global.vars.SPEI6" })}</Radio>
+                        <InfoTooltip i18n_path="historic_compare.info.SPEI" />
+                    </HStack>
+                    <HStack>
                         <Radio value="spei9">{intl.formatMessage({ id: "global.vars.SPEI9"})}</Radio>
                         <InfoTooltip i18n_path="historic_compare.info.SPEI" />
                     </HStack>
+                    <HStack>
+                        <Radio value="spei12">{intl.formatMessage({ id: "global.vars.SPEI12" })}</Radio>
+                        <InfoTooltip i18n_path="historic_compare.info.SPEI" />
+                    </HStack>    
                     <HStack>
                         <Radio value="spei24">{intl.formatMessage({ id: "global.vars.SPEI24" })}</Radio>
                         <InfoTooltip i18n_path="historic_compare.info.SPEI" />
