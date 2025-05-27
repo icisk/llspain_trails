@@ -265,50 +265,50 @@ export class HydrologicalMapProvider implements MapConfigProvider {
         networkLayer.set("id", "network");
         networkLayer.set("vector", true);
 
-        const aforos = new TileLayer({
-            source: new TileWMS({
-                url: 'https://wms.mapama.gob.es/sig/agua/aforos/wms.aspx',
-                params: {'layers': 'EF.EnvironmentalMonitoringFacilities'},
-                serverType: 'mapserver',
-                transition: 0,
-            }),
-            extent: extent3857,
-            opacity: 1,
-            zIndex: 10,
-        });
+        // const aforos = new TileLayer({
+        //     source: new TileWMS({
+        //         url: 'https://wms.mapama.gob.es/sig/agua/aforos/wms.aspx',
+        //         params: {'layers': 'EF.EnvironmentalMonitoringFacilities'},
+        //         serverType: 'mapserver',
+        //         transition: 0,
+        //     }),
+        //     extent: extent3857,
+        //     opacity: 1,
+        //     zIndex: 10,
+        // });
 
-        aforos.set("id", "aforos");
-        aforos.set("vector", true);
+        // aforos.set("id", "aforos");
+        // aforos.set("vector", true);
 
-        const aguas_subter = new TileLayer({
-            source: new TileWMS({
-                url: 'https://wms.mapama.gob.es/sig/agua/Piezometria/wms.aspx',
-                params: {'layers': 'EF.EnvironmentalMonitoringFacilities'},
-                serverType: 'mapserver',
-                transition: 0,
-            }),
-            extent: extent3857,
-            opacity: 1,
-            zIndex: 10,
-        });
+        // const aguas_subter = new TileLayer({
+        //     source: new TileWMS({
+        //         url: 'https://wms.mapama.gob.es/sig/agua/Piezometria/wms.aspx',
+        //         params: {'layers': 'EF.EnvironmentalMonitoringFacilities'},
+        //         serverType: 'mapserver',
+        //         transition: 0,
+        //     }),
+        //     extent: extent3857,
+        //     opacity: 1,
+        //     zIndex: 10,
+        // });
 
-        aguas_subter.set("id", "aguas_subter");
-        aguas_subter.set("vector", true);
+        // aguas_subter.set("id", "aguas_subter");
+        // aguas_subter.set("vector", true);
 
-        const puntos_acui = new TileLayer({
-            source: new TileWMS({
-                url: 'http://mapas.igme.es/gis/services/BasesDatos/IGME_PuntosAgua/MapServer/WMSServer',
-                params: {'layers': '1'},
-                serverType: 'mapserver',
-                transition: 0,
-            }),
-            extent: extent3857,
-            opacity: 1,
-            zIndex: 10,
-        });
+        // const puntos_acui = new TileLayer({
+        //     source: new TileWMS({
+        //         url: 'http://mapas.igme.es/gis/services/BasesDatos/IGME_PuntosAgua/MapServer/WMSServer',
+        //         params: {'layers': '1'},
+        //         serverType: 'mapserver',
+        //         transition: 0,
+        //     }),
+        //     extent: extent3857,
+        //     opacity: 1,
+        //     zIndex: 10,
+        // });
 
-        puntos_acui.set("id", "puntos_acui");
-        puntos_acui.set("vector", true);
+        // puntos_acui.set("id", "puntos_acui");
+        // puntos_acui.set("vector", true);
 
         const catchmentGuadiana = new TileLayer({
             source: new TileWMS({
@@ -354,6 +354,54 @@ export class HydrologicalMapProvider implements MapConfigProvider {
 
         landUseLayer.set("id", "thematic-1");
         landUseLayer.set("thematic", true);
+
+        // Style for the measure stations
+        const getColorByFuente = (fuente: string): string => {
+            switch (fuente) {
+                case "IGME Base de datos de puntos de agua":
+                    return "red";
+                case "Red piezométrica - C.H.Guadiana":
+                    return "green";
+                case "Red de aforos - C.H.Guadiana":
+                    return "lightblue";
+                case "Red de calidad de aguas subterráneas - C.H.Guadiana":
+                    return "purple";
+                case "Red de calidad de aguas subterráneas - - C.H.Guadalquivir":
+                    return "yellow";
+                case "Universidad de Córdoba":
+                    return "blue";
+                default:
+                    return "gray";
+            }
+        }
+
+        const styleFuntcionMeasureStations = (feature: any) => {
+            const fuente = feature.get('Fuente');
+            const color = getColorByFuente(fuente);
+            return new Style({
+                image: new CircleStyle({
+                    radius: 6,
+                    fill: new Fill({ color }),
+                    stroke: new Stroke({ color: 'black', width: 1 }),
+                }),
+
+            })
+        }
+
+        const measureStations = new VectorLayer({
+            source: new VectorSource({
+                url: "https://i-cisk.dev.52north.org/data/collections/ll_spain_measure_stations_epsg_25830/items?f=json",
+                format: new GeoJSON({
+                    dataProjection: "EPSG:25830",
+                    featureProjection: "EPSG:3857",
+                }),
+            }),
+            visible: false,
+            style: styleFuntcionMeasureStations,
+        });
+
+        measureStations.set("id", "measure_stations");
+        measureStations.set("vector", true);
 
         return {
             initialView: {
@@ -438,24 +486,29 @@ export class HydrologicalMapProvider implements MapConfigProvider {
                     olLayer: springsLayer,
                     isBaseLayer: false
                 }),
-                new SimpleLayer({
-                    title: "aforos",
-                    olLayer: aforos,
-                    isBaseLayer: false
-                }),
-                new SimpleLayer({
-                    title: "aguas_subter",
-                    olLayer: aguas_subter,
-                    isBaseLayer: false
-                }),
-                new SimpleLayer({
-                    title: "puntos_acui",
-                    olLayer: puntos_acui,
-                    isBaseLayer: false
-                }),
+                // new SimpleLayer({
+                //     title: "aforos",
+                //     olLayer: aforos,
+                //     isBaseLayer: false
+                // }),
+                // new SimpleLayer({
+                //     title: "aguas_subter",
+                //     olLayer: aguas_subter,
+                //     isBaseLayer: false
+                // }),
+                // new SimpleLayer({
+                //     title: "puntos_acui",
+                //     olLayer: puntos_acui,
+                //     isBaseLayer: false
+                // }),
                 new SimpleLayer({
                     title: "catchmentGuadiana",
                     olLayer: catchmentGuadiana,
+                    isBaseLayer: false
+                }),
+                new SimpleLayer({
+                    title: "measure_stations",
+                    olLayer: measureStations,
                     isBaseLayer: false
                 }),
 

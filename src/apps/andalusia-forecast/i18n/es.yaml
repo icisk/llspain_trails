@@ -139,6 +139,7 @@ messages:
         puntos_acui: Puntos Acuiferos
         catchmentGuadiana: Captaciones Guadiana
         catchmentGuadalquivir: Captaciones Guadalquivir
+        measure_stations: Puntos de datos disponibles
         
       aquifer_info: 'Chismorreos del acuífero'
   historic_stations:

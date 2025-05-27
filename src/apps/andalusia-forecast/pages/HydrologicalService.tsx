@@ -26,9 +26,7 @@ export function HydrologicalService() {
         municipalities: "",
         network: "https://www.juntadeandalucia.es/medioambiente/mapwms/REDIAM_masas_agua_andalucia_phc_2022_27?language=spa&version=1.3.0&service=WMS&request=GetLegendGraphic&sld_version=1.1.0&layer=red_hidrografica&format=image/png&STYLE=default",
         springs: "",
-        aforos: "",
-        aguas_subter: "https://wms.mapama.gob.es/sig/Agua/Piezometria/Leyenda/Piezometria.png",
-        puntos_acui: "http://mapas.igme.es/gis/services/BasesDatos/IGME_PuntosAgua/MapServer/WmsServer?request=GetLegendGraphic%26version=1.3.0%26format=image/png%26layer=1",
+        measure_stations:"",
         catchmentGuadiana: "https://geoguadiana.chguadiana.es/geoserver/usos/ows?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=captaciones",
         catchmentGuadalquivir: "http://idechg.chguadalquivir.es/inspire/wms?language=spa&version=1.3.0&service=WMS&request=GetLegendGraphic&sld_version=1.1.0&layer=CaptacionesDPH&format=image/png&STYLE=default",
         "thematic-1": "https://www.juntadeandalucia.es/medioambiente/mapwms/REDIAM_siose_2020?language=spa&version=1.3.0&service=WMS&request=GetLegendGraphic&sld_version=1.1.0&layer=raster_recon_siose20&format=image/png&STYLE=default",
@@ -143,11 +141,13 @@ export function HydrologicalService() {
                         "municipalities",
                         "network",
                         "springs",
-                        "aforos",
-                        "aguas_subter",
-                        "puntos_acui",
+                        // "aforos",
+                        // "aguas_subter",
+                        // "puntos_acui",
+                        "measure_stations",
                         "catchmentGuadiana",
-                        "catchmentGuadalquivir"].map((layerId) => {
+                        "catchmentGuadalquivir"
+                        ].map((layerId) => {
                                 const hasLegend = !!legendUrls[layerId];
                                 const label = `${intl.formatMessage({ id: `hydro_service.selection_options.hydro_data.${layerId}` })}${hasLegend ? " 🗺️" : ""}`;
                                 return (
@@ -159,7 +159,7 @@ export function HydrologicalService() {
                                         {label}
                                     </Checkbox>
                                 );
-                            })}
+                        })}
                     </VStack>
                 </VStack>
 
