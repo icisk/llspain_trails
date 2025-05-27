@@ -62,7 +62,7 @@ export function Phenology() {
     const [clickedCoordinates, setClickedCoordinates] = useState<number[] | null>(null);
     const [currentLayer, setCurrentLayer] = useState<any>(null); // State to keep track of the current layer
     const bioDataHandler = useService<BioindicatorLayerHandler>("app.BioindicatorLayerHandler");
-    const [cddValues, setCDDValues] = useState([])
+    const [IndicatorValues, setIndicatorValues] = useState([])
     const [chartOptions, setChartOptions] = useState({
         chart: { type: "column", zoomType: "x" },
         title: { text: "Loading..." },
@@ -78,6 +78,12 @@ export function Phenology() {
     const markerLayer = new VectorLayer({ source: markerSource, zIndex: 100 });
     
     const [selectedDate] = useReactiveSnapshot(() =>[bioDataHandler.currentDate], [bioDataHandler]);
+
+    const [selectedIndicator, setSelectedIndicator] = useState("CDD");
+
+    useEffect(() => {
+        bioDataHandler.setIndicator(selectedIndicator);
+    }, [selectedIndicator]);
 
     useEffect(() => {
         fetch("https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/spain/agro_indicator/CDD/CDD_metadata.json")
@@ -134,19 +140,27 @@ export function Phenology() {
              let x = coord4326[0];
              let y = coord4326[1];
 
+            let url: string;
+            if (selectedIndicator === "SU") {
+                url = `https://i-cisk.dev.52north.org/data/collections/sis-agroclimatic-indicators_201104_spain_SU/position?f=json&coords=POINT(${x}%20${y})&parameter-name=SU`;
+            } else if (selectedIndicator === "CSU") {
+                url = `https://i-cisk.dev.52north.org/data/collections/sis-agroclimatic-indicators_201104_spain_CSU/position?f=json&coords=POINT(${x}%20${y})&parameter-name=CSU`;
+            } else {
+                url = `https://i-cisk.dev.52north.org/data/collections/sis-agroclimatic-indicators_201104_spain_CDD/position?f=json&coords=POINT(${x}%20${y})&parameter-name=CDD`;
+            }
              //console.log (x, y)
              //console.log(`https://i-cisk.dev.52north.org/data/collections/sis-agroclimatic-indicators_2011-04-16%2000:00:00+00:00_None_CDD/position?f=json&coords=POINT(${x}%20${y})&parameter-name=CDD`)
-             fetch(`https://i-cisk.dev.52north.org/data/collections/sis-agroclimatic-indicators_2011-04-16%2000:00:00+00:00_None_CDD/position?f=json&coords=POINT(${x}%20${y})&parameter-name=CDD`)
+             fetch(url)
                  .then(response => response.json())
-                 .then(data => setCDDValues(data.ranges.CDD.values))
+                 .then(data => setIndicatorValues(data.ranges[selectedIndicator].values))
                  .catch(error => console.error('Error fetching data:', error))
                  .finally(() => setChartLoading(false))            
 
          }
-    }, [clickedCoordinates]);
+    }, [clickedCoordinates, selectedIndicator]);
 
     useEffect(() => {
-        if (cddValues.length > 0) {
+        if (IndicatorValues.length > 0) {
             let iso_dates = dateObjects.map((date) => date.toISOString().split('T')[0]);
             let seasonLabels = dateObjects.map(date => getSeasonLabel(date)); // Convert dates to season labels
 
@@ -155,12 +169,12 @@ export function Phenology() {
                 ...prevOptions,
                 title: { text: intl.formatMessage({ id: "phenology.plot.title" }) },
                 xAxis: { ...prevOptions.xAxis, categories: seasonLabels },
-                series: [{ ...prevOptions.series[0], data: cddValues }]
+                series: [{ ...prevOptions.series[0], data: IndicatorValues }]
             }));
 
             setChartLoading(false); 
         }
-    }, [cddValues]);
+    }, [IndicatorValues]);
 
     
     // NEEDS TO STAY AT BOTTOM
@@ -188,6 +202,38 @@ export function Phenology() {
             </Box>
 
             <Container flex={2} minWidth={"container.xl"}>
+            <Box mt={4}>
+                <Text>{intl.formatMessage({ id: "phenology.select_indicator"})}:</Text>
+                <HStack spacing={6}>
+                    <label>
+                        <input
+                            type="radio"
+                            value="CDD"
+                            checked={selectedIndicator === "CDD"}
+                            onChange={(e) => setSelectedIndicator(e.target.value)}
+                        />{" "}
+                        CDD
+                    </label>
+                    <label>
+                        <input
+                            type="radio"
+                            value="CSU"
+                            checked={selectedIndicator === "CSU"}
+                            onChange={(e) => setSelectedIndicator(e.target.value)}
+                        />{" "}
+                        CSU
+                    </label>
+                    <label>
+                        <input
+                            type="radio"
+                            value="SU"
+                            checked={selectedIndicator === "SU"}
+                            onChange={(e) => setSelectedIndicator(e.target.value)}
+                        />{" "}
+                        SU
+                    </label>
+                </HStack>
+            </Box>
                 <Box mt={5}>
                     <VStack>
                         {metadata.time.length > 0 && (

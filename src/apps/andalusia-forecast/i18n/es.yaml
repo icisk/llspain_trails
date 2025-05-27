@@ -107,6 +107,7 @@ messages:
     heading: Número máximo de días secos consecutivos.
     heading_descr: "Período más largo de días consecutivos dentro de un trimestre con suma de precipitación diaria inferior a 1 mm. Las fechas corresponden a los días centrales de los trimestres:\n\n• Dic, Ene, Feb (invierno)\n• Mar, Abr, May (primavera)\n• Jun, Jul, Ago (verano)\n• Sep, Oct, Nov (otoño)"
     info: "Generado con información del Servicio de Cambio Climático de Copernicus [2019]. Datos elaborados a partir de proyecciones climáticas correspondientes al escenario de cambio climático RCP4.5 para el período 2011-2040. Ni la Comisión Europea ni el ECMWF son responsables del uso que pueda hacerse de la información o los datos de Copernicus que contiene. Copernicus Climate Change Service (2019): Agroclimatic indicators from 1951 to 2099 derived from climate projections. Copernicus Climate Change Service (C3S) Climate Data Store (CDS). DOI: 10.24381/cds.dad6e055. https://cds.climate.copernicus.eu/datasets/sis-agroclimatic-indicators "
+    select_indicator: Seleccione indicador
     plot:
       title: Número de días secos consecutivos por trimestre
       xAxis: Número de días secos

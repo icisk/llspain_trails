@@ -15,7 +15,9 @@ import {HistoricLayerHandler} from "./HistoricLayerHandler";
 
 export interface BioindicatorLayerHandler extends DeclaredService<"app.BioindicatorLayerHandler">{
     setDate(date: string): void;
+    setIndicator(indicator: string): void;
     currentDate: string;
+    currentIndicator: string;
 }
 
 interface References {
@@ -27,6 +29,7 @@ export class BioindicatorLayerHandlerImpl implements BioindicatorLayerHandler {
     private mapRegistry: MapRegistry;
     private tiflayer: WebGLTileLayer | undefined;
     #currentDate: Reactive<string> = reactive('2011-04-16')
+    #currentIndicator: Reactive<string> = reactive('CDD');
 
     constructor(options: ServiceOptions<References>) {
         const { mapRegistry } = options.references;
@@ -41,6 +44,10 @@ export class BioindicatorLayerHandlerImpl implements BioindicatorLayerHandler {
     get currentDate(){
         return this.#currentDate.value;
     }
+
+    get currentIndicator(){
+        return this.#currentIndicator.value;
+    }
     
     async setDate(date: string){
         this.#currentDate.value = date;
@@ -51,9 +58,27 @@ export class BioindicatorLayerHandlerImpl implements BioindicatorLayerHandler {
         }
     }
 
+    async setIndicator(indicator: string) {
+        this.#currentIndicator.value = indicator;
+        this.setDate(this.currentDate);
+    }
+
 
     private async createSource() {
-        const tifUrl = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/spain/agro_indicator/CDD/CDD_${this.currentDate}.tif`;
+        let tifUrl: string;
+        if (this.#currentIndicator.value === 'SU') {
+            const originalDateStr = this.#currentDate.value;
+            const originalDate = new Date(originalDateStr);
+            originalDate.setDate(originalDate.getDate() - 1);
+
+            const adjustedDateStr = originalDate.toISOString().split('T')[0];
+
+            tifUrl = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/spain/agro_indicator/SU/SU_${adjustedDateStr}.tif`;
+        } else if (this.#currentIndicator.value === 'CSU') {
+            tifUrl = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/spain/agro_indicator/CSU/CSU_${this.currentDate}.tif`;
+        } else {
+            tifUrl = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/spain/agro_indicator/CDD/CDD_${this.currentDate}.tif`;
+        }
         try {
             const response = await fetch(tifUrl,
                 {
@@ -75,10 +100,6 @@ export class BioindicatorLayerHandlerImpl implements BioindicatorLayerHandler {
                 nodata: -5.3e+37
             }]
         });
-    }
-    
-    
-    
-    
+    }   
 }
 
