@@ -318,14 +318,72 @@ const HistoricClimateData1 = () => {
     }, [isComparisonMode, precipData1, precipData2, tempData1, tempData2, tempTSDATA, precipTSDATA, yearLeft, yearRight]);
     
     useEffect(() => {
+        let speiVarLeft;
+        if (varLeft === "temp" || varLeft === "precip") {
+            speiVarLeft = "spei3";
+        } else {
+            speiVarLeft = varLeft;
+        }
+
+        let speiVarRight;
+        if (varRight === "temp" || varRight === "precip") {
+            speiVarRight = "spei6";
+        } else {
+            speiVarRight = varRight;
+        }
+
+        let speiDataLeft;
+
+        switch (varLeft) {
+            case "spei3":
+                speiDataLeft = spei3TSDATA;
+                break;
+            case "spei6":
+                speiDataLeft = spei6TSDATA;
+                break;
+            case "spei9":
+                speiDataLeft = spei9TSDATA;
+                break;
+            case "spei12":
+                speiDataLeft = spei12TSDATA;
+                break;
+            case "spei24":
+                speiDataLeft = spei24TSDATA;
+                break;
+            default:
+                speiDataLeft = spei3TSDATA;
+        }
+
+        let speiDataRight;
+
+        switch (varRight) {
+            case "spei3":
+                speiDataRight = spei3TSDATA;
+                break;
+            case "spei6":
+                speiDataRight = spei6TSDATA;
+                break;
+            case "spei9":
+                speiDataRight = spei9TSDATA;
+                break;
+            case "spei12":
+                speiDataRight = spei12TSDATA;
+                break;
+            case "spei24":
+                speiDataRight = spei24TSDATA;
+                break;
+            default:
+                speiDataRight = spei6TSDATA;
+        }
+
         setSpeiChartOptions(CS02_SPEIfullTimeSeriesChartOptions(
             intl,
-            spei3TSDATA,
-            spei24TSDATA,
-            spei9TSDATA,
-            spei6TSDATA,
-            spei12TSDATA))
-    }, [spei24TSDATA, spei3TSDATA, spei9TSDATA, spei6TSDATA, spei12TSDATA]);
+            speiDataLeft,
+            speiDataRight,
+            speiVarLeft,
+            speiVarRight,
+        ))
+    }, [spei24TSDATA, spei3TSDATA, spei9TSDATA, spei6TSDATA, spei12TSDATA, varLeft, varRight]);
 
     
     useEffect(() => {

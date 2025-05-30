@@ -1,6 +1,5 @@
 import {useIntl, useService} from "open-pioneer:react-hooks";
 
-
 export const espanolChartOptions = (intl)=> ({
     lang: {
         // Basic Date/Time Names
@@ -189,11 +188,11 @@ export const CS02_TPfullTimeSeriesChartOptions =(
 
 export const CS02_SPEIfullTimeSeriesChartOptions =(
     intl,
-    spei3TSDATA,
-    spei6TSDATA,
-    spei9TSDATA,
-    spei12TSDATA,
-    spei24TSDATA) => ({
+    speiDataLeft,
+    speiDataRight,
+    varLeft,
+    varRight
+    ) => ({
     chart: { type: "column", zoomType: "x" },
     title: { text: intl.formatMessage({ id: "global.plot.header_spei" }) },
     xAxis: { type: 'datetime',
@@ -210,39 +209,18 @@ export const CS02_SPEIfullTimeSeriesChartOptions =(
     },
     series: [
         {
-            name: intl.formatMessage({ id: "global.vars.SPEI3" }),
-            data: spei3TSDATA || [],
+            name: intl.formatMessage({ id: `global.vars.${varLeft}` }),
+            data: speiDataLeft || [],
             type: "spline",
             color: "#FF6961",
             yAxis: 0
         },
         {
-            name: intl.formatMessage({ id: "global.vars.SPEI6" }),
-            data: spei6TSDATA || [],
+            name: intl.formatMessage({ id: `global.vars.${varRight}` }),
+            data: speiDataRight || [],
             type: "spline",
-            color: "#77DD77",
+            color: "#FFD600",
             yAxis: 0
-        },    
-        {
-            name: intl.formatMessage({ id: "global.vars.SPEI9" }),
-            data: spei9TSDATA || [],
-            type: "spline",
-            color: "#FFB347",
-            yAxis: 0
-        },
-        {
-            name: intl.formatMessage({ id: "global.vars.SPEI12" }),
-            data: spei12TSDATA || [],
-            type: "spline",
-            color: "#AEC6CF",
-            yAxis: 0
-        },
-        {
-            name: intl.formatMessage({ id: "global.vars.SPEI24" }),
-            data: spei24TSDATA || [],
-            type: "spline",
-            color: "#0066ff",
-            yAxis: 0
-        },
+        }
     ]
 });
