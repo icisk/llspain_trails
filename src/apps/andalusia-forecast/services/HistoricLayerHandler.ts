@@ -62,13 +62,16 @@ export interface HistoricLayerHandler extends DeclaredService<"app.HistoricLayer
     setMonthRight(month: Month): void;
     setYearRight(year: number): void;
     setVarRight(variable: Variable): void;
+    setUrlLeft(url: string): void;
+    setUrlRight(url: string): void;
     currentMonthLeft: Month;
     currentYearLeft: Year;
     currentVarLeft: Variable;
     currentMonthRight: Month;
     currentYearRight: Year;
     currentVarRight: Variable;
-    
+    currentUrlLeft: string;
+    currentUrlRight: string;   
 }
 
 interface References {
@@ -86,9 +89,9 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
     #currentMonthRight: Reactive<Month> = reactive(1);
     #currentYearRight: Reactive<Year> = reactive(Year.dummy2);
     #currentVarRight: Reactive<Variable> = reactive("temp");
+    #currentUrlLeft: Reactive<string> = reactive("https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_2000_08_MeanTemperature_v0.tif");
+    #currentUrlRight: Reactive<string> = reactive("https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_2005_01_MeanTemperature_v0.tif");
    
-
-
     constructor(options: ServiceOptions<References>) {
         const { mapRegistry } = options.references;
         this.mapRegistry = mapRegistry;
@@ -171,6 +174,18 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
         
     }
 
+    get currentUrlLeft(): string {
+        return this.#currentUrlLeft.value;
+    }
+    get currentUrlRight(): string {
+        return this.#currentUrlRight.value;
+    }
+    set currentUrlLeft(url: string) {
+        this.#currentUrlLeft.value = url;
+    }
+    set currentUrlRight(url: string) {
+        this.#currentUrlRight.value = url;
+    }
 
     getColorStyleLeft() {
         if (this.#currentVarLeft.value === "temp") {
@@ -211,6 +226,7 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
         }
 
         try {
+            this.#currentUrlLeft.value = historicLayer;
             const response = await fetch(historicLayer,
                 {
                     method: "HEAD",
@@ -231,6 +247,7 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
             }]
         });
     }
+
     private async createSourceRight() {
         let historicLayer: string;
         if (this.#currentVarRight.value === "temp") {
@@ -250,6 +267,7 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
         }
 
         try {
+            this.#currentUrlRight.value = historicLayer;
             const response = await fetch(historicLayer, 
                 {
                 method: "HEAD",

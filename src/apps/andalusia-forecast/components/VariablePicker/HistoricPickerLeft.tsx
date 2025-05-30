@@ -1,4 +1,4 @@
-import { Container, Radio, RadioGroup } from "@open-pioneer/chakra-integration";
+import { Container, Radio, RadioGroup,Button } from "@open-pioneer/chakra-integration";
 import { HStack, Select, VStack } from "@chakra-ui/react";
 import { InfoTooltip } from "../InfoTooltip/InfoTooltip";
 import React, { useEffect, useState } from "react";
@@ -15,10 +15,11 @@ export function HistoricPickerLeft(props: HistoricPickerProps) {
     const intl = useIntl();
     const histLayerHandler = useService<HistoricLayerHandler>("app.HistoricLayerHandler");
 
-    const [currentYear, currentMonth, currentVar] = useReactiveSnapshot(() => [
+    const [currentYear, currentMonth, currentVar, urlLeft] = useReactiveSnapshot(() => [
         histLayerHandler.currentYearLeft,
         histLayerHandler.currentMonthLeft,
-        histLayerHandler.currentVarLeft
+        histLayerHandler.currentVarLeft,
+        histLayerHandler.currentUrlLeft
     ], [histLayerHandler]);
 
     const [error, setError] = useState(null);
@@ -185,6 +186,11 @@ export function HistoricPickerLeft(props: HistoricPickerProps) {
                                 <option value="spei24">{intl.formatMessage({ id: "global.vars.spei24" })}</option>
                             </Select>
                         )}
+                        <a href = {urlLeft} target="_blank" rel="noopener noreferrer">
+                            <Button>
+                                {intl.formatMessage({id: "historic_compare.download_button"})}
+                            </Button>
+                        </a>
                     </VStack>
                 </RadioGroup>
             </div>

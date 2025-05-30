@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Box, Container, Flex} from "@open-pioneer/chakra-integration";
-import {HStack} from "@chakra-ui/react";
+import {Button, HStack} from "@chakra-ui/react";
 import {useIntl, useService} from "open-pioneer:react-hooks";
 import {MapAnchor, MapContainer, SimpleLayer, useMapModel} from "@open-pioneer/map";
 import {Header} from "../components/MainComponents/Header";
@@ -62,10 +62,7 @@ const HistoricClimateData1 = () => {
         intl.formatMessage({ id: "global.months.nov" }),
         intl.formatMessage({ id: "global.months.dec" }),
     ];
-    const [varLeft, 
-        varRight] = useReactiveSnapshot(()=> [
-            histLayerHandler.currentVarLeft, 
-        histLayerHandler.currentVarRight], [histLayerHandler])
+    const [varLeft, varRight] = useReactiveSnapshot(()=> [ histLayerHandler.currentVarLeft,  histLayerHandler.currentVarRight], [histLayerHandler])
     const mapRef = useRef<HTMLDivElement>(null);
     const [leftLayers, setLeftLayers]= useState<Layer[]>();
     const [rightLayers, setRightLayers]= useState<Layer[]>();

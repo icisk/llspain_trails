@@ -81,6 +81,7 @@ messages:
       heading: 'Seleccionar modo de visualización de datos:'
       full_series: Serie temporal completa
       compare: Comparar años
+    download_button: descargar datos
   historic_station:
     nav: Datos de estaciones
     heading: Datos históricos de estaciones
