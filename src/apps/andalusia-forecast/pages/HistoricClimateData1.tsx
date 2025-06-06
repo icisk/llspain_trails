@@ -32,7 +32,7 @@ import {
     CS02_initChartOptions,
     CS02_compareChartOptions,
     CS02_TPfullTimeSeriesChartOptions, 
-    CS02_SPEIfullTimeSeriesChartOptions
+    CS02_SPEIfullTimeSeriesChartOptions,
 } from "../components/Charts/ChartOptions";
 
 
@@ -89,7 +89,11 @@ const HistoricClimateData1 = () => {
     const [spei9Data, setSpei9Data] = useState(null);
     const [spei6Data, setSpei6Data] = useState(null);
     const [spei12Data, setSpei12Data] = useState(null);
-    const [spiData, setSpiData] = useState(null);
+    const [spi3Data, setSpi3Data] = useState(null);
+    const [spi6Data, setSpi6Data] = useState(null);
+    const [spi9Data, setSpi9Data] = useState(null);
+    const [spi12Data, setSpi12Data] = useState(null);
+    const [spi24Data, setSpi24Data] = useState(null);
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -101,6 +105,11 @@ const HistoricClimateData1 = () => {
     const [spei9TimeSeries, setSpei9TimeSeries] = useState<String>(null)
     const [spei6TimeSeries, setSpei6TimeSeries] = useState<String>(null)
     const [spei12TimeSeries, setSpei12TimeSeries] = useState<String>(null)
+    const [spi3TimeSeries, setSpi3TimeSeries] = useState<String>(null)
+    const [spi6TimeSeries, setSpi6TimeSeries] = useState<String>(null)
+    const [spi9TimeSeries, setSpi9TimeSeries] = useState<String>(null)
+    const [spi12TimeSeries, setSpi12TimeSeries] = useState<String>(null)
+    const [spi24TimeSeries, setSpi24TimeSeries] = useState<String>(null)
 
     const [spiTimeSeries, setSpiTimeSeries] = useState<String>(null)
     
@@ -111,6 +120,11 @@ const HistoricClimateData1 = () => {
     const [spei9TSDATA, setSpei9TSDATA] = useState<String>(null)
     const [spei6TSDATA, setSpei6TSDATA] = useState<String>(null)
     const [spei12TSDATA, setSpei12TSDATA] = useState<String>(null)
+    const [spi3TSDATA, setSpi3TSDATA] = useState<String>(null)
+    const [spi6TSDATA, setSpi6TSDATA] = useState<String>(null)
+    const [spi9TSDATA, setSpi9TSDATA] = useState<String>(null)
+    const [spi12TSDATA, setSpi12TSDATA] = useState<String>(null)
+    const [spi24TSDATA, setSpi24TSDATA] = useState<String>(null)
 
     const [spiTSDATA, setSpiTSDATA] = useState<String>(null)
     
@@ -120,6 +134,7 @@ const HistoricClimateData1 = () => {
 
     const [chartOptions, setChartOptions] = useState(CS02_initChartOptions(intl));
     const [speiChartOptions, setSpeiChartOptions] = useState<ChartOptions>();
+    const [spiChartOptions, setSpiChartOptions] = useState<ChartOptions>();
     
     
     const mapModel = useMapModel(MAP_ID);
@@ -158,40 +173,76 @@ const HistoricClimateData1 = () => {
             const spei6MetaDataUrl = "https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_6months/position?coords=POINT(0 0)&f=json";
             const spei12MetaDataUrl = "https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_12months/position?coords=POINT(0 0)&f=json";
 
+            const spi3MetaDataUrl = "https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPI_3months/position?coords=POINT(0 0)&f=json";
+            const spi6MetaDataUrl = "https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPI_6months/position?coords=POINT(0 0)&f=json";
+            const spi9MetaDataUrl = "https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPI_9months/position?coords=POINT(0 0)&f=json";
+            const spi12MetaDataUrl = "https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPI_12months/position?coords=POINT(0 0)&f=json";
+            const spi24MetaDataUrl = "https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPI_24months/position?coords=POINT(0 0)&f=json";
+
             try {
-                const [precipMetadata, tempMetadata, spei3Metadata, spei24Metadata, spei9Metadata, spei6Metadata, spei12Metadata] = await Promise.all([
+                const [precipMetadata, tempMetadata, spei3Metadata, spei24Metadata, spei9Metadata, spei6Metadata, spei12Metadata, spi3Metadata, spi6Metadata, spi9Metadata, spi12Metadata, spi24Metadata] = await Promise.all([
                     fetch(precipMetadataUrl).then((res) => res.json()),
                     fetch(tempMetadataUrl).then((res) => res.json()),
+
                     fetch(spei3MetaDataUrl).then((res) => res.json()),
                     fetch(spei24MetaDataUrl).then((res) => res.json()),
                     fetch(spei9MetaDataUrl).then((res) => res.json()),
                     fetch(spei6MetaDataUrl).then((res) => res.json()),
-                    fetch(spei12MetaDataUrl).then((res) => res.json())
+                    fetch(spei12MetaDataUrl).then((res) => res.json()),
+
+                    fetch(spi3MetaDataUrl).then((res) => res.json()),
+                    fetch(spi6MetaDataUrl).then((res) => res.json()),
+                    fetch(spi9MetaDataUrl).then((res) => res.json()),
+                    fetch(spi12MetaDataUrl).then((res) => res.json()),
+                    fetch(spi24MetaDataUrl).then((res) => res.json())
                 ]);
 
                 const tempMetrics = tempMetadata.metadata[".zattrs"].metrics;
                 const precipMetrics = precipMetadata.metadata[".zattrs"].metrics;
+
                 const spei3Metrics = spei3Metadata?.domain.axes.time;
                 const spei24Metrics = spei24Metadata?.domain.axes.time;
                 const spei9Metrics = spei9Metadata?.domain.axes.time;
                 const spei6Metrics = spei6Metadata?.domain.axes.time;
                 const spei12Metrics = spei12Metadata?.domain.axes.time;
+
+                const spi3Metrics = spi3Metadata?.domain.axes.time;
+                const spi6Metrics = spi6Metadata?.domain.axes.time;
+                const spi9Metrics = spi9Metadata?.domain.axes.time;
+                const spi12Metrics = spi12Metadata?.domain.axes.time;
+                const spi24Metrics = spi24Metadata?.domain.axes.time;
+
                 
                 const tempTimeSeries = meta2TS(tempMetrics)
                 const precipTimeSeries = meta2TS(precipMetrics)
+
                 const spei3TimeSeries = coords2TS(spei3Metrics.start, spei3Metrics.stop, spei3Metrics.num);
                 const spei24TimeSeries = coords2TS(spei24Metrics.start, spei24Metrics.stop, spei24Metrics.num);
                 const spei9TimeSeries = coords2TS(spei9Metrics.start, spei9Metrics.stop, spei9Metrics.num);
                 const spei6TimeSeries = coords2TS(spei6Metrics.start, spei6Metrics.stop, spei6Metrics.num);
                 const spei12TimeSeries = coords2TS(spei12Metrics.start, spei12Metrics.stop, spei12Metrics.num);
+
+                const spi3TimeSeries = coords2TS(spi3Metrics.start, spi3Metrics.stop, spi3Metrics.num);
+                const spi6TimeSeries = coords2TS(spi6Metrics.start, spi6Metrics.stop, spi6Metrics.num);
+                const spi9TimeSeries = coords2TS(spi9Metrics.start, spi9Metrics.stop, spi9Metrics.num);
+                const spi12TimeSeries = coords2TS(spi12Metrics.start, spi12Metrics.stop, spi12Metrics.num);
+                const spi24TimeSeries = coords2TS(spi24Metrics.start, spi24Metrics.stop, spi24Metrics.num);
+
                                 
                 setTempTimeSeries(tempTimeSeries)
                 setPrecipTimeSeries(precipTimeSeries)
+
                 setSpei3TimeSeries(spei3TimeSeries)
                 setSpei24TimeSeries(spei24TimeSeries)
                 setSpei9TimeSeries(spei9TimeSeries);
                 setSpei6TimeSeries(spei6TimeSeries);
                 setSpei12TimeSeries(spei12TimeSeries);
+
+                setSpi3TimeSeries(spi3TimeSeries);
+                setSpi6TimeSeries(spi6TimeSeries);
+                setSpi9TimeSeries(spi9TimeSeries);
+                setSpi12TimeSeries(spi12TimeSeries);
+                setSpi24TimeSeries(spi24TimeSeries);
                 
             } catch (err) {
                 setError(err.message);
@@ -210,39 +261,68 @@ const HistoricClimateData1 = () => {
         const fetchData = async (x, y) => {
             const precipUrl = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_precip/position?coords=POINT(${x}%20${y})`;
             const tempUrl = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_temperature/position?coords=POINT(${x}%20${y})`;
+
             const spei3Url = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_3months/position?coords=POINT(${x}%20${y})`;
             const spei24Url = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_24months/position?coords=POINT(${x}%20${y})`;
             const spei9Url = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_9months/position?coords=POINT(${x}%20${y})`;
             const spei6Url = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_6months/position?coords=POINT(${x}%20${y})`;
             const spei12Url = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_12months/position?coords=POINT(${x}%20${y})`;
+
+            const spi3Url = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPI_3months/position?coords=POINT(${x}%20${y})`;
+            const spi6Url = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPI_6months/position?coords=POINT(${x}%20${y})`;
+            const spi9Url = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPI_9months/position?coords=POINT(${x}%20${y})`;
+            const spi12Url = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPI_12months/position?coords=POINT(${x}%20${y})`;
+            const spi24Url = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPI_24months/position?coords=POINT(${x}%20${y})`;
             
             try {                
-                const [precipResponse, tempResponse, spei3Response, spei24Response, spei9Response, spei6Response, spei12Response] = await Promise.all([
+                const [precipResponse, tempResponse, spei3Response, spei24Response, spei9Response, spei6Response, spei12Response, spi3Response, spi6Response, spi9Response, spi12Response, spi24Response] = await Promise.all([
                     fetch(precipUrl),
                     fetch(tempUrl),
+
                     fetch(spei3Url),
                     fetch(spei24Url),
                     fetch(spei9Url),
                     fetch(spei6Url),
-                    fetch(spei12Url)
+                    fetch(spei12Url),
+
+                    fetch(spi3Url),
+                    fetch(spi6Url),
+                    fetch(spi9Url),
+                    fetch(spi12Url),
+                    fetch(spi24Url)
                 ]);
-                if (!precipResponse.ok || !tempResponse.ok || !spei3Response.ok || !spei24Response.ok || !spei9Response.ok || !spei6Response.ok || !spei12Response.ok) throw new Error("Network response was not ok");
+                if (!precipResponse.ok || !tempResponse.ok || !spei3Response.ok || !spei24Response.ok || !spei9Response.ok || !spei6Response.ok || !spei12Response.ok || !spi3Response.ok || !spi6Response.ok || !spi9Response.ok || !spi12Response.ok || !spi24Response.ok) throw new Error("Network response was not ok");
 
                 const precipJsonData =  await precipResponse.json();
                 const tempJsonData =  await tempResponse.json();
+
                 const spei3JsonData = await spei3Response.json();
                 const spei24JsonData = await spei24Response.json();
                 const spei9JsonData = await spei9Response.json();
                 const spei6JsonData = await spei6Response.json();
                 const spei12JsonData = await spei12Response.json();
+
+                const spi3JsonData = await spi3Response.json();
+                const spi6JsonData = await spi6Response.json();
+                const spi9JsonData = await spi9Response.json();
+                const spi12JsonData = await spi12Response.json();
+                const spi24JsonData = await spi24Response.json();
                 
+
                 setPrecipData(precipJsonData?.ranges.historic_precip.values);
                 setTempData(tempJsonData?.ranges.historic_temperature.values);
+
                 setSpei3Data(spei3JsonData?.ranges.historic_SPEI_3months.values);
                 setSpei24Data(spei24JsonData?.ranges.historic_SPEI_24months.values);
                 setSpei9Data(spei9JsonData?.ranges.historic_SPEI_9months.values);
                 setSpei6Data(spei6JsonData?.ranges.historic_SPEI_6months.values);
                 setSpei12Data(spei12JsonData?.ranges.historic_SPEI_12months.values);
+
+                setSpi3Data(spi3JsonData?.ranges.historic_SPI_3months.values);
+                setSpi6Data(spi6JsonData?.ranges.historic_SPI_6months.values);
+                setSpi9Data(spi9JsonData?.ranges.historic_SPI_9months.values);
+                setSpi12Data(spi12JsonData?.ranges.historic_SPI_12months.values);
+                setSpi24Data(spi24JsonData?.ranges.historic_SPI_24months.values);
                 
 
             } catch (err) {
@@ -255,20 +335,27 @@ const HistoricClimateData1 = () => {
         
         fetchData(x, y);
         // console.log(speiData)
-    }, [clickedCoordinates, isComparisonMode, yearRight, yearLeft, precipTimeSeries, tempTimeSeries, spei3TimeSeries, spei24TimeSeries, spei9TimeSeries, spei6TimeSeries, spei12TimeSeries]);
+    }, [clickedCoordinates, isComparisonMode, yearRight, yearLeft, precipTimeSeries, tempTimeSeries, spei3TimeSeries, spei24TimeSeries, spei9TimeSeries, spei6TimeSeries, spei12TimeSeries, spi3TimeSeries, spi6TimeSeries, spi9TimeSeries, spi12TimeSeries, spi24TimeSeries]);
     
 
     useEffect(() => {
-        if (!tempData || !precipData || !spei3Data || !tempTimeSeries || !precipTimeSeries || !spei3TimeSeries || !spei9TimeSeries || !spei6TimeSeries || !spei12TimeSeries) return;
+        if (!tempData || !precipData || !spei3Data || !tempTimeSeries || !precipTimeSeries || !spei3TimeSeries || !spei9TimeSeries || !spei6TimeSeries || !spei12TimeSeries || !spi3TimeSeries || !spi6TimeSeries || !spi9TimeSeries || !spi12TimeSeries || !spi24TimeSeries) return;
 
         setTempTSDATA(tempTimeSeries.map((val, i) => [val, tempData[i]]));
         setPrecipTSDATA(precipTimeSeries.map((val, i) => [val, precipData[i]]));
+
         setSpei3TSDATA(spei3TimeSeries.map((val, i) => [val, spei3Data[i]]));
         setSpei24TSDATA(spei24TimeSeries.map((val, i) => [val, spei24Data[i]]));
         setSpei9TSDATA(spei9TimeSeries.map((val, i) => [val, spei9Data[i]]));
         setSpei6TSDATA(spei6TimeSeries.map((val, i) => [val, spei6Data[i]]));
         setSpei12TSDATA(spei12TimeSeries.map((val, i) => [val, spei12Data[i]]));
-    }, [tempData, precipData, spei3Data, tempTimeSeries, precipTimeSeries, spei3TimeSeries, spei24TimeSeries, spei9TimeSeries, spei6TimeSeries, spei12TimeSeries]);
+
+        setSpi3TSDATA(spi3TimeSeries.map((val, i) => [val, spi3Data[i]]));
+        setSpi6TSDATA(spi6TimeSeries.map((val, i) => [val, spi6Data[i]]));
+        setSpi9TSDATA(spi9TimeSeries.map((val, i) => [val, spi9Data[i]]));
+        setSpi12TSDATA(spi12TimeSeries.map((val, i) => [val, spi12Data[i]]));
+        setSpi24TSDATA(spi24TimeSeries.map((val, i) => [val, spi24Data[i]]));
+    }, [tempData, precipData, spei3Data, tempTimeSeries, precipTimeSeries, spei3TimeSeries, spei24TimeSeries, spei9TimeSeries, spei6TimeSeries, spei12TimeSeries, spi3TimeSeries, spi6TimeSeries, spi9TimeSeries, spi12TimeSeries, spi24TimeSeries]);
 
     useEffect(() => {
         if (!tempTSDATA || !precipTSDATA) return;
@@ -304,84 +391,108 @@ const HistoricClimateData1 = () => {
                 intl,
                 precipTSDATA,
                 tempTSDATA,
-                spei3TSDATA,
-                spei24TSDATA,
-                spei9TSDATA,
-                spei6TSDATA,
-                spei12TSDATA,
             ));
         }
                 
     }, [isComparisonMode, precipData1, precipData2, tempData1, tempData2, tempTSDATA, precipTSDATA, yearLeft, yearRight]);
     
     useEffect(() => {
-        let speiVarLeft;
+        let indicatorVarLeft;
         if (varLeft === "temp" || varLeft === "precip") {
-            speiVarLeft = "spei3";
+            indicatorVarLeft = "spei9";
         } else {
-            speiVarLeft = varLeft;
+            indicatorVarLeft = varLeft;
         }
 
-        let speiVarRight;
+        let indicatorVarRight;
         if (varRight === "temp" || varRight === "precip") {
-            speiVarRight = "spei6";
+            indicatorVarRight = "spei9";
         } else {
-            speiVarRight = varRight;
+            indicatorVarRight = varRight;
         }
 
-        let speiDataLeft;
+        let DataLeft;
 
         switch (varLeft) {
             case "spei3":
-                speiDataLeft = spei3TSDATA;
+                DataLeft = spei3TSDATA;
                 break;
             case "spei6":
-                speiDataLeft = spei6TSDATA;
+                DataLeft = spei6TSDATA;
                 break;
             case "spei9":
-                speiDataLeft = spei9TSDATA;
+                DataLeft = spei9TSDATA;
                 break;
             case "spei12":
-                speiDataLeft = spei12TSDATA;
+                DataLeft = spei12TSDATA;
                 break;
             case "spei24":
-                speiDataLeft = spei24TSDATA;
+                DataLeft = spei24TSDATA;
+                break;
+            case "spi3":
+                DataLeft = spi3TSDATA;
+                break;
+            case "spi6":
+                DataLeft = spi6TSDATA;
+                break;
+            case "spi9":
+                DataLeft = spi9TSDATA;
+                break;
+            case "spi12":
+                DataLeft = spi12TSDATA;
+                break;
+            case "spi24":
+                DataLeft = spi24TSDATA;
                 break;
             default:
-                speiDataLeft = spei3TSDATA;
+                DataLeft = spei9TSDATA;
         }
 
-        let speiDataRight;
+        let DataRight;
 
         switch (varRight) {
             case "spei3":
-                speiDataRight = spei3TSDATA;
+                DataRight = spei3TSDATA;
                 break;
             case "spei6":
-                speiDataRight = spei6TSDATA;
+                DataRight = spei6TSDATA;
                 break;
             case "spei9":
-                speiDataRight = spei9TSDATA;
+                DataRight = spei9TSDATA;
                 break;
             case "spei12":
-                speiDataRight = spei12TSDATA;
+                DataRight = spei12TSDATA;
                 break;
             case "spei24":
-                speiDataRight = spei24TSDATA;
+                DataRight = spei24TSDATA;
+                break;
+            case "spi3":
+                DataRight = spi3TSDATA;
+                break;
+            case "spi6":
+                DataRight = spi6TSDATA;
+                break;
+            case "spi9":
+                DataRight = spi9TSDATA;
+                break;
+            case "spi12":
+                DataRight = spi12TSDATA;
+                break;
+            case "spi24":
+                DataRight = spi24TSDATA;
                 break;
             default:
-                speiDataRight = spei6TSDATA;
+                DataRight = spei9TSDATA;
         }
 
         setSpeiChartOptions(CS02_SPEIfullTimeSeriesChartOptions(
             intl,
-            speiDataLeft,
-            speiDataRight,
-            speiVarLeft,
-            speiVarRight,
+            DataLeft,
+            DataRight,
+            indicatorVarLeft,
+            indicatorVarRight,
         ))
-    }, [spei24TSDATA, spei3TSDATA, spei9TSDATA, spei6TSDATA, spei12TSDATA, varLeft, varRight]);
-
+    }, [spei24TSDATA, spei3TSDATA, spei9TSDATA, spei6TSDATA, spei12TSDATA, spi3TSDATA, spi6TSDATA, spi9TSDATA, spi12TSDATA, spi24Data, varLeft, varRight]);
     
     useEffect(() => {
         if(mapModel.map){

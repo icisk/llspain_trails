@@ -2,7 +2,7 @@
 import React from "react";
 import {Box, Text} from "@open-pioneer/chakra-integration";
 import {useIntl} from "open-pioneer:react-hooks";
-import {phenoColors, speicolors, uncertaintyColors} from "../utils/globals";
+import {phenoColors, phenocolors_SU, speicolors, uncertaintyColors} from "../utils/globals";
 
 //temperature colors
 const pink = '#eb7fe9BC'
@@ -74,8 +74,21 @@ export const DynamicLegend = ({ variable, position }: { variable: string, positi
             { value: 2, color: speicolors.very_wet, label: "1.5 - 2" },
             { value: 3, color: speicolors.extrem_wet, label: "> 2" }
         ]
+    } else if (variable.startsWith("spi")){
+        text = intl.formatMessage({id: "global.vars.SPI"})
+        colorMapping = [
+            { value: -2, color: speicolors.extrem_dry, label: "< -2" },
+            { value: -1.5, color: speicolors.very_dry, label: "-2 - -1.5" },
+            { value: -1, color: speicolors.dry, label: "-1.5 - -1" },
+            { value: -0.25, color: speicolors.little_dry, label: "-1 - -0.25" },
+            { value: 0.25, color:speicolors.normal, label: "-0.25 - 0.25" },
+            { value: 1, color: speicolors.little_wet, label: "0.25 - 1" },
+            { value: 1.5, color: speicolors.wet, label: "1 - 1.5" },
+            { value: 2, color: speicolors.very_wet, label: "1.5 - 2" },
+            { value: 3, color: speicolors.extrem_wet, label: "> 2" }
+        ]
     } else if (variable === "CDD"){
-        text = intl.formatMessage({id: "global.vars.csd"})
+        text = intl.formatMessage({id: "global.vars.cdd"})
         colorMapping = [
             { value: 0, color: phenoColors.cdd_01, label: "0 - 20 días" },
             { value: 20, color: phenoColors.cdd_02, label: "21 - 40 días" },
@@ -90,9 +103,26 @@ export const DynamicLegend = ({ variable, position }: { variable: string, positi
             { value: 2, color: uncertaintyColors.yellow, label: intl.formatMessage({id: "global.legend.uncertainty.yellow"})},
             { value: 3, color: uncertaintyColors.green, label: intl.formatMessage({id: "global.legend.uncertainty.green"})},
         ]
+    } else if (variable === "CSU"){
+        text = intl.formatMessage({id: "global.vars.csu"})
+        colorMapping = [
+            { value: 0, color: phenoColors.cdd_01, label: "0 - 20 días" },
+            { value: 20, color: phenoColors.cdd_02, label: "21 - 40 días" },
+            { value: 40, color: phenoColors.cdd_03, label: "41 - 60 días" },
+            { value: 60, color: phenoColors.cdd_04, label: "61 - 80 días" },
+            { value: 80, color: phenoColors.cdd_05, label: "81 - 100 días" },
+        ];
+    } else if (variable === "SU") {
+        text = intl.formatMessage({ id: "global.vars.su" });
+        colorMapping = [
+            { value: 0, color: phenocolors_SU.su_01, label: intl.formatMessage({ id: "global.legend.su.su_01" }) },
+            { value: 3, color: phenocolors_SU.su_02, label: intl.formatMessage({ id: "global.legend.su.su_02" }) },
+            { value: 5, color: phenocolors_SU.su_03, label: intl.formatMessage({ id: "global.legend.su.su_03" }) },
+            { value: 7, color: phenocolors_SU.su_04, label: intl.formatMessage({ id: "global.legend.su.su_04" }) },
+            { value: 9, color: phenocolors_SU.su_05, label: intl.formatMessage({ id: "global.legend.su.su_05" }) },
+        ];
     }
-    
-    
+  
     const positionStyle = position === "right" ? { right: "10px" } : { left: "10px" };
 
     return (
@@ -100,7 +130,7 @@ export const DynamicLegend = ({ variable, position }: { variable: string, positi
             position="absolute"
             top="10px"
             {...positionStyle}
-            bg="white"
+            bg="#efefef"
             p={2}
             borderRadius="md"
             boxShadow="md"

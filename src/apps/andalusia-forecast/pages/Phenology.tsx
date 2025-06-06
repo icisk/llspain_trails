@@ -34,24 +34,10 @@ import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
 import {PhenologyLegend} from "../components/Legends/PhenologyLegend";
 import React, {useEffect, useState} from "react";
-import {DynamicLegend} from "../components/Legends/DynamicLegend";
+import { DynamicLegend } from "../components/Legends/DynamicLegend";
 import {header} from "typedoc/dist/lib/output/themes/default/partials/header";
 import description = meta.docs.description;
 import {InfoTooltip} from "../components/InfoTooltip/InfoTooltip";
-
-
-function getSeasonLabel(date) {
-    const month = date.getMonth() + 1; // months are 0-indexed
-    const year = date.getFullYear();
-
-    let season;
-    if (month >= 3 && month <= 5) season = "Primavera";
-    else if (month >= 6 && month <= 8) season = "Verano";
-    else if (month >= 9 && month <= 11) season = "Otoño";
-    else season = "Invierno";
-
-    return `${year} ${season}`;
-}
 
 
 export function Phenology() {
@@ -59,6 +45,7 @@ export function Phenology() {
     const intl = useIntl();
     const [sliderValue, setSliderValue] = useState(0);
     const [metadata, setMetadata] = useState({"time": []});
+    const [metadata_SU, setMetadata_SU] = useState({"time": []});
     const [clickedCoordinates, setClickedCoordinates] = useState<number[] | null>(null);
     const [currentLayer, setCurrentLayer] = useState<any>(null); // State to keep track of the current layer
     const bioDataHandler = useService<BioindicatorLayerHandler>("app.BioindicatorLayerHandler");
@@ -81,6 +68,25 @@ export function Phenology() {
 
     const [selectedIndicator, setSelectedIndicator] = useState("CDD");
 
+    function getSeasonLabel(date) {
+        if (selectedIndicator === "SU") {
+            const oneDayInMs = 24 * 60 * 60 * 1000; // 24 Stunden in Millisekunden
+            const nextDay = new Date(date.getTime() + oneDayInMs);
+            return nextDay.toISOString().split('T')[0]; // YYYY-MM-DD
+        }
+
+        const month = date.getMonth() + 1; // months are 0-indexed
+        const year = date.getFullYear();
+    
+        let season;
+        if (month >= 3 && month <= 5) season = "Primavera";
+        else if (month >= 6 && month <= 8) season = "Verano";
+        else if (month >= 9 && month <= 11) season = "Otoño";
+        else season = "Invierno";
+    
+        return `${year} ${season}`;
+    }
+
     useEffect(() => {
         bioDataHandler.setIndicator(selectedIndicator);
     }, [selectedIndicator]);
@@ -94,6 +100,16 @@ export function Phenology() {
             .then(data => setMetadata(data))
             .catch(error => console.error("Fetch error:", error));
 
+    }, []);
+
+    useEffect(() => {
+        fetch("https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/spain/agro_indicator/SU/SU_metadata.json")
+            .then(response => {
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                return response.json();
+            })
+            .then(data => setMetadata_SU(data))
+            .catch(error => console.error("Fetch error:", error));
     }, []);
     
     useEffect(() => {
@@ -121,18 +137,31 @@ export function Phenology() {
         const marker = createMarker(coordinatesEPSG3857, markerStyle)
         markerSource.addFeature(marker);
     };
+
     const dateObjects = metadata.time.map(dateStr => new Date(dateStr));
+    const dateObjects_SU = metadata_SU.time.map(dateStr => new Date(dateStr));
 
 
-    useEffect(() => {        
-        const dateObjects = metadata.time.map(dateStr => new Date(dateStr));
-        if (!mapModel?.map?.olMap || !dateObjects.length) return;
-        const date = dateObjects[sliderValue];
-        const localDate = new Date(date.getTime() + 12 * 60 * 60 * 1000); // Add 12 hours
-        const formattedDate = localDate.toISOString().split('T')[0];
-        bioDataHandler.setDate(formattedDate);
-        //console.log(formattedDate)
-    }, [sliderValue]);
+    useEffect(() => {
+        let dateObjects: Date[] = [];
+        if (selectedIndicator === "CDD" || selectedIndicator === "CSU") {
+            dateObjects = metadata.time.map(dateStr => new Date(dateStr));
+        } else if (selectedIndicator === "SU") {
+            dateObjects = metadata_SU.time.map(dateStr => new Date(dateStr));
+        }
+
+        if (sliderValue < 0 || sliderValue >= dateObjects.length) {
+            setSliderValue(0); // Reset to 0 if out of bounds
+            return;
+        } else {
+            if (!mapModel?.map?.olMap || !dateObjects.length) return;
+            const date = dateObjects[sliderValue];
+            const localDate = new Date(date.getTime() + 12 * 60 * 60 * 1000); // Add 12 hours
+            const formattedDate = localDate.toISOString().split('T')[0];
+
+            bioDataHandler.setDate(formattedDate);
+        }
+    }, [sliderValue, selectedIndicator, metadata, metadata_SU, mapModel]);
 
      useEffect(() => {
          if (clickedCoordinates && dateObjects.length > 0){
@@ -142,7 +171,7 @@ export function Phenology() {
 
             let url: string;
             if (selectedIndicator === "SU") {
-                url = `https://i-cisk.dev.52north.org/data/collections/sis-agroclimatic-indicators_201104_spain_SU/position?f=json&coords=POINT(${x}%20${y})&parameter-name=SU`;
+                url = `https://i-cisk.dev.52north.org/data/collections/sis-agroclimatic-indicators_201101_spain_SU/position?f=json&coords=POINT(${x}%20${y})&parameter-name=SU`;
             } else if (selectedIndicator === "CSU") {
                 url = `https://i-cisk.dev.52north.org/data/collections/sis-agroclimatic-indicators_201104_spain_CSU/position?f=json&coords=POINT(${x}%20${y})&parameter-name=CSU`;
             } else {
@@ -152,25 +181,73 @@ export function Phenology() {
              //console.log(`https://i-cisk.dev.52north.org/data/collections/sis-agroclimatic-indicators_2011-04-16%2000:00:00+00:00_None_CDD/position?f=json&coords=POINT(${x}%20${y})&parameter-name=CDD`)
              fetch(url)
                  .then(response => response.json())
-                 .then(data => setIndicatorValues(data.ranges[selectedIndicator].values))
+                 .then(data => {
+                    if (data?.ranges?.[selectedIndicator]?.values) {
+                        if (selectedIndicator === "SU") {
+                            const limitedValues = data.ranges[selectedIndicator].values.slice(0, 1080);
+                            setIndicatorValues(limitedValues);
+                        } else {
+                            setIndicatorValues(data.ranges[selectedIndicator].values);
+                        }
+                    } else {
+                        console.warn("No values found for indicator:", selectedIndicator);
+                        setIndicatorValues([]);
+                    }
+                })
                  .catch(error => console.error('Error fetching data:', error))
-                 .finally(() => setChartLoading(false))            
-
+                 .finally(() => setChartLoading(false))
          }
     }, [clickedCoordinates, selectedIndicator]);
+
+    function generateSUDateLabels(): string[] {
+        const labels: string[] = [];
+        const startYear = 2011;
+        const endYear = 2040;
+        const days = [5, 15, 25];
+    
+        for (let year = startYear; year <= endYear; year++) {
+            for (let month = 0; month < 12; month++) {
+                for (const day of days) {
+                    const date = new Date(year, month, day);
+                    const label = date.toLocaleDateString('sv-SE'); // YYYY-MM-DD
+                    labels.push(label);
+                }
+            }
+        }
+    
+        return labels;
+    }
+    
 
     useEffect(() => {
         if (IndicatorValues.length > 0) {
             let iso_dates = dateObjects.map((date) => date.toISOString().split('T')[0]);
             let seasonLabels = dateObjects.map(date => getSeasonLabel(date)); // Convert dates to season labels
 
-
-            setChartOptions(prevOptions => ({
-                ...prevOptions,
-                title: { text: intl.formatMessage({ id: "phenology.plot.title" }) },
-                xAxis: { ...prevOptions.xAxis, categories: seasonLabels },
-                series: [{ ...prevOptions.series[0], data: IndicatorValues }]
-            }));
+            if (selectedIndicator === "CDD") {
+                setChartOptions(prevOptions => ({
+                    ...prevOptions,
+                    title: { text: intl.formatMessage({ id: "phenology.plot.title_cdd" }) },
+                    xAxis: { ...prevOptions.xAxis, categories: seasonLabels },
+                    series: [{ ...prevOptions.series[0], data: IndicatorValues }]
+                }));
+            } else if (selectedIndicator === "CSU") {
+                setChartOptions(prevOptions => ({
+                    ...prevOptions,
+                    title: { text: intl.formatMessage({ id: "phenology.plot.title_csu" }) },
+                    xAxis: { ...prevOptions.xAxis, categories: seasonLabels },
+                    series: [{ ...prevOptions.series[0], data: IndicatorValues }]
+                }));
+            }
+            else if (selectedIndicator === "SU") {
+                const suDateLabels = generateSUDateLabels();
+                setChartOptions(prevOptions => ({
+                    ...prevOptions,
+                    title: { text: intl.formatMessage({ id: "phenology.plot.title_su" }) },
+                    xAxis: { ...prevOptions.xAxis, categories: suDateLabels },
+                    series: [{ ...prevOptions.series[0], data: IndicatorValues }]
+                }));
+            }
 
             setChartLoading(false); 
         }
@@ -236,11 +313,13 @@ export function Phenology() {
             </Box>
                 <Box mt={5}>
                     <VStack>
-                        {metadata.time.length > 0 && (
+                    {metadata.time.length > 0 && (
+                    <>
+                        {(selectedIndicator === "CDD" || selectedIndicator === "CSU") && (
                             <>
                                 <Box mt={2}>
                                     <p>
-                                        Seleccione el período entre: {" "}
+                                        Seleccione el período entre:{" "}
                                         {dateObjects?.[0] && getSeasonLabel(dateObjects[0])} -{" "}
                                         {dateObjects?.length > 0 && getSeasonLabel(dateObjects[dateObjects.length - 1])}
                                     </p>
@@ -275,14 +354,62 @@ export function Phenology() {
                                         })}
                                     </SliderTrack>
                                     <SliderThumb boxSize={30} bg="blue.450" />
-
                                 </Slider>
-
                                 <Box mt={2} textAlign="center" fontSize="lg" fontWeight="bold">
-                                    {getSeasonLabel(dateObjects[sliderValue])}
+                                {dateObjects[sliderValue]
+                                    ? getSeasonLabel(dateObjects[sliderValue])
+                                    : "Loading..."}
                                 </Box>
                             </>
                         )}
+                        {(selectedIndicator === "SU") && (
+                            <>
+                                <Box mt={2}>
+                                    <p>
+                                        Seleccione el período entre:{" "}
+                                        {dateObjects_SU?.[0] && dateObjects_SU[0].getFullYear()} –{" "}
+                                        {dateObjects_SU?.[dateObjects_SU.length - 1] &&
+                                            dateObjects_SU[dateObjects_SU.length - 1].getFullYear()}
+                                    </p>
+                                </Box>
+                                <Slider
+                                    min={0}
+                                    max={dateObjects_SU.length - 1}
+                                    step={1}
+                                    value={sliderValue}
+                                    onChange={(value) => setSliderValue(value)}
+                                >
+                                    <SliderTrack bg="gray.200">
+                                        <SliderFilledTrack bg="blue.450" />
+                                        {dateObjects_SU.map((date, index) => {
+                                            const year = date.getFullYear();
+                                            const isFirstOfYear = index === 0 || dateObjects_SU[index - 1].getFullYear() !== year;
+                                            const isFifthYear = isFirstOfYear && year % 5 === 0;
+                                            return (
+                                                isFirstOfYear && (
+                                                    <Box
+                                                        key={year}
+                                                        position="absolute"
+                                                        left={`${(index / (dateObjects_SU.length - 1)) * 100}%`}
+                                                        bottom="-8px"
+                                                        width="2px"
+                                                        height={isFifthYear ? "30px" : "10px"}
+                                                        bg="black"
+                                                    />
+                                                )
+                                            );
+                                        })}
+                                    </SliderTrack>
+                                    <SliderThumb boxSize={30} bg="blue.450" />
+                                </Slider>
+                                <Box mt={2} textAlign="center" fontSize="lg" fontWeight="bold">
+                                    {getSeasonLabel(dateObjects_SU[sliderValue])}
+                                </Box>
+                            </>
+                        )}
+                    </>
+                )}
+
                     </VStack>
                 </Box>
 
@@ -300,7 +427,7 @@ export function Phenology() {
                     <Box mb={4}>
                         <CoordsScaleBar MAP_ID={MAP_ID} />
                     </Box>
-                    <DynamicLegend position={"right"} variable={"CDD"} />
+                    <DynamicLegend position={"right"} variable={selectedIndicator} />
 
                 </Box>
 

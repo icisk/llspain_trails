@@ -96,7 +96,7 @@ export const phenoColors = {
     "cdd_02": "rgba(42,202,130,0.75)",    // Light Blue (21 - 40 days)
     "cdd_03": "rgba(255, 255, 0, 0.75)",   // Yellow (41 - 60 days)
     "cdd_04": "rgba(255, 165, 0, 0.75)",   // Orange (61 - 80 days)
-    "cdd_05": "rgba(255, 0, 0, 0.75)"      // Red (81 - 100 days)
+    "cdd_05": "rgba(255, 0, 0, 0.75)",     // Red (81 - 100 days)
 };
 const boundaries_pheno = [-10, 0, 20, 40, 60, 80, 100];
 const gradientColors_pheno = [
@@ -111,6 +111,26 @@ export const phenoColorGradient = [
     ...boundaries_pheno.flatMap((boundary) => [boundary, colorScale_pheno(boundary).hex()])
 ];
 
+export const phenocolors_SU = {
+    "su_01": "rgba(0, 191, 255, 0.75)",   // Blue (0 - 2 days)
+    "su_02": "rgba(42,202,130,0.75)",    // Light Blue (3 - 4 days)
+    "su_03": "rgba(255, 255, 0, 0.75)",   // Yellow (5 - 6 days)
+    "su_04": "rgba(255, 165, 0, 0.75)",   // Orange (7 - 8 days)
+    "su_05": "rgba(255, 0, 0, 0.75)",     // Red (9 - 11 days)
+}
+
+const boundaries_pheno_SU = [-10, 0, 3, 5, 7, 9, 11];
+const gradientColors_pheno_SU = [
+    tempColors.black,
+    ...Object.values(phenocolors_SU)
+];
+const colorScale_pheno_SU = chroma.scale(gradientColors_pheno_SU).domain(boundaries_pheno_SU).mode('lab');
+export const phenoColorGradient_SU = [
+    "interpolate",
+    ["linear"],
+    ["band", 1],
+    ...boundaries_pheno_SU.flatMap((boundary) => [boundary, colorScale_pheno_SU(boundary).hex()])
+];
 
 export const stationValueColors = {
     red: "#e01616", //#e01616

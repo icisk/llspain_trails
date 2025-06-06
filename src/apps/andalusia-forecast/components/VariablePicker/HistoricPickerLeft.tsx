@@ -30,10 +30,12 @@ export function HistoricPickerLeft(props: HistoricPickerProps) {
     const meta_precip = 'https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/creaf_historic_precip_metrics.zarr/.zmetadata';
     const meta_temp = 'https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/creaf_historic_temperature_metrics.zarr/.zmetadata';
 
-    const [mainVar, setMainVar] = useState(currentVar.startsWith("spei") ? "indicators" : currentVar);
-
+    const [mainVar, setMainVar] = useState(
+        currentVar.startsWith("spei") || currentVar.startsWith("spi") ? "indicators" : currentVar
+    );
+    
     useEffect(() => {
-        setMainVar(currentVar.startsWith("spei") ? "indicators" : currentVar);
+        setMainVar(currentVar.startsWith("spei") || currentVar.startsWith("spi") ? "indicators" : currentVar);
     }, [currentVar]);
 
     useEffect(() => {
@@ -80,23 +82,31 @@ export function HistoricPickerLeft(props: HistoricPickerProps) {
             return timeSeries;
         }
 
-        if (currentVar.startsWith("spei")) {
-            const map: Record<string, string> = {
+        if (currentVar.startsWith("spei") || currentVar.startsWith("spi")) {
+
+            let indicatorType = currentVar.startsWith("spei") ? "SPEI" : "SPI";
+
+            const map = {
                 spei3: "3months",
                 spei6: "6months",
                 spei9: "9months",
                 spei12: "12months",
-                spei24: "24months"
+                spei24: "24months",
+                spi3: "3months",
+                spi6: "6months",
+                spi9: "9months",
+                spi12: "12months",
+                spi24: "24months"
             };
 
-            const link = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_${map[currentVar]}/position?coords=POINT(0 0)&f=json`;
+            const link = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_${indicatorType}_${map[currentVar]}/position?coords=POINT(0 0)&f=json`;
 
             fetch(link)
                 .then((res) => res.json())
-                .then((speiMetadata) => {
-                    const speiMetrics = speiMetadata?.domain?.axes?.time;
-                    if (!speiMetrics) throw new Error('Missing SPEI time axis data.');
-                    const timeSeries = coords2TS(speiMetrics.start, speiMetrics.stop, speiMetrics.num);
+                .then((indicatorMetadata) => {
+                    const indicatorMetrics = indicatorMetadata?.domain?.axes?.time;
+                    if (!indicatorMetrics) throw new Error('Missing time axis data.');
+                    const timeSeries = coords2TS(indicatorMetrics.start, indicatorMetrics.stop, indicatorMetrics.num);
 
                     const yearMonthMap: Record<number, Set<number>> = {};
                     timeSeries.forEach((timestamp) => {
@@ -178,12 +188,17 @@ export function HistoricPickerLeft(props: HistoricPickerProps) {
                                 value={currentVar}
                                 onChange={(e) => props.onChange("var", e.target.value)}
                                 width="100%"
-                            >
+                            >   
                                 <option value="spei3">{intl.formatMessage({ id: "global.vars.spei3" })}</option>
                                 <option value="spei6">{intl.formatMessage({ id: "global.vars.spei6" })}</option>
                                 <option value="spei9">{intl.formatMessage({ id: "global.vars.spei9" })}</option>
                                 <option value="spei12">{intl.formatMessage({ id: "global.vars.spei12" })}</option>
                                 <option value="spei24">{intl.formatMessage({ id: "global.vars.spei24" })}</option>
+                                <option value="spi3">{intl.formatMessage({ id: "global.vars.spi3" })}</option>
+                                <option value="spi6">{intl.formatMessage({ id: "global.vars.spi6" })}</option>
+                                <option value="spi9">{intl.formatMessage({ id: "global.vars.spi9" })}</option>
+                                <option value="spi12">{intl.formatMessage({ id: "global.vars.spi12" })}</option>
+                                <option value="spi24">{intl.formatMessage({ id: "global.vars.spi24" })}</option>
                             </Select>
                         )}
                         <a href = {urlLeft} target="_blank" rel="noopener noreferrer">

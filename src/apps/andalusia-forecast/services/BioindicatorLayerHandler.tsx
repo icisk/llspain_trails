@@ -6,6 +6,7 @@ import {reactive, Reactive} from "@conterra/reactivity-core";
 import {MAP_ID} from "./BioindicatorMapProvider";
 import {
     phenoColorGradient,
+    phenoColorGradient_SU
 
 } from "../components/utils/globals";
 import {GeoTIFF} from "ol/source";
@@ -54,7 +55,14 @@ export class BioindicatorLayerHandlerImpl implements BioindicatorLayerHandler {
         const newSource = await this.createSource();
         if (newSource) {
             this.tiflayer?.setSource(newSource);
-            this.tiflayer?.setStyle({ color: phenoColorGradient});
+
+            if (this.#currentIndicator.value === 'SU') {
+                this.tiflayer?.setStyle({ color: phenoColorGradient_SU });
+            } else if (this.#currentIndicator.value === 'CSU') {
+                this.tiflayer?.setStyle({ color: phenoColorGradient });
+            } else {
+                this.tiflayer?.setStyle({ color: phenoColorGradient });
+            }
         }
     }
 
@@ -69,7 +77,7 @@ export class BioindicatorLayerHandlerImpl implements BioindicatorLayerHandler {
         if (this.#currentIndicator.value === 'SU') {
             const originalDateStr = this.#currentDate.value;
             const originalDate = new Date(originalDateStr);
-            originalDate.setDate(originalDate.getDate() - 1);
+            originalDate.setDate(originalDate.getDate());
 
             const adjustedDateStr = originalDate.toISOString().split('T')[0];
 

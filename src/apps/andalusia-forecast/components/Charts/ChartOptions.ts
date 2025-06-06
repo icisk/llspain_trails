@@ -188,13 +188,13 @@ export const CS02_TPfullTimeSeriesChartOptions =(
 
 export const CS02_SPEIfullTimeSeriesChartOptions =(
     intl,
-    speiDataLeft,
-    speiDataRight,
+    DataLeft,
+    DataRight,
     varLeft,
     varRight
     ) => ({
     chart: { type: "column", zoomType: "x" },
-    title: { text: intl.formatMessage({ id: "global.plot.header_spei" }) },
+    title: { text: intl.formatMessage({ id: "global.plot.header_indicator" }) },
     xAxis: { type: 'datetime',
         title: {text: intl.formatMessage({ id: "global.vars.date" })},
         categories: undefined,
@@ -210,14 +210,14 @@ export const CS02_SPEIfullTimeSeriesChartOptions =(
     series: [
         {
             name: intl.formatMessage({ id: `global.vars.${varLeft}` }),
-            data: speiDataLeft || [],
+            data: DataLeft || [],
             type: "spline",
             color: "#FF6961",
             yAxis: 0
         },
         {
             name: intl.formatMessage({ id: `global.vars.${varRight}` }),
-            data: speiDataRight || [],
+            data: DataRight || [],
             type: "spline",
             color: "#FFD600",
             yAxis: 0
