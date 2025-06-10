@@ -31,7 +31,7 @@ import {
     espanolChartOptions,
     CS02_initChartOptions,
     CS02_compareChartOptions,
-    CS02_TPfullTimeSeriesChartOptions, 
+    CS02_TPfullTimeSeriesChartOptions,
     CS02_SPEIfullTimeSeriesChartOptions,
 } from "../components/Charts/ChartOptions";
 
@@ -67,7 +67,7 @@ const HistoricClimateData1 = () => {
     const [leftLayers, setLeftLayers]= useState<Layer[]>();
     const [rightLayers, setRightLayers]= useState<Layer[]>();
     const [sliderValue, setSliderValue] = useState<number>(50);
-    
+
     const [clickedCoordinates, setClickedCoordinates] = useState<number[] | null>(null);
     const [yearLeft, setYearLeft] = useState<number>(2000);
     const [yearRight, setYearRight] = useState<number>(2005);
@@ -81,7 +81,7 @@ const HistoricClimateData1 = () => {
     //states for single mode
     // const [tempprecipData, setTempPrecipData] = useState(null);
     // const [speiData, setSpeiData] = useState(null);
-    
+
     const [precipData, setPrecipData] = useState(null);
     const [tempData, setTempData] = useState(null);
     const [spei3Data, setSpei3Data] = useState(null);
@@ -97,7 +97,7 @@ const HistoricClimateData1 = () => {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    
+
     const [precipTimeSeries, setPrecipTimeSeries] = useState<String>(null)
     const [tempTimeSeries, setTempTimeSeries] = useState<String>(null)
     const [spei3TimeSeries, setSpei3TimeSeries] = useState<String>(null)
@@ -112,7 +112,7 @@ const HistoricClimateData1 = () => {
     const [spi24TimeSeries, setSpi24TimeSeries] = useState<String>(null)
 
     const [spiTimeSeries, setSpiTimeSeries] = useState<String>(null)
-    
+
     const [precipTSDATA, setPrecipTSDATA] = useState<String>(null)
     const [tempTSDATA, setTempTSDATA] = useState<String>(null)
     const [spei3TSDATA, setSpei3TSDATA] = useState<String>(null)
@@ -127,7 +127,7 @@ const HistoricClimateData1 = () => {
     const [spi24TSDATA, setSpi24TSDATA] = useState<String>(null)
 
     const [spiTSDATA, setSpiTSDATA] = useState<String>(null)
-    
+
     const [chartInstance, setChartInstance] = useState(null);
 
     const [isComparisonMode, setIsComparisonMode] = useState(false);
@@ -135,12 +135,12 @@ const HistoricClimateData1 = () => {
     const [chartOptions, setChartOptions] = useState(CS02_initChartOptions(intl));
     const [speiChartOptions, setSpeiChartOptions] = useState<ChartOptions>();
     const [spiChartOptions, setSpiChartOptions] = useState<ChartOptions>();
-    
-    
+
+
     const mapModel = useMapModel(MAP_ID);
 
-    //useEffect to get datetimes for Timeseries 
-    useEffect(() => {        
+    //useEffect to get datetimes for Timeseries
+    useEffect(() => {
         const meta2TS = (metaData) => {
             return Object.keys(metaData).map(timestamp => new Date(timestamp).getTime());
         }
@@ -161,7 +161,7 @@ const HistoricClimateData1 = () => {
 
             return timeSeries;
         }
-        
+
         const fetchMetaData = async () => {
 
             const tempMetadataUrl = "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/creaf_historic_temperature_metrics.zarr/.zmetadata";
@@ -212,7 +212,7 @@ const HistoricClimateData1 = () => {
                 const spi12Metrics = spi12Metadata?.domain.axes.time;
                 const spi24Metrics = spi24Metadata?.domain.axes.time;
 
-                
+
                 const tempTimeSeries = meta2TS(tempMetrics)
                 const precipTimeSeries = meta2TS(precipMetrics)
 
@@ -243,21 +243,21 @@ const HistoricClimateData1 = () => {
                 setSpi9TimeSeries(spi9TimeSeries);
                 setSpi12TimeSeries(spi12TimeSeries);
                 setSpi24TimeSeries(spi24TimeSeries);
-                
+
             } catch (err) {
                 setError(err.message);
             }
         };
-        
+
         fetchMetaData();
-        
-     
+
+
     }, []);
 
     //get values for full timeseries
     useEffect(() => {
         if (!clickedCoordinates) return;
-        
+
         const fetchData = async (x, y) => {
             const precipUrl = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_precip/position?coords=POINT(${x}%20${y})`;
             const tempUrl = `https://i-cisk.dev.52north.org/data/collections/creaf_historic_temperature/position?coords=POINT(${x}%20${y})`;
@@ -307,7 +307,7 @@ const HistoricClimateData1 = () => {
                 const spi9JsonData = await spi9Response.json();
                 const spi12JsonData = await spi12Response.json();
                 const spi24JsonData = await spi24Response.json();
-                
+
 
                 setPrecipData(precipJsonData?.ranges.historic_precip.values);
                 setTempData(tempJsonData?.ranges.historic_temperature.values);
@@ -323,7 +323,7 @@ const HistoricClimateData1 = () => {
                 setSpi9Data(spi9JsonData?.ranges.historic_SPI_9months.values);
                 setSpi12Data(spi12JsonData?.ranges.historic_SPI_12months.values);
                 setSpi24Data(spi24JsonData?.ranges.historic_SPI_24months.values);
-                
+
 
             } catch (err) {
                 setError(err.message);
@@ -332,7 +332,7 @@ const HistoricClimateData1 = () => {
             }
         };
         const [x, y] = clickedCoordinates;
-        
+
         fetchData(x, y);
         // console.log(speiData)
     }, [clickedCoordinates, isComparisonMode, yearRight, yearLeft, precipTimeSeries, tempTimeSeries, spei3TimeSeries, spei24TimeSeries, spei9TimeSeries, spei6TimeSeries, spei12TimeSeries, spi3TimeSeries, spi6TimeSeries, spi9TimeSeries, spi12TimeSeries, spi24TimeSeries]);
@@ -377,8 +377,8 @@ const HistoricClimateData1 = () => {
             if (!precipData1 || !precipData2 || !tempData1 || !tempData2) return;
 
             setChartOptions(CS02_compareChartOptions(
-                intl, 
-                months, 
+                intl,
+                months,
                 yearLeft,
                 yearRight,
                 tempData1,
@@ -386,16 +386,16 @@ const HistoricClimateData1 = () => {
                 precipData1,
                 precipData2))
         } else {
-            
+
             setChartOptions(CS02_TPfullTimeSeriesChartOptions(
                 intl,
                 precipTSDATA,
                 tempTSDATA,
             ));
         }
-                
+
     }, [isComparisonMode, precipData1, precipData2, tempData1, tempData2, tempTSDATA, precipTSDATA, yearLeft, yearRight]);
-    
+
     useEffect(() => {
         let indicatorVarLeft;
         if (varLeft === "temp" || varLeft === "precip") {
@@ -493,7 +493,7 @@ const HistoricClimateData1 = () => {
             indicatorVarRight,
         ))
     }, [spei24TSDATA, spei3TSDATA, spei9TSDATA, spei6TSDATA, spei12TSDATA, spi3TSDATA, spi6TSDATA, spi9TSDATA, spi12TSDATA, spi24Data, varLeft, varRight]);
-    
+
     useEffect(() => {
         if(mapModel.map){
             const map = mapModel.map;
@@ -510,9 +510,9 @@ const HistoricClimateData1 = () => {
             const olMap = mapModel.map.olMap;
             // add marker layer
             olMap.addLayer(markerLayer);
-            // attach click event handler 
+            // attach click event handler
             olMap.on("click", handleMapClick);
-            // Cleanup function 
+            // Cleanup function
             return () => {
                 olMap.removeLayer(markerLayer);
                 olMap.un("click", handleMapClick);
@@ -553,20 +553,20 @@ const HistoricClimateData1 = () => {
         } else if (field === 'month') {
 
             histLayerHandler.setMonthRight(value as number);
-            
+
         } else if (field === 'var') {
             histLayerHandler.setVarRight(value as string);
         }
     }
-    
+
     //HistoricClimateHook1(mapRef);
     HistoricClimateHook2(mapRef);
-    
+
     //console.log(histLayerHandler.currentVarLeft)
     useEffect(() => {
-        
+
     }, [histLayerHandler]);
-    
+
     return (
 <Box>
     <Header subpage={'historic_compare'} />
@@ -587,16 +587,16 @@ const HistoricClimateData1 = () => {
                                     <ZoomOut mapId={MAP_ID}/>
                                 </Flex>
                             </MapAnchor>
-                            
+
                         </MapContainer>
                     </Box>
                     <Box mb={4}>
                         <CoordsScaleBar MAP_ID={MAP_ID} />
-                    </Box>                   
+                    </Box>
 
                     <DynamicLegend variable={varLeft} position={'left'} />
                     <DynamicLegend variable={varRight} position={'right'} />
-                
+
             </Box>
 
             {(leftLayers && rightLayers && mapModel.map) &&
@@ -635,7 +635,7 @@ const HistoricClimateData1 = () => {
                         options={chartOptions}
                     />
                 </div>
-                <div>                    
+                <div>
                         <HighchartsReact
                             highcharts={Highcharts}
                             options={speiChartOptions}
