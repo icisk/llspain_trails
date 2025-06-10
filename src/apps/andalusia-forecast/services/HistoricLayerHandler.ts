@@ -208,31 +208,37 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
 
 
     private async createSourceLeft() {
-        let historicLayer: string;
+        let historicLayer: string = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/`;
         if (this.#currentVarLeft.value === "temp") {
-             historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}_MeanTemperature_v0.tif`;
+             historicLayer += `temp/COG_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}_MeanTemperature_v0.tif`;
         }  if (this.#currentVarLeft.value === "precip") {
-             historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/precip/COG_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}_precipitation_v1.tif`;
+             historicLayer += `precip/COG_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}_precipitation_v1.tif`;
+             //
+             // SPEI: tif
+             //
         } if (this.#currentVarLeft.value === "spei3") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_3months/COG_SPEI3_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tif`
-        } if (this.#currentVarLeft.value === "spei24") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_24months/COG_SPEI24_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tif`
-        } if (this.#currentVarLeft.value === "spei9") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_9months/COG_SPEI_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tif`
-        } if (this.#currentVarLeft.value === "spei12") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_12months/COG_SPEI12_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tif`
+            historicLayer += `data/SPEI/SPEI_3months/COG_SPEI3_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tif`
         } if (this.#currentVarLeft.value === "spei6") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_6months/COG_SPEI6_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tif`
+            historicLayer += `data/SPEI/SPEI_6months/COG_SPEI6_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tif`
+        } if (this.#currentVarLeft.value === "spei9") {
+            historicLayer += `data/SPEI/SPEI_9months/COG_SPEI_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tif`
+        } if (this.#currentVarLeft.value === "spei12") {
+            historicLayer += `data/SPEI/SPEI_12months/COG_SPEI12_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tif`
+        } if (this.#currentVarLeft.value === "spei24") {
+            historicLayer += `data/SPEI/SPEI_24months/COG_SPEI24_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tif`
+            //
+            // SPI: tiff
+            //
         } if (this.#currentVarLeft.value === "spi3") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPI/SPI_G_3months/COG_SPI_G3_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tif`
+            historicLayer += `data/SPI/SPI_G_3months/COG_SPI_G3_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tiff`
         } if (this.#currentVarLeft.value === "spi6") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPI/SPI_G_6months/COG_SPI_G6_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tif`
+            historicLayer += `data/SPI/SPI_G_6months/COG_SPI_G6_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tiff`
         } if (this.#currentVarLeft.value === "spi9") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPI/SPI_G_9months/COG_SPI_G9_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tif`
+            historicLayer += `data/SPI/SPI_G_9months/COG_SPI_G9_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tiff`
         } if (this.#currentVarLeft.value === "spi12") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPI/SPI_G_12months/COG_SPI_G12_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tif`
+            historicLayer += `data/SPI/SPI_G_12months/COG_SPI_G12_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tiff`
         } if (this.#currentVarLeft.value === "spi24") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPI/SPI_G_24months/COG_SPI_G24_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tif`
+            historicLayer += `data/SPI/SPI_G_24months/COG_SPI_G24_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tiff`
         }
 
         try {
@@ -259,31 +265,37 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
     }
 
     private async createSourceRight() {
-        let historicLayer: string;
+        let historicLayer: string = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/`;
         if (this.#currentVarRight.value === "temp") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}_MeanTemperature_v0.tif`;
+            historicLayer += `temp/COG_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}_MeanTemperature_v0.tif`;
         }  if (this.#currentVarRight.value === "precip") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/precip/COG_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}_precipitation_v1.tif`;
+            historicLayer += `precip/COG_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}_precipitation_v1.tif`;
+             //
+             // SPEI: tif
+             //
         } if (this.#currentVarRight.value === "spei3") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_3months/COG_SPEI3_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}.tif`
-        } if (this.#currentVarRight.value === "spei24") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_24months/COG_SPEI24_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}.tif`
-        } if (this.#currentVarRight.value === "spei9") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_9months/COG_SPEI_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}.tif`
-        } if (this.#currentVarRight.value === "spei12") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_12months/COG_SPEI12_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}.tif`
+            historicLayer += `data/SPEI/SPEI_3months/COG_SPEI3_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}.tif`
         } if (this.#currentVarRight.value === "spei6") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_6months/COG_SPEI6_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}.tif`
+            historicLayer += `data/SPEI/SPEI_6months/COG_SPEI6_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}.tif`
+        } if (this.#currentVarRight.value === "spei9") {
+            historicLayer += `data/SPEI/SPEI_9months/COG_SPEI_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}.tif`
+        } if (this.#currentVarRight.value === "spei12") {
+            historicLayer += `data/SPEI/SPEI_12months/COG_SPEI12_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}.tif`
+        } if (this.#currentVarRight.value === "spei24") {
+            historicLayer += `data/SPEI/SPEI_24months/COG_SPEI24_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}.tif`
+            //
+            // SPI: tiff
+            //
         } if (this.#currentVarRight.value === "spi3") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPI/SPI_G_3months/COG_SPI_G3_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}.tif`
+            historicLayer += `data/SPI/SPI_G_3months/COG_SPI_G3_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}.tiff`
         } if (this.#currentVarRight.value === "spi6") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPI/SPI_G_6months/COG_SPI_G6_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}.tif`
+            historicLayer += `data/SPI/SPI_G_6months/COG_SPI_G6_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}.tiff`
         } if (this.#currentVarRight.value === "spi9") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPI/SPI_G_9months/COG_SPI_G9_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}.tif`
+            historicLayer += `data/SPI/SPI_G_9months/COG_SPI_G9_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}.tiff`
         } if (this.#currentVarRight.value === "spi12") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPI/SPI_G_12months/COG_SPI_G12_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}.tif`
+            historicLayer += `data/SPI/SPI_G_12months/COG_SPI_G12_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}.tiff`
         } if (this.#currentVarRight.value === "spi24") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPI/SPI_G_24months/COG_SPI_G24_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}.tif`
+            historicLayer += `data/SPI/SPI_G_24months/COG_SPI_G24_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}.tiff`
         }
 
         try {
