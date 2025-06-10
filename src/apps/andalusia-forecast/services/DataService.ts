@@ -12,8 +12,8 @@ export async function fetchData(x: number, y: number): Promise<DataResponse | nu
     try {
         const response = await fetch(url);
         const data: DataResponse = await response.json();
-        const hasValidData = Object.values(data.ranges).some(range =>
-            range.values.some(value => value > -1e37 && value < 1e37)
+        const hasValidData = Object.values(data.ranges).some((range) =>
+            range.values.some((value) => value > -1e37 && value < 1e37)
         );
         return hasValidData ? data : null;
     } catch (error) {

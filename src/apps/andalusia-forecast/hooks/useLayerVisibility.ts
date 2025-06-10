@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { HistoricClimateMapProvider } from '../services/HistoricClimateMapProvider';
+import { useState, useEffect } from "react";
+import { HistoricClimateMapProvider } from "../services/HistoricClimateMapProvider";
 
 export const useLayerVisibility = (initialVisibility: boolean) => {
     const [isVisible, setIsVisible] = useState(initialVisibility);
