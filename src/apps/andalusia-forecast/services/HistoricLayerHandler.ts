@@ -188,21 +188,19 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
     }
 
     getColorStyleLeft() {
-        if (this.#currentVarLeft.value === "temp") {
-            return tempColorGradient;
-        }  if (this.#currentVarLeft.value === "precip") {
-            return precipColorGradient;
-        }  if (this.#currentVarLeft.value.startsWith("spei") || this.#currentVarLeft.value.startsWith("spi")) {
-            return speiColorGradient;
-        }
+        return this.getColorStyle(this.#currentVarLeft.value);
     }
     getColorStyleRight() {
-        if (this.#currentVarRight.value === "temp") {
-            return tempColorGradient;
-        }  if (this.#currentVarRight.value === "precip") {
-            return precipColorGradient;
-        } if (this.#currentVarRight.value.startsWith("spei") || this.#currentVarRight.value.startsWith("spi")) {
-            return speiColorGradient;
+        return this.getColorStyle(this.#currentVarRight.value);
+    }
+    getColorStyle(value: string) {
+        switch (value) {
+            case "temp":
+                return tempColorGradient;
+            case "precip":
+                return precipColorGradient;
+            default:
+                return speiColorGradient;
         }
     }
 
