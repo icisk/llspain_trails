@@ -109,7 +109,7 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
     get currentVarRight(): Variable {
         return this.#currentVarRight.value;
     }
-    async setVarLeft(variable: Variable): void {
+    async setVarLeft(variable: Variable): Promise<void> {
         this.#currentVarLeft.value = variable;
         const newSource = await this.createSourceLeft();
         if (newSource) {
@@ -132,7 +132,7 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
     get currentMonthRight(): Month {
         return this.#currentMonthRight.value;
     }
-    async setMonthLeft(month: Month): void {
+    async setMonthLeft(month: Month): Promise<void> {
         this.#currentMonthLeft.value = month;
         const source = await this.createSourceLeft();
         if (source) {
@@ -140,7 +140,7 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
             this.layerLeft?.setStyle({ color: this.getColorStyleLeft()});
         }
     }
-    async setMonthRight(month: Month): void {
+    async setMonthRight(month: Month): Promise<void> {
         this.#currentMonthRight.value = month;
         const source = await this.createSourceRight()
         if (source) {
@@ -156,7 +156,7 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
     get currentYearRight(): Year {
         return this.#currentYearRight.value;
     }
-    async setYearLeft(year: number): void {
+    async setYearLeft(year: number): Promise<void> {
         this.#currentYearLeft.value = year;
         const source = await this.createSourceLeft();
         if (source) {
@@ -164,7 +164,7 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
             this.layerLeft?.setStyle({ color: this.getColorStyleLeft()});
         }
     }
-    async setYearRight(year: number): void {
+    async setYearRight(year: number): Promise<void> {
         this.#currentYearRight.value = year;
         const source = await this.createSourceRight();
         if (source) {
