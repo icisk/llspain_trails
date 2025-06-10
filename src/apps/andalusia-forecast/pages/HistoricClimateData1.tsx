@@ -90,10 +90,10 @@ const HistoricClimateData1 = () => {
     const [precipData, setPrecipData] = useState(null);
     const [tempData, setTempData] = useState(null);
     const [spei3Data, setSpei3Data] = useState(null);
-    const [spei24Data, setSpei24Data] = useState(null);
-    const [spei9Data, setSpei9Data] = useState(null);
     const [spei6Data, setSpei6Data] = useState(null);
+    const [spei9Data, setSpei9Data] = useState(null);
     const [spei12Data, setSpei12Data] = useState(null);
+    const [spei24Data, setSpei24Data] = useState(null);
     const [spi3Data, setSpi3Data] = useState(null);
     const [spi6Data, setSpi6Data] = useState(null);
     const [spi9Data, setSpi9Data] = useState(null);
@@ -105,11 +105,13 @@ const HistoricClimateData1 = () => {
 
     const [precipTimeSeries, setPrecipTimeSeries] = useState<String>(null);
     const [tempTimeSeries, setTempTimeSeries] = useState<String>(null);
+
     const [spei3TimeSeries, setSpei3TimeSeries] = useState<String>(null);
-    const [spei24TimeSeries, setSpei24TimeSeries] = useState<String>(null);
-    const [spei9TimeSeries, setSpei9TimeSeries] = useState<String>(null);
     const [spei6TimeSeries, setSpei6TimeSeries] = useState<String>(null);
+    const [spei9TimeSeries, setSpei9TimeSeries] = useState<String>(null);
     const [spei12TimeSeries, setSpei12TimeSeries] = useState<String>(null);
+    const [spei24TimeSeries, setSpei24TimeSeries] = useState<String>(null);
+
     const [spi3TimeSeries, setSpi3TimeSeries] = useState<String>(null);
     const [spi6TimeSeries, setSpi6TimeSeries] = useState<String>(null);
     const [spi9TimeSeries, setSpi9TimeSeries] = useState<String>(null);
@@ -123,11 +125,13 @@ const HistoricClimateData1 = () => {
 
     const [precipTSDATA, setPrecipTSDATA] = useState<String>(null);
     const [tempTSDATA, setTempTSDATA] = useState<String>(null);
+
     const [spei3TSDATA, setSpei3TSDATA] = useState<String>(null);
-    const [spei24TSDATA, setSpei24TSDATA] = useState<String>(null);
-    const [spei9TSDATA, setSpei9TSDATA] = useState<String>(null);
     const [spei6TSDATA, setSpei6TSDATA] = useState<String>(null);
+    const [spei9TSDATA, setSpei9TSDATA] = useState<String>(null);
     const [spei12TSDATA, setSpei12TSDATA] = useState<String>(null);
+    const [spei24TSDATA, setSpei24TSDATA] = useState<String>(null);
+
     const [spi3TSDATA, setSpi3TSDATA] = useState<String>(null);
     const [spi6TSDATA, setSpi6TSDATA] = useState<String>(null);
     const [spi9TSDATA, setSpi9TSDATA] = useState<String>(null);
@@ -437,10 +441,10 @@ const HistoricClimateData1 = () => {
                     !precipResponse.ok ||
                     !tempResponse.ok ||
                     !spei3Response.ok ||
-                    !spei24Response.ok ||
-                    !spei9Response.ok ||
                     !spei6Response.ok ||
+                    !spei9Response.ok ||
                     !spei12Response.ok ||
+                    !spei24Response.ok ||
                     !spi3Response.ok ||
                     !spi6Response.ok ||
                     !spi9Response.ok ||
@@ -515,9 +519,10 @@ const HistoricClimateData1 = () => {
             !tempTimeSeries ||
             !precipTimeSeries ||
             !spei3TimeSeries ||
-            !spei9TimeSeries ||
             !spei6TimeSeries ||
+            !spei9TimeSeries ||
             !spei12TimeSeries ||
+            !spei24TimeSeries ||
             !spi3TimeSeries ||
             !spi6TimeSeries ||
             !spi9TimeSeries ||
@@ -547,10 +552,10 @@ const HistoricClimateData1 = () => {
         tempTimeSeries,
         precipTimeSeries,
         spei3TimeSeries,
-        spei24TimeSeries,
-        spei9TimeSeries,
         spei6TimeSeries,
+        spei9TimeSeries,
         spei12TimeSeries,
+        spei24TimeSeries,
         spi3TimeSeries,
         spi6TimeSeries,
         spi9TimeSeries,
@@ -688,11 +693,11 @@ const HistoricClimateData1 = () => {
                 setIndicatorDataRight(spei9TSDATA);
         }
     }, [
-        spei24TSDATA,
         spei3TSDATA,
-        spei9TSDATA,
         spei6TSDATA,
+        spei9TSDATA,
         spei12TSDATA,
+        spei24TSDATA,
         spi3TSDATA,
         spi6TSDATA,
         spi9TSDATA,
