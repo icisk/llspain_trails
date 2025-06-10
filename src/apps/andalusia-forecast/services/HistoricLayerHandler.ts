@@ -23,7 +23,7 @@ export enum Month {
     December = "12",
 }
 
-export enum Year  { "dummy" = 2000, 
+export enum Year  { "dummy" = 2000,
                     "dummy2" = 2005
 };
 
@@ -71,7 +71,7 @@ export interface HistoricLayerHandler extends DeclaredService<"app.HistoricLayer
     currentYearRight: Year;
     currentVarRight: Variable;
     currentUrlLeft: string;
-    currentUrlRight: string;   
+    currentUrlRight: string;
 }
 
 interface References {
@@ -91,7 +91,7 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
     #currentVarRight: Reactive<Variable> = reactive("temp");
     #currentUrlLeft: Reactive<string> = reactive("https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_2000_08_MeanTemperature_v0.tif");
     #currentUrlRight: Reactive<string> = reactive("https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_2005_01_MeanTemperature_v0.tif");
-   
+
     constructor(options: ServiceOptions<References>) {
         const { mapRegistry } = options.references;
         this.mapRegistry = mapRegistry;
@@ -125,7 +125,7 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
             this.layerRight?.setStyle({ color: this.getColorStyleRight() });
         }
     }
-    
+
     get currentMonthLeft(): Month {
         return this.#currentMonthLeft.value;
     }
@@ -146,10 +146,10 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
         if (source) {
             this.layerRight?.setSource(source);
             this.layerRight?.setStyle({ color: this.getColorStyleRight() });
-        }        
+        }
     }
 
-    
+
     get currentYearLeft(): Year {
         return this.#currentYearLeft.value;
     }
@@ -171,7 +171,7 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
             this.layerRight?.setSource(source);
             this.layerRight?.setStyle({ color: this.getColorStyleRight() });
         }
-        
+
     }
 
     get currentUrlLeft(): string {
@@ -249,7 +249,7 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
         } catch {
             return undefined;
         }
-        
+
         return new GeoTIFF({
             normalize: false,
             sources: [{url: historicLayer,
@@ -288,7 +288,7 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
 
         try {
             this.#currentUrlRight.value = historicLayer;
-            const response = await fetch(historicLayer, 
+            const response = await fetch(historicLayer,
                 {
                 method: "HEAD",
                 mode: "cors",
@@ -300,7 +300,7 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
         } catch {
             return undefined;
         }
-        
+
         return new GeoTIFF({
             normalize: false,
             sources: [{url: historicLayer,
@@ -308,5 +308,5 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
             }]
         });
     }
-    
+
 }
