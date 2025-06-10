@@ -121,8 +121,8 @@ catalogs:
       specifier: ~5.6.3
       version: 5.6.3
     vite:
-      specifier: ^5.4.9
-      version: 5.4.11
+      specifier: ^5.4.19
+      version: 5.4.19
     vite-plugin-eslint:
       specifier: ^1.8.1
       version: 1.8.1
@@ -156,7 +156,7 @@ importers:
         version: 0.1.0(@pnpm/logger@5.2.0)
       '@open-pioneer/vite-plugin-pioneer':
         specifier: 'catalog:'
-        version: 3.0.5(@open-pioneer/runtime@2.1.7(42fbu32fugpnb3fmv2gwarbetm))(sass@1.82.0)(vite@5.4.11(@types/node@18.19.41)(sass@1.82.0))
+        version: 3.0.5(@open-pioneer/runtime@2.1.7(42fbu32fugpnb3fmv2gwarbetm))(sass@1.82.0)(vite@5.4.19(@types/node@18.19.41)(sass@1.82.0))
       '@testing-library/dom':
         specifier: 'catalog:'
         version: 10.4.0
@@ -189,7 +189,7 @@ importers:
         version: 8.18.0(eslint@8.57.0)(typescript@5.6.3)
       '@vitejs/plugin-react-swc':
         specifier: 'catalog:'
-        version: 3.7.2(vite@5.4.11(@types/node@18.19.41)(sass@1.82.0))
+        version: 3.7.2(vite@5.4.19(@types/node@18.19.41)(sass@1.82.0))
       chroma-js:
         specifier: ^3.1.2
         version: 3.1.2
@@ -270,10 +270,10 @@ importers:
         version: 5.6.3
       vite:
         specifier: 'catalog:'
-        version: 5.4.11(@types/node@18.19.41)(sass@1.82.0)
+        version: 5.4.19(@types/node@18.19.41)(sass@1.82.0)
       vite-plugin-eslint:
         specifier: 'catalog:'
-        version: 1.8.1(eslint@8.57.0)(vite@5.4.11(@types/node@18.19.41)(sass@1.82.0))
+        version: 1.8.1(eslint@8.57.0)(vite@5.4.19(@types/node@18.19.41)(sass@1.82.0))
       vitest:
         specifier: 'catalog:'
         version: 2.1.9(@types/node@18.19.41)(happy-dom@15.11.7)(jsdom@25.0.1)(sass@1.82.0)
@@ -4583,8 +4583,8 @@ packages:
       eslint: '>=7'
       vite: '>=2'
 
-  vite@5.4.11:
-    resolution: {integrity: sha512-c7jFQRklXua0mTzneGW9QVyxFjUgwcihC4bXEtujIo2ouWCe1Ajt/amn2PCxYnhYfd5k09JX3SB7OYWFKYqj8Q==}
+  vite@5.4.19:
+    resolution: {integrity: sha512-qO3aKv3HoQC8QKiNSTuUM1l9o/XX3+c+VTgLHbJWHZGeTPVAg2XwazI9UWzoxjIJCGCV2zU60uqMzjeLZuULqA==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -6121,7 +6121,7 @@ snapshots:
       '@open-pioneer/runtime': 2.1.7(42fbu32fugpnb3fmv2gwarbetm)
       react: 18.3.1
 
-  '@open-pioneer/vite-plugin-pioneer@3.0.5(@open-pioneer/runtime@2.1.7(42fbu32fugpnb3fmv2gwarbetm))(sass@1.82.0)(vite@5.4.11(@types/node@18.19.41)(sass@1.82.0))':
+  '@open-pioneer/vite-plugin-pioneer@3.0.5(@open-pioneer/runtime@2.1.7(42fbu32fugpnb3fmv2gwarbetm))(sass@1.82.0)(vite@5.4.19(@types/node@18.19.41)(sass@1.82.0))':
     dependencies:
       '@babel/generator': 7.26.3
       '@babel/template': 7.25.9
@@ -6131,8 +6131,8 @@ snapshots:
       debug: 4.4.0
       js-yaml: 4.1.0
       sass: 1.82.0
-      vite: 5.4.11(@types/node@18.19.41)(sass@1.82.0)
-      vitefu: 1.0.4(vite@5.4.11(@types/node@18.19.41)(sass@1.82.0))
+      vite: 5.4.19(@types/node@18.19.41)(sass@1.82.0)
+      vitefu: 1.0.4(vite@5.4.19(@types/node@18.19.41)(sass@1.82.0))
       zod: 3.23.8
       zod-validation-error: 3.4.0(zod@3.23.8)
     transitivePeerDependencies:
@@ -6424,7 +6424,7 @@ snapshots:
 
   '@rollup/pluginutils@5.1.0(rollup@4.28.1)':
     dependencies:
-      '@types/estree': 1.0.5
+      '@types/estree': 1.0.6
       estree-walker: 2.0.2
       picomatch: 2.3.1
     optionalDependencies:
@@ -6788,10 +6788,10 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@vitejs/plugin-react-swc@3.7.2(vite@5.4.11(@types/node@18.19.41)(sass@1.82.0))':
+  '@vitejs/plugin-react-swc@3.7.2(vite@5.4.19(@types/node@18.19.41)(sass@1.82.0))':
     dependencies:
       '@swc/core': 1.10.1
-      vite: 5.4.11(@types/node@18.19.41)(sass@1.82.0)
+      vite: 5.4.19(@types/node@18.19.41)(sass@1.82.0)
     transitivePeerDependencies:
       - '@swc/helpers'
 
@@ -6802,13 +6802,13 @@ snapshots:
       chai: 5.1.2
       tinyrainbow: 1.2.0
 
-  '@vitest/mocker@2.1.9(vite@5.4.11(@types/node@18.19.41)(sass@1.82.0))':
+  '@vitest/mocker@2.1.9(vite@5.4.19(@types/node@18.19.41)(sass@1.82.0))':
     dependencies:
       '@vitest/spy': 2.1.9
       estree-walker: 3.0.3
       magic-string: 0.30.15
     optionalDependencies:
-      vite: 5.4.11(@types/node@18.19.41)(sass@1.82.0)
+      vite: 5.4.19(@types/node@18.19.41)(sass@1.82.0)
 
   '@vitest/pretty-format@2.1.9':
     dependencies:
@@ -9418,7 +9418,7 @@ snapshots:
       debug: 4.4.0
       es-module-lexer: 1.5.4
       pathe: 1.1.2
-      vite: 5.4.11(@types/node@18.19.41)(sass@1.82.0)
+      vite: 5.4.19(@types/node@18.19.41)(sass@1.82.0)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -9430,15 +9430,15 @@ snapshots:
       - supports-color
       - terser
 
-  vite-plugin-eslint@1.8.1(eslint@8.57.0)(vite@5.4.11(@types/node@18.19.41)(sass@1.82.0)):
+  vite-plugin-eslint@1.8.1(eslint@8.57.0)(vite@5.4.19(@types/node@18.19.41)(sass@1.82.0)):
     dependencies:
       '@rollup/pluginutils': 4.2.1
       '@types/eslint': 8.21.1
       eslint: 8.57.0
       rollup: 4.22.4
-      vite: 5.4.11(@types/node@18.19.41)(sass@1.82.0)
+      vite: 5.4.19(@types/node@18.19.41)(sass@1.82.0)
 
-  vite@5.4.11(@types/node@18.19.41)(sass@1.82.0):
+  vite@5.4.19(@types/node@18.19.41)(sass@1.82.0):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.4.47
@@ -9448,14 +9448,14 @@ snapshots:
       fsevents: 2.3.3
       sass: 1.82.0
 
-  vitefu@1.0.4(vite@5.4.11(@types/node@18.19.41)(sass@1.82.0)):
+  vitefu@1.0.4(vite@5.4.19(@types/node@18.19.41)(sass@1.82.0)):
     optionalDependencies:
-      vite: 5.4.11(@types/node@18.19.41)(sass@1.82.0)
+      vite: 5.4.19(@types/node@18.19.41)(sass@1.82.0)
 
   vitest@2.1.9(@types/node@18.19.41)(happy-dom@15.11.7)(jsdom@25.0.1)(sass@1.82.0):
     dependencies:
       '@vitest/expect': 2.1.9
-      '@vitest/mocker': 2.1.9(vite@5.4.11(@types/node@18.19.41)(sass@1.82.0))
+      '@vitest/mocker': 2.1.9(vite@5.4.19(@types/node@18.19.41)(sass@1.82.0))
       '@vitest/pretty-format': 2.1.9
       '@vitest/runner': 2.1.9
       '@vitest/snapshot': 2.1.9
@@ -9471,7 +9471,7 @@ snapshots:
       tinyexec: 0.3.1
       tinypool: 1.0.2
       tinyrainbow: 1.2.0
-      vite: 5.4.11(@types/node@18.19.41)(sass@1.82.0)
+      vite: 5.4.19(@types/node@18.19.41)(sass@1.82.0)
       vite-node: 2.1.9(@types/node@18.19.41)(sass@1.82.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
