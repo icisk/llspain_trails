@@ -152,14 +152,16 @@ export const CS02_TPfullTimeSeriesChartOptions =(
         intl,
         precipTSDATA,
         tempTSDATA,
+        oldestDateOfAllTS,
+        newestDateOfAllTS
             ) => ({
-    chart: { type: "column", zoomType: "x" },
+    chart: { type: "column", zoomType: "x", marginLeft: 80, marginRight: 60 },
     title: { text: intl.formatMessage({ id: "global.plot.header_temp_precip" }) },
     xAxis: { type: 'datetime',
         title: {text: intl.formatMessage({ id: "global.vars.date" })},
         categories: undefined,
-        min: null,
-        max: null},
+        min: new Date(oldestDateOfAllTS).getTime(),
+        max: new Date(newestDateOfAllTS).getTime()},
     yAxis: [
         {title: {text: intl.formatMessage({ id: "global.vars.precip" }) + " (mm)" }, min: 0, max: 400, opposite: false},
         {title: {text: intl.formatMessage({ id: "global.vars.temp" }) + " (°C)" }, min: -10, max: 40, opposite: true}
@@ -191,15 +193,18 @@ export const CS02_SPEIfullTimeSeriesChartOptions =(
     DataLeft,
     DataRight,
     varLeft,
-    varRight
+    varRight,
+    oldestDateOfAllTS,
+    newestDateOfAllTS
     ) => ({
-    chart: { type: "column", zoomType: "x" },
+    chart: { type: "column", zoomType: "x", marginLeft: 80, marginRight: 60 },
     title: { text: intl.formatMessage({ id: "global.plot.header_indicator" }) },
     xAxis: { type: 'datetime',
         title: {text: intl.formatMessage({ id: "global.vars.date" })},
         categories: undefined,
-        min: null,
-        max: null},
+        min: new Date(oldestDateOfAllTS).getTime(),
+        max: new Date(newestDateOfAllTS).getTime()
+    },
     yAxis: [
         {title: {text: intl.formatMessage({ id: "global.vars.SPEI" }) + " " }, min: -3, max: 3, opposite: false},
     ],

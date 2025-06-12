@@ -114,6 +114,9 @@ const HistoricClimateData1 = () => {
     const [spi12TimeSeries, setSpi12TimeSeries] = useState<String>(null);
     const [spi24TimeSeries, setSpi24TimeSeries] = useState<String>(null);
 
+    const [oldestDateOfAllTS, setOldestDateOfAllTS] = useState<Date>(null);
+    const [newestDateOfAllTS, setNewestDateOfAllTS] = useState<Date>(null);
+
     const [spiTimeSeries, setSpiTimeSeries] = useState<String>(null);
 
     const [precipTSDATA, setPrecipTSDATA] = useState<String>(null);
@@ -128,6 +131,9 @@ const HistoricClimateData1 = () => {
     const [spi9TSDATA, setSpi9TSDATA] = useState<String>(null);
     const [spi12TSDATA, setSpi12TSDATA] = useState<String>(null);
     const [spi24TSDATA, setSpi24TSDATA] = useState<String>(null);
+
+    const[indicatorDataLeft, setIndicatorDataLeft] = useState<any>(null);
+    const[indicatorDataRight, setIndicatorDataRight] = useState<any>(null);
 
     const [spiTSDATA, setSpiTSDATA] = useState<String>(null);
 
@@ -168,6 +174,38 @@ const HistoricClimateData1 = () => {
             }
 
             return timeSeries;
+        }
+
+        function getDataRange({tempMetrics, precipMetrics, spei3Metrics, spei6Metrics, spei9Metrics, spei12Metrics, spei24Metrics, spi3Metrics, spi6Metrics, spi9Metrics, spi12Metrics, spi24Metrics}){
+            const dates = [];
+
+            if (Array.isArray(tempMetrics)) {
+                dates.push(new Date(tempMetrics[0]));
+                dates.push(new Date(tempMetrics[tempMetrics.length - 1]));
+            };
+
+            if (Array.isArray(precipMetrics)) {
+                dates.push(new Date(precipMetrics[0]));
+                dates.push(new Date(precipMetrics[precipMetrics.length -1]));
+            }
+
+            const rangeMetrics = [spei3Metrics, spei6Metrics, spei9Metrics, spei12Metrics, spei24Metrics, spi3Metrics, spi6Metrics, spi9Metrics, spi12Metrics, spi24Metrics]
+
+            for (const metric of rangeMetrics) {
+                if (metric?.start && metric?.stop) {
+                    dates.push(new Date(metric.start));
+                    dates.push(new Date(metric.stop));
+                }
+            }
+
+            const minDate = new Date(Math.min(...dates));
+            const maxDate = new Date(Math.max(...dates));
+
+            setOldestDateOfAllTS(minDate);
+            setNewestDateOfAllTS(maxDate);
+
+            console.log(minDate);
+            console.log(maxDate);
         }
 
         const fetchMetaData = async () => {
@@ -313,12 +351,17 @@ const HistoricClimateData1 = () => {
                 setSpi9TimeSeries(spi9TimeSeries);
                 setSpi12TimeSeries(spi12TimeSeries);
                 setSpi24TimeSeries(spi24TimeSeries);
+
+                // get the oldest and newest date of all time series
+                getDataRange({tempMetrics, precipMetrics, spei3Metrics, spei6Metrics, spei9Metrics, spei12Metrics, spei24Metrics, spi3Metrics, spi6Metrics, spi9Metrics, spi12Metrics, spi24Metrics});
+
             } catch (err) {
                 setError(err.message);
             }
         };
 
         fetchMetaData();
+
     }, []);
 
     //get values for full timeseries
@@ -527,7 +570,7 @@ const HistoricClimateData1 = () => {
                 )
             );
         } else {
-            setChartOptions(CS02_TPfullTimeSeriesChartOptions(intl, precipTSDATA, tempTSDATA));
+            setChartOptions(CS02_TPfullTimeSeriesChartOptions(intl, precipTSDATA, tempTSDATA, oldestDateOfAllTS, newestDateOfAllTS));
         }
     }, [
         isComparisonMode,
@@ -556,87 +599,85 @@ const HistoricClimateData1 = () => {
             indicatorVarRight = varRight;
         }
 
-        let DataLeft;
-
         switch (varLeft) {
             case "spei3":
-                DataLeft = spei3TSDATA;
+                setIndicatorDataLeft(spei3TSDATA);
                 break;
             case "spei6":
-                DataLeft = spei6TSDATA;
+                setIndicatorDataLeft(spei6TSDATA);
                 break;
             case "spei9":
-                DataLeft = spei9TSDATA;
+                setIndicatorDataLeft(spei9TSDATA);
                 break;
             case "spei12":
-                DataLeft = spei12TSDATA;
+                setIndicatorDataLeft(spei12TSDATA);
                 break;
             case "spei24":
-                DataLeft = spei24TSDATA;
+                setIndicatorDataLeft(spei24TSDATA);
                 break;
             case "spi3":
-                DataLeft = spi3TSDATA;
+                setIndicatorDataLeft(spi3TSDATA);
                 break;
             case "spi6":
-                DataLeft = spi6TSDATA;
+                setIndicatorDataLeft(spi6TSDATA);
                 break;
             case "spi9":
-                DataLeft = spi9TSDATA;
+                setIndicatorDataLeft(spi9TSDATA);
                 break;
             case "spi12":
-                DataLeft = spi12TSDATA;
+                setIndicatorDataLeft(spi12TSDATA);
                 break;
             case "spi24":
-                DataLeft = spi24TSDATA;
+                setIndicatorDataLeft(spi24TSDATA);
                 break;
             default:
-                DataLeft = spei9TSDATA;
+                setIndicatorDataLeft(spei9TSDATA);
         }
-
-        let DataRight;
 
         switch (varRight) {
             case "spei3":
-                DataRight = spei3TSDATA;
+                setIndicatorDataRight(spei3TSDATA);
                 break;
             case "spei6":
-                DataRight = spei6TSDATA;
+                setIndicatorDataRight(spei6TSDATA);
                 break;
             case "spei9":
-                DataRight = spei9TSDATA;
+                setIndicatorDataRight(spei9TSDATA);
                 break;
             case "spei12":
-                DataRight = spei12TSDATA;
+                setIndicatorDataRight(spei12TSDATA);
                 break;
             case "spei24":
-                DataRight = spei24TSDATA;
+                setIndicatorDataRight(spei24TSDATA);
                 break;
             case "spi3":
-                DataRight = spi3TSDATA;
+                setIndicatorDataRight(spi3TSDATA);
                 break;
             case "spi6":
-                DataRight = spi6TSDATA;
+                setIndicatorDataRight(spi6TSDATA);
                 break;
             case "spi9":
-                DataRight = spi9TSDATA;
+                setIndicatorDataRight(spi9TSDATA);
                 break;
             case "spi12":
-                DataRight = spi12TSDATA;
+                setIndicatorDataRight(spi12TSDATA);
                 break;
             case "spi24":
-                DataRight = spi24TSDATA;
+                setIndicatorDataRight(spi24TSDATA);
                 break;
             default:
-                DataRight = spei9TSDATA;
+                setIndicatorDataRight(spei9TSDATA);
         }
 
         setSpeiChartOptions(
             CS02_SPEIfullTimeSeriesChartOptions(
                 intl,
-                DataLeft,
-                DataRight,
+                indicatorDataLeft,
+                indicatorDataRight,
                 indicatorVarLeft,
-                indicatorVarRight
+                indicatorVarRight,
+                oldestDateOfAllTS,
+                newestDateOfAllTS
             )
         );
     }, [
