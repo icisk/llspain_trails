@@ -92,12 +92,13 @@ export const speiColorGradient = [
 
 
 export const phenoColors = {
-    "cdd_01": "rgba(0, 191, 255, 0.75)",   // Blue (0 - 20 days)
-    "cdd_02": "rgba(42,202,130,0.75)",    // Light Blue (21 - 40 days)
-    "cdd_03": "rgba(255, 255, 0, 0.75)",   // Yellow (41 - 60 days)
-    "cdd_04": "rgba(255, 165, 0, 0.75)",   // Orange (61 - 80 days)
-    "cdd_05": "rgba(255, 0, 0, 0.75)",     // Red (81 - 100 days)
+    "cdd_01": "#00bfff",   // Blue (0 - 20 days)
+    "cdd_02": "#2acb82",   // Light Blue (21 - 40 days)
+    "cdd_03": "#ffff00",   // Yellow (41 - 60 days)
+    "cdd_04": "#ffa500",   // Orange (61 - 80 days)
+    "cdd_05": "#ff0000",   // Red (81 - 100 days)
 };
+
 const boundaries_pheno = [-10, 0, 20, 40, 60, 80, 100];
 const gradientColors_pheno = [
     tempColors.black,
@@ -112,12 +113,12 @@ export const phenoColorGradient = [
 ];
 
 export const phenocolors_SU = {
-    "su_01": "rgba(0, 191, 255, 0.75)",   // Blue (0 - 2 days)
-    "su_02": "rgba(42,202,130,0.75)",    // Light Blue (3 - 4 days)
-    "su_03": "rgba(255, 255, 0, 0.75)",   // Yellow (5 - 6 days)
-    "su_04": "rgba(255, 165, 0, 0.75)",   // Orange (7 - 8 days)
-    "su_05": "rgba(255, 0, 0, 0.75)",     // Red (9 - 11 days)
-}
+    "su_01": "#00bfff",
+    "su_02": "#2aca82",
+    "su_03": "#ffff00",
+    "su_04": "#ffa500",
+    "su_05": "#ff0000",
+};  
 
 const boundaries_pheno_SU = [-10, 0, 3, 5, 7, 9, 11];
 const gradientColors_pheno_SU = [

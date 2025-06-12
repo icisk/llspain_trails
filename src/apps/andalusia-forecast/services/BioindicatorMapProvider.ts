@@ -47,7 +47,7 @@ export class BioindicatorMapProvider implements MapConfigProvider {
                     id: "tif",
                     title: "CDD",
                     olLayer: new WebGLTileLayer({
-                        opacity: 0.5,
+                        opacity: 0.75,
                         source: new GeoTIFF({
                             normalize: false,
                             sources: [

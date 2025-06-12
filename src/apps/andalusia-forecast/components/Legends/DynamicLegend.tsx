@@ -26,9 +26,13 @@ const p_07 = '#591061BC'
 const p_08 = '#290A47BC'
 const p_09 = '#11011eBC'
 
-
-
-
+function hextoRGBA(hex: string, alpha: number): string {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    console.log(hex, `rgba(${r}, ${g}, ${b}, ${alpha})`)
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
 
 export const DynamicLegend = ({ variable, position }: { variable: string, position: "right" | "left" }) => {
     
@@ -90,11 +94,11 @@ export const DynamicLegend = ({ variable, position }: { variable: string, positi
     } else if (variable === "CDD"){
         text = intl.formatMessage({id: "global.vars.cdd"})
         colorMapping = [
-            { value: 0, color: phenoColors.cdd_01, label: "0 - 20 días" },
-            { value: 20, color: phenoColors.cdd_02, label: "21 - 40 días" },
-            { value: 40, color: phenoColors.cdd_03, label: "41 - 60 días" },
-            { value: 60, color: phenoColors.cdd_04, label: "61 - 80 días" },
-            { value: 80, color: phenoColors.cdd_05, label: "81 - 100 días" },
+            { value: 0, color: hextoRGBA(phenoColors.cdd_01, 0.75), label: "0 - 20 días" },
+            { value: 20, color: hextoRGBA(phenoColors.cdd_02, 0.75), label: "21 - 40 días" },
+            { value: 40, color: hextoRGBA(phenoColors.cdd_03, 0.75), label: "41 - 60 días" },
+            { value: 60, color: hextoRGBA(phenoColors.cdd_04, 0.75), label: "61 - 80 días" },
+            { value: 80, color: hextoRGBA(phenoColors.cdd_05, 0.75), label: "81 - 100 días" },
         ];
     } else if (variable === "uncertainty"){
         text = intl.formatMessage({id: "global.vars.uncertainty"})
@@ -104,22 +108,22 @@ export const DynamicLegend = ({ variable, position }: { variable: string, positi
             { value: 3, color: uncertaintyColors.green, label: intl.formatMessage({id: "global.legend.uncertainty.green"})},
         ]
     } else if (variable === "CSU"){
-        text = intl.formatMessage({id: "global.vars.csu"})
+        text = intl.formatMessage({ id: "global.vars.csu" });
         colorMapping = [
-            { value: 0, color: phenoColors.cdd_01, label: "0 - 20 días" },
-            { value: 20, color: phenoColors.cdd_02, label: "21 - 40 días" },
-            { value: 40, color: phenoColors.cdd_03, label: "41 - 60 días" },
-            { value: 60, color: phenoColors.cdd_04, label: "61 - 80 días" },
-            { value: 80, color: phenoColors.cdd_05, label: "81 - 100 días" },
+            { value: 0, color: hextoRGBA(phenoColors.cdd_01, 0.75), label: "0 - 20 días" },
+            { value: 20, color: hextoRGBA(phenoColors.cdd_02, 0.75), label: "21 - 40 días" },
+            { value: 40, color: hextoRGBA(phenoColors.cdd_03, 0.75), label: "41 - 60 días" },
+            { value: 60, color: hextoRGBA(phenoColors.cdd_04, 0.75), label: "61 - 80 días" },
+            { value: 80, color: hextoRGBA(phenoColors.cdd_05, 0.75), label: "81 - 100 días" },
         ];
     } else if (variable === "SU") {
         text = intl.formatMessage({ id: "global.vars.su" });
         colorMapping = [
-            { value: 0, color: phenocolors_SU.su_01, label: intl.formatMessage({ id: "global.legend.su.su_01" }) },
-            { value: 3, color: phenocolors_SU.su_02, label: intl.formatMessage({ id: "global.legend.su.su_02" }) },
-            { value: 5, color: phenocolors_SU.su_03, label: intl.formatMessage({ id: "global.legend.su.su_03" }) },
-            { value: 7, color: phenocolors_SU.su_04, label: intl.formatMessage({ id: "global.legend.su.su_04" }) },
-            { value: 9, color: phenocolors_SU.su_05, label: intl.formatMessage({ id: "global.legend.su.su_05" }) },
+            { value: 0, color: hextoRGBA(phenocolors_SU.su_01, 0.75), label: intl.formatMessage({ id: "global.legend.su.su_01" }) },
+            { value: 3, color: hextoRGBA(phenocolors_SU.su_02, 0.75), label: intl.formatMessage({ id: "global.legend.su.su_02" }) },
+            { value: 5, color: hextoRGBA(phenocolors_SU.su_03, 0.75), label: intl.formatMessage({ id: "global.legend.su.su_03" }) },
+            { value: 7, color: hextoRGBA(phenocolors_SU.su_04, 0.75), label: intl.formatMessage({ id: "global.legend.su.su_04" }) },
+            { value: 9, color: hextoRGBA(phenocolors_SU.su_05, 0.75), label: intl.formatMessage({ id: "global.legend.su.su_05" }) },
         ];
     }
   
