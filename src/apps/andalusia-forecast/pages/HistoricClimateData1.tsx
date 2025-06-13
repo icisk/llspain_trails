@@ -203,9 +203,6 @@ const HistoricClimateData1 = () => {
 
             setOldestDateOfAllTS(minDate);
             setNewestDateOfAllTS(maxDate);
-
-            console.log(minDate);
-            console.log(maxDate);
         }
 
         const fetchMetaData = async () => {
@@ -692,7 +689,9 @@ const HistoricClimateData1 = () => {
         spi12TSDATA,
         spi24Data,
         varLeft,
-        varRight
+        varRight,
+        oldestDateOfAllTS,
+        newestDateOfAllTS,
     ]);
 
     useEffect(() => {
