@@ -113,14 +113,21 @@ export const phenoColorGradient = [
 ];
 
 export const phenocolors_SU = {
-    "su_01": "#00bfff",
-    "su_02": "#2aca82",
-    "su_03": "#ffff00",
-    "su_04": "#ffa500",
-    "su_05": "#ff0000",
+    "su_00": "#1e90ff",  // DodgerBlue
+    "su_01": "#00bfff",  // DeepSkyBlue
+    "su_02": "#40e0d0",  // Turquoise
+    "su_03": "#2aca82",  // MediumAquamarine
+    "su_04": "#adff2f",  // GreenYellow
+    "su_05": "#ffff00",  // Yellow
+    "su_06": "#ffd700",  // Gold
+    "su_07": "#ffa500",  // Orange
+    "su_08": "#ff8c00",  // DarkOrange
+    "su_09": "#ff4500",  // OrangeRed
+    "su_10": "#ff0000",  // Red
+    "su_11": "#8b0000",  // DarkRed
 };  
 
-const boundaries_pheno_SU = [-10, 0, 3, 5, 7, 9, 11];
+const boundaries_pheno_SU = [-10, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 const gradientColors_pheno_SU = [
     tempColors.black,
     ...Object.values(phenocolors_SU)

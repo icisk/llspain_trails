@@ -1,6 +1,6 @@
 // components/Legends/StaticPrecipitationLegend.tsx
 import React from "react";
-import {Box, Text} from "@open-pioneer/chakra-integration";
+import {Box, Text, HStack, VStack} from "@open-pioneer/chakra-integration";
 import {useIntl} from "open-pioneer:react-hooks";
 import {phenoColors, phenocolors_SU, speicolors, uncertaintyColors} from "../utils/globals";
 
@@ -93,11 +93,11 @@ export const DynamicLegend = ({ variable, position }: { variable: string, positi
     } else if (variable === "CDD"){
         text = intl.formatMessage({id: "global.vars.cdd"})
         colorMapping = [
-            { value: 0, color: hextoRGBA(phenoColors.cdd_01, 0.75), label: "0 - 20 días" },
-            { value: 20, color: hextoRGBA(phenoColors.cdd_02, 0.75), label: "21 - 40 días" },
-            { value: 40, color: hextoRGBA(phenoColors.cdd_03, 0.75), label: "41 - 60 días" },
-            { value: 60, color: hextoRGBA(phenoColors.cdd_04, 0.75), label: "61 - 80 días" },
-            { value: 80, color: hextoRGBA(phenoColors.cdd_05, 0.75), label: "81 - 100 días" },
+            { value: 0, color: hextoRGBA(phenoColors.cdd_01, 0.75), label: "0 días" },
+            { value: 20, color: hextoRGBA(phenoColors.cdd_02, 0.75), label: "25 días" },
+            { value: 40, color: hextoRGBA(phenoColors.cdd_03, 0.75), label: "50 días" },
+            { value: 60, color: hextoRGBA(phenoColors.cdd_04, 0.75), label: "75 días" },
+            { value: 80, color: hextoRGBA(phenoColors.cdd_05, 0.75), label: "100 días" },
         ];
     } else if (variable === "uncertainty"){
         text = intl.formatMessage({id: "global.vars.uncertainty"})
@@ -109,22 +109,30 @@ export const DynamicLegend = ({ variable, position }: { variable: string, positi
     } else if (variable === "CSU"){
         text = intl.formatMessage({ id: "global.vars.csu" });
         colorMapping = [
-            { value: 0, color: hextoRGBA(phenoColors.cdd_01, 0.75), label: "0 - 20 días" },
-            { value: 20, color: hextoRGBA(phenoColors.cdd_02, 0.75), label: "21 - 40 días" },
-            { value: 40, color: hextoRGBA(phenoColors.cdd_03, 0.75), label: "41 - 60 días" },
-            { value: 60, color: hextoRGBA(phenoColors.cdd_04, 0.75), label: "61 - 80 días" },
-            { value: 80, color: hextoRGBA(phenoColors.cdd_05, 0.75), label: "81 - 100 días" },
+            { value: 0, color: hextoRGBA(phenoColors.cdd_01, 0.75), label: "0 días" },
+            { value: 20, color: hextoRGBA(phenoColors.cdd_02, 0.75), label: "25 días" },
+            { value: 40, color: hextoRGBA(phenoColors.cdd_03, 0.75), label: "50 días" },
+            { value: 60, color: hextoRGBA(phenoColors.cdd_04, 0.75), label: "75 días" },
+            { value: 80, color: hextoRGBA(phenoColors.cdd_05, 0.75), label: "100 días" },
         ];
     } else if (variable === "SU") {
         text = intl.formatMessage({ id: "global.vars.su" });
         colorMapping = [
-            { value: 0, color: hextoRGBA(phenocolors_SU.su_01, 0.75), label: intl.formatMessage({ id: "global.legend.su.su_01" }) },
-            { value: 3, color: hextoRGBA(phenocolors_SU.su_02, 0.75), label: intl.formatMessage({ id: "global.legend.su.su_02" }) },
-            { value: 5, color: hextoRGBA(phenocolors_SU.su_03, 0.75), label: intl.formatMessage({ id: "global.legend.su.su_03" }) },
-            { value: 7, color: hextoRGBA(phenocolors_SU.su_04, 0.75), label: intl.formatMessage({ id: "global.legend.su.su_04" }) },
-            { value: 9, color: hextoRGBA(phenocolors_SU.su_05, 0.75), label: intl.formatMessage({ id: "global.legend.su.su_05" }) },
+            { value: 0,  color: hextoRGBA(phenocolors_SU.su_00, 0.75), label: intl.formatMessage({ id: "global.legend.su.su_00" }) },
+            { value: 2,  color: hextoRGBA(phenocolors_SU.su_01, 0.75), label: intl.formatMessage({ id: "global.legend.su.su_01" }) },
+            { value: 4,  color: hextoRGBA(phenocolors_SU.su_02, 0.75), label: intl.formatMessage({ id: "global.legend.su.su_02" }) },
+            { value: 6,  color: hextoRGBA(phenocolors_SU.su_03, 0.75), label: intl.formatMessage({ id: "global.legend.su.su_03" }) },
+            { value: 8,  color: hextoRGBA(phenocolors_SU.su_04, 0.75), label: intl.formatMessage({ id: "global.legend.su.su_04" }) },
+            { value: 10, color: hextoRGBA(phenocolors_SU.su_05, 0.75), label: intl.formatMessage({ id: "global.legend.su.su_05" }) },
+            { value: 12, color: hextoRGBA(phenocolors_SU.su_06, 0.75), label: intl.formatMessage({ id: "global.legend.su.su_06" }) },
+            { value: 14, color: hextoRGBA(phenocolors_SU.su_07, 0.75), label: intl.formatMessage({ id: "global.legend.su.su_07" }) },
+            { value: 16, color: hextoRGBA(phenocolors_SU.su_08, 0.75), label: intl.formatMessage({ id: "global.legend.su.su_08" }) },
+            { value: 18, color: hextoRGBA(phenocolors_SU.su_09, 0.75), label: intl.formatMessage({ id: "global.legend.su.su_09" }) },
+            { value: 20, color: hextoRGBA(phenocolors_SU.su_10, 0.75), label: intl.formatMessage({ id: "global.legend.su.su_10" }) },
+            { value: 25, color: hextoRGBA(phenocolors_SU.su_11, 0.75), label: intl.formatMessage({ id: "global.legend.su.su_11" }) },
         ];
     }
+    
   
     const positionStyle = position === "right" ? { right: "10px" } : { left: "10px" };
 
@@ -139,12 +147,48 @@ export const DynamicLegend = ({ variable, position }: { variable: string, positi
             boxShadow="md"
         >
             <Text fontWeight="bold" mb={2}>{text}</Text>
-            {colorMapping.map((item, index) => (
-                <Box key={index} display="flex" alignItems="center" mb={1}>
-                    <Box width="12px" height="12px" bg={item.color} mr={2} />
-                    <Box>{item.label}</Box>
-                </Box>
-            ))}
+            <HStack alignItems="flex-start">
+                {variable === "SU" ? (
+                    // Einzelne Kästchen für SU
+                    <VStack spacing={0} align="flex-start">
+                        {colorMapping.map((item, index) => (
+                            <HStack key={index} spacing={2}>
+                                <Box
+                                    width="12px"
+                                    height="12px"
+                                    background={item.color}
+                                    border="1px solid #ccc"
+                                />
+                                <Text fontSize="xs">{item.label}</Text>
+                            </HStack>
+                        ))}
+                    </VStack>
+                ) : (
+                    // Farbverlauf für andere Variablen
+                    <>
+                        <Box
+                            width="20px"
+                            height="250px"
+                            background={`linear-gradient(to bottom, ${colorMapping.map((item) => item.color).join(', ')})`}
+                            mb={2}
+                        />
+                        <Box
+                            display="flex"
+                            justifyContent="space-between"
+                            height="250px"
+                            flexDirection="column"
+                            alignItems="flex-start"
+                        >
+                            {colorMapping.map((item, index) => (
+                                <Text key={index} fontSize="xs">
+                                    {item.label}
+                                </Text>
+                            ))}
+                        </Box>
+                    </>
+                )}
+            </HStack>
+
         </Box>
     );
 };
