@@ -42,52 +42,52 @@ export const DynamicLegend = ({ variable, position }: { variable: string, positi
         text = intl.formatMessage({id: "global.vars.temp"})
         colorMapping = [
             { value: 0, color: pink, label: "<  0 ºC" },
-            { value: 5, color: cold_blue, label: "0 - 5 ºC" },
-            { value: 15, color: ice_blue, label: "5 - 10 ºC" },
-            { value: 30, color: green, label: "10 - 15 ºC" },
-            { value: 50, color: yellow, label: "15 - 20 ºC" },
-            { value: 75, color: orange, label: "20 - 25 ºC" },
-            { value: 100, color: red, label: "25 - 30 ºC" },
+            { value: 5, color: cold_blue, label: "5 ºC" },
+            { value: 15, color: ice_blue, label: "10 ºC" },
+            { value: 30, color: green, label: "15 ºC" },
+            { value: 50, color: yellow, label: "20 ºC" },
+            { value: 75, color: orange, label: "25 ºC" },
+            { value: 100, color: red, label: "30 ºC" },
             { value: 150, color: dark_red, label: ">  30 ºC" },
 
         ];
     } else if (variable === 'precip'){
         text = intl.formatMessage({id: "global.vars.precip"})
         colorMapping = [
-            { value: 0, color: p_01, label: "0 - 5 mm" },
-            { value: 5, color: p_02, label: "5 - 15 mm" },
-            { value: 15, color: p_03, label: "15 - 30 mm" },
-            { value: 30, color: p_04, label: "30 - 50 mm" },
-            { value: 50, color: p_05, label: "50 - 75 mm" },
-            { value: 75, color: p_06, label: "75 - 100 mm" },
-            { value: 100, color: p_07, label: "100 - 150 mm" },
+            { value: 0, color: p_01, label: "0 mm" },
+            { value: 5, color: p_02, label: "5 mm" },
+            { value: 15, color: p_03, label: "15 mm" },
+            { value: 30, color: p_04, label: "30 mm" },
+            { value: 50, color: p_05, label: "50 mm" },
+            { value: 75, color: p_06, label: "75 mm" },
+            { value: 100, color: p_07, label: "100 mm" },
             { value: 150, color: p_08, label: "> 150 mm" },
 
         ];
     } else if (variable.startsWith("spei")){
         text = intl.formatMessage({id: "global.vars.SPEI"})
         colorMapping = [
-            { value: -2, color: speicolors.extrem_dry, label: "< -2" },
-            { value: -1.5, color: speicolors.very_dry, label: "-2 - -1.5" },
-            { value: -1, color: speicolors.dry, label: "-1.5 - -1" },
-            { value: -0.25, color: speicolors.little_dry, label: "-1 - -0.25" },
-            { value: 0.25, color:speicolors.normal, label: "-0.25 - 0.25" },
-            { value: 1, color: speicolors.little_wet, label: "0.25 - 1" },
-            { value: 1.5, color: speicolors.wet, label: "1 - 1.5" },
-            { value: 2, color: speicolors.very_wet, label: "1.5 - 2" },
+            { value: -2, color: speicolors.extrem_dry, label: "-2" },
+            { value: -1.5, color: speicolors.very_dry, label: "-1.5" },
+            { value: -1, color: speicolors.dry, label: "-1" },
+            { value: -0.25, color: speicolors.little_dry, label: "-0.25" },
+            { value: 0.25, color:speicolors.normal, label: "0.25" },
+            { value: 1, color: speicolors.little_wet, label: "1" },
+            { value: 1.5, color: speicolors.wet, label: "1.5" },
+            { value: 2, color: speicolors.very_wet, label: "2" },
             { value: 3, color: speicolors.extrem_wet, label: "> 2" }
         ]
     } else if (variable.startsWith("spi")){
         text = intl.formatMessage({id: "global.vars.SPI"})
         colorMapping = [
-            { value: -2, color: speicolors.extrem_dry, label: "< -2" },
-            { value: -1.5, color: speicolors.very_dry, label: "-2 - -1.5" },
-            { value: -1, color: speicolors.dry, label: "-1.5 - -1" },
-            { value: -0.25, color: speicolors.little_dry, label: "-1 - -0.25" },
-            { value: 0.25, color:speicolors.normal, label: "-0.25 - 0.25" },
-            { value: 1, color: speicolors.little_wet, label: "0.25 - 1" },
-            { value: 1.5, color: speicolors.wet, label: "1 - 1.5" },
-            { value: 2, color: speicolors.very_wet, label: "1.5 - 2" },
+            { value: -2, color: speicolors.extrem_dry, label: "-2" },
+            { value: -1.5, color: speicolors.very_dry, label: "-1.5" },
+            { value: -1, color: speicolors.dry, label: "-1" },
+            { value: -0.25, color: speicolors.little_dry, label: "-0.25" },
+            { value: 0.25, color:speicolors.normal, label: "0.25" },
+            { value: 1, color: speicolors.little_wet, label: "1" },
+            { value: 1.5, color: speicolors.wet, label: "1.5" },
+            { value: 2, color: speicolors.very_wet, label: "2" },
             { value: 3, color: speicolors.extrem_wet, label: "> 2" }
         ]
     } else if (variable === "CDD"){

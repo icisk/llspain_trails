@@ -180,7 +180,7 @@ export function HistoricPickerLeft(props: HistoricPickerProps) {
                         </HStack>
                         <HStack>
                             <Radio value="indicators">{intl.formatMessage({ id: "global.vars.indicators" })}</Radio>
-                            <InfoTooltip i18n_path="historic_compare.info.SPEI" />
+                            <InfoTooltip i18n_path="historic_compare.info.indicators" />
                         </HStack>
 
                         {mainVar === "indicators" && (

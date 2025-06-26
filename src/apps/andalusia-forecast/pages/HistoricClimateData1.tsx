@@ -665,18 +665,6 @@ const HistoricClimateData1 = () => {
             default:
                 setIndicatorDataRight(spei9TSDATA);
         }
-
-        setSpeiChartOptions(
-            CS02_SPEIfullTimeSeriesChartOptions(
-                intl,
-                indicatorDataLeft,
-                indicatorDataRight,
-                indicatorVarLeft,
-                indicatorVarRight,
-                oldestDateOfAllTS,
-                newestDateOfAllTS
-            )
-        );
     }, [
         spei24TSDATA,
         spei3TSDATA,
@@ -693,6 +681,26 @@ const HistoricClimateData1 = () => {
         oldestDateOfAllTS,
         newestDateOfAllTS,
     ]);
+
+    useEffect(() => {
+        if (!indicatorDataLeft || !indicatorDataRight) return;
+    
+        const indicatorVarLeft = ["temp", "precip"].includes(varLeft) ? "spei9" : varLeft;
+        const indicatorVarRight = ["temp", "precip"].includes(varRight) ? "spei9" : varRight;
+    
+        setSpeiChartOptions(
+            CS02_SPEIfullTimeSeriesChartOptions(
+                intl,
+                indicatorDataLeft,
+                indicatorDataRight,
+                indicatorVarLeft,
+                indicatorVarRight,
+                oldestDateOfAllTS,
+                newestDateOfAllTS
+            )
+        );
+    }, [indicatorDataLeft, indicatorDataRight, varLeft, varRight, intl, oldestDateOfAllTS, newestDateOfAllTS]);
+    
 
     useEffect(() => {
         if (mapModel.map) {

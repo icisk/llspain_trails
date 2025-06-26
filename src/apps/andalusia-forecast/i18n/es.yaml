@@ -14,25 +14,25 @@ messages:
       precip: Precipitación 
       precip_cum:  Precipitación acumulada mensual 
       uncertainty: Grado de incertidumbre
-      SPEI: Índice de sequía
-      SPI: Índice de precipitación estandarizado
-      spei3: SPEI 3 meses
-      spei6: SPEI 6 meses 
-      spei9: SPEI 9 meses
-      spei12: SPEI 12 meses
-      spei24: SPEI 24 meses 
-      spi3: SPI 3 meses
-      spi6: SPI 6 meses
-      spi9: SPI 9 meses
-      spi12: SPI 12 meses
-      spi24: SPI 24 meses
+      SPEI: Índice de sequía (SPEI)
+      SPI: Índice de sequía (SPI)
+      spei3: Índice de sequía (SPEI) 3 meses
+      spei6: Índice de sequía (SPEI) 6 meses
+      spei9: Índice de sequía (SPEI) 9 meses
+      spei12: Índice de sequía (SPEI) 12 meses
+      spei24: Índice de sequía (SPEI) 24 meses
+      spi3: Índice de sequía (SPI) 3 meses
+      spi6: Índice de sequía (SPI) 6 meses
+      spi9: Índice de sequía (SPI) 9 meses
+      spi12: Índice de sequía (SPI) 12 meses
+      spi24: Índice de sequía (SPI) 24 meses
       year: año
       month: mes
       date: Fecha
       cdd: CDD
       csu: CSU
       su: SU
-      indicators: indicadores de sequía
+      indicators: Índices de sequía
       placeholder_indicator: Seleccione un indicador
     controls:
       sel_month: Seleccione el mes 
@@ -143,8 +143,11 @@ messages:
     heading_descr: Proyecciones climáticas hasta 2100
   phenology:
     nav: Indicadores agroclimáticos
-    heading: Número máximo de días secos consecutivos.
-    heading_descr: "Período más largo de días consecutivos dentro de un trimestre con suma de precipitación diaria inferior a 1 mm. Las fechas corresponden a los días centrales de los trimestres:\n\n• Dic, Ene, Feb (invierno)\n• Mar, Abr, May (primavera)\n• Jun, Jul, Ago (verano)\n• Sep, Oct, Nov (otoño)"
+    heading: Indicadores agroclimáticos de 2011 a 2040 derivados de proyecciones climáticas
+    heading_descr: "Este conjunto de datos proporciona indicadores agroclimáticos utilizados para caracterizar las interacciones planta-clima para la agricultura global. Los indicadores agroclimáticos son útiles para transmitir la variabilidad y el cambio climático en términos que sean significativos para el sector agrícola. En este conjunto de datos se proporciona un total de 3 indicadores con una resolución espacial de 50 km x 50 km. La resolución temporal de las variables difiere según el indicador: están disponibles en resolución de 10 días consecutivos (10 días) o estacional. Los datos fueron elaborados por el "
+    heading_descr_link: "https://cds.climate.copernicus.eu/datasets/sis-agroclimatic-indicators?tab=overview"
+    heading_descr_link_text: Servicio de Cambio Climático Copernicus
+    heading_descr_end: .
     info: "Generado con información del Servicio de Cambio Climático de Copernicus [2019]. Datos elaborados a partir de proyecciones climáticas correspondientes al escenario de cambio climático RCP4.5 para el período 2011-2040. Ni la Comisión Europea ni el ECMWF son responsables del uso que pueda hacerse de la información o los datos de Copernicus que contiene. Copernicus Climate Change Service (2019): Agroclimatic indicators from 1951 to 2099 derived from climate projections. Copernicus Climate Change Service (C3S) Climate Data Store (CDS). DOI: 10.24381/cds.dad6e055. https://cds.climate.copernicus.eu/datasets/sis-agroclimatic-indicators "
     select_indicator: Seleccione indicador
     plot:
@@ -154,6 +157,12 @@ messages:
       xAxis: Número de días secos
       yAxis: Número de días
       popupvar: Número de días secos consecutivos
+    cdd: Númeru máximo de días secos consecutivos (estacional) 
+    csu: Número máximo de días de verano consecutivos (estacional)
+    su: Días de verano (10-días)
+    cdd_info: 'Período más largo de días consecutivos dentro de un trimestre con suma de precipitación diaria inferior a 1 mm. Los trimestres corresponden a las estaciones: Dic-Ene-Feb (invierno), Mar-Abr-May (primavera), Jun-Jul-Ago (verano), Sep-Oct-Nov (otoño). Este indicador se utiliza para el seguimiento de la sequía.'
+    csu_info: 'Período más largo de días consecutivos dentro de un trimestre con temperatura máxima diaria superior a 25°C. Los trimestres corresponden a las estaciones: Dic-Ene-Feb (invierno), Mar-Abr-May (primavera), Jun-Jul-Ago (verano), Sep-Oct-Nov (otoño). Este indicador proporciona información sobre el estrés por sequía.'
+    su_info: 'Número de días dentro de intervalos fijos de 10 días con temperatura máxima diaria superior a 25°C. Las fechas corresponden a los días centrales de los períodos: 1-10, 11-20, 21 – fin de mes. Este indicador proporciona una indicación de la aparición de estrés por calor.'
   hydro_service:
     legend:
         hide: ocultar leyenda

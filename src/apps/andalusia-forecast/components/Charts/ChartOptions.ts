@@ -196,7 +196,26 @@ export const CS02_SPEIfullTimeSeriesChartOptions =(
     varRight,
     oldestDateOfAllTS,
     newestDateOfAllTS
-    ) => ({
+    ) => {
+    
+    const series = [{
+        name: intl.formatMessage({ id: `global.vars.${varLeft}` }),
+        data: DataLeft || [],
+        type: "spline",
+        color: "#FF6961",
+        yAxis: 0
+    }]
+    if (varLeft !== varRight || DataLeft !== DataRight) {
+        series.push({
+            name: intl.formatMessage({ id: `global.vars.${varRight}` }),
+            data: DataRight || [],
+            type: "spline",
+            color: "#FFD600",
+            yAxis: 0
+        });
+    }
+
+    return {
     chart: { type: "column", zoomType: "x", marginLeft: 80, marginRight: 60 },
     title: { text: intl.formatMessage({ id: "global.plot.header_indicator" }) },
     xAxis: { type: 'datetime',
@@ -206,26 +225,12 @@ export const CS02_SPEIfullTimeSeriesChartOptions =(
         max: new Date(newestDateOfAllTS).getTime()
     },
     yAxis: [
-        {title: {text: intl.formatMessage({ id: "global.vars.SPEI" }) + " " }, min: -3, max: 3, opposite: false},
+        {title: {text: intl.formatMessage({ id: "global.vars.indicators" })}, min: -3, max: 3, opposite: false},
     ],
     tooltip: {
         valueDecimals: 1,
         xDateFormat: '%Y-%m-%d',
     },
-    series: [
-        {
-            name: intl.formatMessage({ id: `global.vars.${varLeft}` }),
-            data: DataLeft || [],
-            type: "spline",
-            color: "#FF6961",
-            yAxis: 0
-        },
-        {
-            name: intl.formatMessage({ id: `global.vars.${varRight}` }),
-            data: DataRight || [],
-            type: "spline",
-            color: "#FFD600",
-            yAxis: 0
-        }
-    ]
-});
+    series: series
+    }
+};

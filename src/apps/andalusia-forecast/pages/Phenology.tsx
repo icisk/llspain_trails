@@ -285,47 +285,62 @@ export function Phenology() {
                     <InfoTooltip i18n_path="phenology.info" />
                 </HStack>
                 <Box pt={1}>
-                    {intl
-                        .formatMessage({ id: "phenology.heading_descr" })
-                        .split("\n")
-                        .map((line, index) => (
-                            <p key={index}>{line}</p>
-                        ))}
+                    <p>
+                        {intl.formatMessage({ id: "phenology.heading_descr" })}{" "}
+                        <a
+                        href={intl.formatMessage({ id: "phenology.heading_descr_link" })}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: "#1a0dab", textDecoration: "underline" }}
+                        >
+                        {intl.formatMessage({ id: "phenology.heading_descr_link_text" })}
+                        </a>
+                        {intl.formatMessage({ id: "phenology.heading_descr_end" })}
+                    </p>
                 </Box>
             </Box>
 
             <Container flex={2} minWidth={"container.xl"}>
                 <Box mt={4}>
                     <Text>{intl.formatMessage({ id: "phenology.select_indicator" })}:</Text>
-                    <HStack spacing={6}>
-                        <label>
-                            <input
-                                type="radio"
-                                value="CDD"
-                                checked={selectedIndicator === "CDD"}
-                                onChange={(e) => setSelectedIndicator(e.target.value)}
-                            />{" "}
-                            CDD
-                        </label>
-                        <label>
-                            <input
-                                type="radio"
-                                value="CSU"
-                                checked={selectedIndicator === "CSU"}
-                                onChange={(e) => setSelectedIndicator(e.target.value)}
-                            />{" "}
-                            CSU
-                        </label>
-                        <label>
-                            <input
-                                type="radio"
-                                value="SU"
-                                checked={selectedIndicator === "SU"}
-                                onChange={(e) => setSelectedIndicator(e.target.value)}
-                            />{" "}
-                            SU
-                        </label>
-                    </HStack>
+                    <VStack align={"start"}>
+                        <HStack>
+                            <label>
+                                <input
+                                    type="radio"
+                                    value="CDD"
+                                    checked={selectedIndicator === "CDD"}
+                                    onChange={(e) => setSelectedIndicator(e.target.value)}
+                                />{" "}
+                                {intl.formatMessage({ id: "phenology.cdd" })}
+                            </label>
+                            <InfoTooltip i18n_path="phenology.cdd_info"/>
+                        </HStack>
+                        <HStack>
+                            <label>
+                                <input
+                                    type="radio"
+                                    value="CSU"
+                                    checked={selectedIndicator === "CSU"}
+                                    onChange={(e) => setSelectedIndicator(e.target.value)}
+                                />{" "}
+                                {intl.formatMessage({ id: "phenology.csu" })}
+                            </label>
+                        <InfoTooltip i18n_path="phenology.csu_info"/>
+                        </HStack>
+                        <HStack>
+                            <label>
+                                <input
+                                    type="radio"
+                                    value="SU"
+                                    checked={selectedIndicator === "SU"}
+                                    onChange={(e) => setSelectedIndicator(e.target.value)}
+                                />{" "}
+                                {intl.formatMessage({ id: "phenology.su" })}
+                            </label>
+                        <InfoTooltip i18n_path="phenology.su_info"/>
+                        </HStack>
+                    </VStack>
                 </Box>
                 <Box mt={5}>
                     <VStack>
