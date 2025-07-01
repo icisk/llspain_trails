@@ -29,9 +29,9 @@ messages:
       year: año
       month: mes
       date: Fecha
-      cdd: CDD
-      csu: CSU
-      su: SU
+      DSC: DSC
+      DVC: DVC
+      DV: DV
       indicators: Índices de sequía
       placeholder_indicator: Seleccione un indicador
     controls:
@@ -96,6 +96,13 @@ messages:
     heading: Mapas climáticos históricos
     heading_descr: Explore los mapas generados a partir de datos históricos de la red de estaciones meteorológicas de la AEMET entre los años 2000 y 2020.
     info:
+      indicators_short: |
+        Índice de Precipitación Estandarizado (SPI) (McKee et al 1993) es un índice ampliamente utilizado para cuantificar condiciones de sequía meteorológica...
+
+        Índice Estandarizado de Precipitación-Evapotranspiración (SPEI) (Vicente-Serrano et al, 2009) amplía el concepto del SPI al incorporar también la demanda atmosférica de agua, es decir, la evapotranspiración potencial (PET), que depende principalmente de la temperatura...
+
+        Haz clic para obtener más información
+
       indicators_title: Indicadores de sequía
       indicators:  |
         Índice de Precipitación Estandarizado (SPI) (McKee et al 1993) es un índice ampliamente utilizado para cuantificar condiciones de sequía meteorológica. Se basa exclusivamente en datos de precipitación y permite evaluar anomalías de humedad en diferentes escalas temporales (3, 6, 9, 12 y 24 meses). Para su cálculo, se ajusta una distribución de probabilidad gamma (Lloyd-Hughes y Saunders, 2002) descrita por a la serie histórica de precipitaciones, y luego se transforma a una distribución normal estándar. Los valores negativos del SPI indican condiciones más secas de lo normal, mientras que los valores positivos indican condiciones más húmedas. El SPI permite comparar condiciones de sequía entre regiones con diferentes regímenes climáticos. 
@@ -103,9 +110,9 @@ messages:
         Índice Estandarizado de Precipitación-Evapotranspiración (SPEI) (Vicente-Serrano et al, 2009) amplía el concepto del SPI al incorporar también la demanda atmosférica de agua, es decir, la evapotranspiración potencial (PET), que depende principalmente de la temperatura. Esto permite una evaluación más completa del balance hídrico, especialmente útil en el contexto del cambio climático, donde el aumento de temperaturas puede intensificar la sequía incluso sin una disminución significativa en la precipitación. El SPEI también se calcula a diferentes escalas temporales (3, 6, 9, 12 y 24 meses) y utiliza una metodología similar al SPI, pero aplicada al déficit hídrico (precipitación menos PET). 
         Computación en base al modulo SPI_SPEI, MiraMon (https://www.miramon.cat/Index_spa.htm) 
         
-        Lloyd-Hughes B, Saunders MA. 2002. A drought climatology for Europe. International Journal of Climatology, 22, 1571–1592. https://doi.org/10.1002/joc.846 
+        Lloyd-Hughes B, Saunders MA. 2002. A drought climatology for Europe. International Journal of Climatology, 22, 1571-1592. https://doi.org/10.1002/joc.846 
 
-        McKee T B, Doesken NJ,  Kleist J. 1993. The relationship of drought frequency and duration to time scales. Preprints, Eighth Conf. on Applied Climatology. Anaheim, CA, Amer. Meteor. Soc., 179–184. 
+        McKee T B, Doesken NJ,  Kleist J. 1993. The relationship of drought frequency and duration to time scales. Preprints, Eighth Conf. on Applied Climatology. Anaheim, CA, Amer. Meteor. Soc., 179-184. 
 
         Vicente-Serrano SM, Beguería S, López-Moreno JI. 2010. A Multiscalar Drought Index Sensitive to Global Warming: The Standardized Precipitation Evapotranspiration Index. Journal of Climate. Vol 23:7, 1696-1718. https://doi.org/10.1175/2009JCLI2909.1 
 
@@ -157,9 +164,9 @@ messages:
       xAxis: Número de días secos
       yAxis: Número de días
       popupvar: Número de días secos consecutivos
-    cdd: Númeru máximo de días secos consecutivos (estacional) 
-    csu: Número máximo de días de verano consecutivos (estacional)
-    su: Días de verano (10-días)
+    cdd: 'DSC: Número máximo de días secos consecutivos (estacional)'
+    csu: 'DVC: Número máximo de días de verano consecutivos (estacional)'
+    su: 'DV: Días de verano (10-días)'
     cdd_info: 'Período más largo de días consecutivos dentro de un trimestre con suma de precipitación diaria inferior a 1 mm. Los trimestres corresponden a las estaciones: Dic-Ene-Feb (invierno), Mar-Abr-May (primavera), Jun-Jul-Ago (verano), Sep-Oct-Nov (otoño). Este indicador se utiliza para el seguimiento de la sequía.'
     csu_info: 'Período más largo de días consecutivos dentro de un trimestre con temperatura máxima diaria superior a 25°C. Los trimestres corresponden a las estaciones: Dic-Ene-Feb (invierno), Mar-Abr-May (primavera), Jun-Jul-Ago (verano), Sep-Oct-Nov (otoño). Este indicador proporciona información sobre el estrés por sequía.'
     su_info: 'Número de días dentro de intervalos fijos de 10 días con temperatura máxima diaria superior a 25°C. Las fechas corresponden a los días centrales de los períodos: 1-10, 11-20, 21 – fin de mes. Este indicador proporciona una indicación de la aparición de estrés por calor.'

@@ -207,6 +207,7 @@ export function Phenology() {
                         console.warn("No values found for indicator:", selectedIndicator);
                         setIndicatorValues([]);
                     }
+                    console.log("Fetched data:", data);
                 })
                 .catch((error) => console.error("Error fetching data:", error))
                 .finally(() => setChartLoading(false));

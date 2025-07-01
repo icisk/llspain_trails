@@ -1,56 +1,77 @@
-import React, { useState } from 'react';
-import { IconButton, Tooltip, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, useDisclosure } from "@open-pioneer/chakra-integration";
+import React from 'react';
+import {
+    IconButton,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalCloseButton,
+    ModalBody,
+    useDisclosure,
+    Popover,
+    PopoverTrigger,
+    PopoverContent,
+    PopoverArrow,
+    PopoverCloseButton,
+    PopoverBody,
+} from "@open-pioneer/chakra-integration";
 import { FaInfo } from "react-icons/fa";
 import { useIntl } from "open-pioneer:react-hooks";
 
-// Konfigurierbare Zeichenlänge, ab der Modal statt Tooltip verwendet wird
 const TOOLTIP_MAX_LENGTH = 1000;
 
-export function InfoTooltip({ i18n_path }: { i18n_path: string }) {
+export function InfoTooltip({
+    i18n_path,
+    i18n_path_title,
+    i18n_path_short_text
+}: {
+    i18n_path: string,
+    i18n_path_title?: string,
+    i18n_path_short_text?: string
+}) {
     const intl = useIntl();
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const [isTooltipOpen, setTooltipOpen] = useState(false);
 
     const text = intl.formatMessage({ id: i18n_path });
+    const title = i18n_path_title ? intl.formatMessage({ id: i18n_path_title }) : null;
+    const shortText = i18n_path_short_text ? intl.formatMessage({ id: i18n_path_short_text }) : null;
 
     const isLongText = text.length > TOOLTIP_MAX_LENGTH;
 
+    const popoverContent = isLongText ? shortText || title || "Más información" : text;
+
     return (
         <>
-            {isLongText ? (
-                <>
+            <Popover trigger="hover" placement="top">
+                <PopoverTrigger>
                     <IconButton
-                        size={'s'}
+                        size="s"
                         aria-label="Más información"
                         icon={<FaInfo />}
                         variant="ghost"
-                        onClick={onOpen}
+                        onClick={isLongText ? onOpen : undefined}
                     />
-                    <Modal isOpen={isOpen} onClose={onClose} size="lg" scrollBehavior="inside">
-                        <ModalOverlay />
-                        <ModalContent>
-                            <ModalHeader>{intl.formatMessage({ id: "historic_compare.info.indicators_title"})}</ModalHeader>
-                            <ModalCloseButton />
-                            <ModalBody whiteSpace="pre-wrap" fontSize="sm">
-                                {text}
-                            </ModalBody>
-                        </ModalContent>
-                    </Modal>
-                </>
-            ) : (
-                <Tooltip
-                    label={text}
-                    openDelay={250}
-                    closeDelay={100}
-                    placement="top"
-                >
-                    <IconButton
-                        size={'s'}
-                        aria-label="Info"
-                        icon={<FaInfo />}
-                        variant="ghost"
-                    />
-                </Tooltip>
+                </PopoverTrigger>
+                <PopoverContent whiteSpace="pre-line" fontSize="sm" maxW="300px">
+                    <PopoverArrow />
+                    <PopoverCloseButton />
+                    <PopoverBody>
+                        {popoverContent}
+                    </PopoverBody>
+                </PopoverContent>
+            </Popover>
+
+            {isLongText && (
+                <Modal isOpen={isOpen} onClose={onClose} size="lg" scrollBehavior="inside">
+                    <ModalOverlay />
+                    <ModalContent>
+                        <ModalHeader>{title}</ModalHeader>
+                        <ModalCloseButton />
+                        <ModalBody whiteSpace="pre-wrap" fontSize="sm">
+                            {text}
+                        </ModalBody>
+                    </ModalContent>
+                </Modal>
             )}
         </>
     );

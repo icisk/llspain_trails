@@ -20,6 +20,7 @@ import {
 } from "@open-pioneer/chakra-integration";
 import { InfoBoxComponent } from "info-box";
 import { useIntl } from "open-pioneer:react-hooks";
+import { buildCustomLegend } from "../components/Legends/buildCustomLegendHydroService";
 
 export function HydrologicalService() {
     const mapModel = useMapModel(MAP_ID);
@@ -29,39 +30,63 @@ export function HydrologicalService() {
     const [activeVectorLayers, setActiveVectorLayers] = useState<string[]>([]);
     const [opacity, setOpacity] = useState(1);
     const [chismorreosActive, setChismorreosActive] = useState(false);
-    const [visibleLegends, setVisibleLegends] = useState<string[]>([]);
+    const [visibleLegends, setVisibleLegends] = useState<legendEntry[]>([]);
     const [showLegends, setShowLegends] = useState(true);
+
+    type legendEntry = 
+        | { type: "image"; url: string }
+        | { type: "custom"; content: React.ReactNode, id: string };
 
     const legendUrls: Record<string, string> = {
         groundwater: "",
         authorities_boundaries: "",
         municipalities: "",
-        network:
-            "https://www.juntadeandalucia.es/medioambiente/mapwms/REDIAM_masas_agua_andalucia_phc_2022_27?language=spa&version=1.3.0&service=WMS&request=GetLegendGraphic&sld_version=1.1.0&layer=red_hidrografica&format=image/png&STYLE=default",
+        network:"",
         springs: "",
         measure_stations: "",
-        catchmentGuadiana:
-            "https://geoguadiana.chguadiana.es/geoserver/usos/ows?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=captaciones",
-        catchmentGuadalquivir:
-            "http://idechg.chguadalquivir.es/inspire/wms?language=spa&version=1.3.0&service=WMS&request=GetLegendGraphic&sld_version=1.1.0&layer=CaptacionesDPH&format=image/png&STYLE=default",
+        catchmentGuadiana:"",
+        catchmentGuadalquivir:"",
         "thematic-1":
             "https://www.juntadeandalucia.es/medioambiente/mapwms/REDIAM_siose_2020?language=spa&version=1.3.0&service=WMS&request=GetLegendGraphic&sld_version=1.1.0&layer=raster_recon_siose20&format=image/png&STYLE=default",
+        "thematic-2":"",
+        "thematic-3":"",
+        "thematic-4":"",
         "thematic-5":
             "https://mapas.igme.es/gis/services/Cartografia_Geologica/IGME_Geode_50/MapServer/WmsServer?request=GetLegendGraphic%26version=1.3.0%26format=image/png%26layer=1"
     };
 
     const updateVisibleLegends = (layerId: string, show: boolean) => {
-        const legendUrl = legendUrls[layerId];
-        if (!legendUrl) return;
+        console.log(`Updating legend for layer: ${layerId}, show: ${show}`);
 
+        const legendUrl = legendUrls[layerId];
+        const customLegend = buildCustomLegend(layerId);
+    
+        if (!legendUrl && !customLegend) return;
+    
         setVisibleLegends((prev) => {
-            if (show) {
-                return prev.includes(legendUrl) ? prev : [...prev, legendUrl];
-            } else {
-                return prev.filter((url) => url !== legendUrl);
+            const filtered = prev.filter((entry) => {
+                if (entry.type === "image") {
+                    return entry.url !== legendUrl;
+                }
+                if (entry.type === "custom") {
+                    return entry.id !== layerId;
+                }
+                return true;
+            });
+    
+            if (!show) return filtered;
+    
+            if (customLegend) {
+                return [...filtered, { type: "custom", content: customLegend, id: layerId }];
             }
+    
+            if (legendUrl) {
+                return [...filtered, { type: "image", url: legendUrl }];
+            }
+    
+            return filtered;
         });
-    };
+    }; 
 
     useEffect(() => {
         if (!mapModel || !mapModel.map?.olMap) return;
@@ -104,6 +129,11 @@ export function HydrologicalService() {
             return isActive ? prev.filter((id) => id !== layerId) : [...prev, layerId];
         });
     };
+
+    // debug use effect to track visibleLegends changes
+    useEffect(() => {
+        console.log("Visible Legends Updated:", visibleLegends);
+    }, [visibleLegends]);
 
     return (
         <Container minWidth={"container.xl"}>
@@ -248,13 +278,13 @@ export function HydrologicalService() {
 
                     {showLegends && (
                         <Box maxHeight="300px" overflowY="auto">
-                            {visibleLegends.map((url, index) => (
+                            {visibleLegends.map((entry, index) => (
                                 <Box key={index} mb={2}>
-                                    <img
-                                        src={url}
-                                        alt={`Legend ${index}`}
-                                        style={{ maxWidth: "200px" }}
-                                    />
+                                    {entry.type === "image" ? (
+                                        <img src={entry.url} alt={`Legend ${index}`} style={{ maxWidth: "200px" }} />
+                                    ) : (
+                                        entry.content
+                                    )}
                                 </Box>
                             ))}
                         </Box>

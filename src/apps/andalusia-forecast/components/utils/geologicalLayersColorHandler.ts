@@ -1,3 +1,5 @@
+import { Style, Stroke, Circle as CircleStyle, Fill } from "ol/style"
+
 export function getGeologicalPolygonColor(type: string): string {
     let color: string;
     
@@ -65,14 +67,11 @@ export function getGeologicalPolygonColor(type: string): string {
 export function getGeologicalLineColor(type: number): string {
     let color: string;
     switch (type) {
-        case 801901:
-            color = "red";
-            break;
-        case 550101:
+        case 1:
             color = "black";
             break;
-        case 540101:
-            color = "blue";
+        case 2:
+            color = "red";
             break;
         default:
             color = "gray";
@@ -80,3 +79,59 @@ export function getGeologicalLineColor(type: number): string {
     }
     return color;
 }
+
+export function getGeologicalLineStyle(type: string): Style {
+    let color: string;
+    let width: number;
+    switch (type) {
+        case "1":
+            color = "black";
+            width = 0.66;
+            break;
+        case "2":
+            color = "red";
+            width = 0.66;
+            break;
+        default:
+            color = "gray";
+            width = 0.66;
+            break;
+    }
+    return new Style({
+        stroke: new Stroke({
+            color: color,
+            width: width
+        })
+    });
+}
+
+export const getColorByFuente = (fuente: string): string => {
+    switch (fuente) {
+        case "IGME Base de datos de puntos de agua":
+            return "red";
+        case "Red piezométrica - C.H.Guadiana":
+            return "green";
+        case "Red de aforos - C.H.Guadiana":
+            return "lightblue";
+        case "Red de calidad de aguas subterráneas - C.H.Guadiana":
+            return "purple";
+        case "Red de calidad de aguas subterráneas - - C.H.Guadalquivir":
+            return "yellow";
+        case "Universidad de Córdoba":
+            return "blue";
+        default:
+            return "gray";
+    }
+};
+
+export const styleFuntcionMeasureStations = (feature: any) => {
+    const fuente = feature.get("Fuente");
+    const color = getColorByFuente(fuente);
+    return new Style({
+        image: new CircleStyle({
+            radius: 6,
+            fill: new Fill({ color }),
+            stroke: new Stroke({ color: "black", width: 1 })
+        })
+    });
+};

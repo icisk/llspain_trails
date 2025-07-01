@@ -12,7 +12,9 @@ import proj4 from "proj4";
 import { createCazorlaLayer, createLosPedrochesLayer } from "../components/utils/regionLayers";
 import {
     getGeologicalPolygonColor,
-    getGeologicalLineColor
+    getGeologicalLineColor,
+    getGeologicalLineStyle,
+    styleFuntcionMeasureStations,
 } from "../components/utils/geologicalLayersColorHandler";
 import { pedrochesPoint } from "../components/utils/globals";
 import { TileWMS } from "ol/source";
@@ -80,7 +82,13 @@ export class HydrologicalMapProvider implements MapConfigProvider {
                 url: "https://i-cisk.dev.52north.org/data/collections/ll_spain_groundwater/items?f=json",
                 format: new GeoJSON()
             }),
-            visible: false
+            visible: false,
+            style: new Style({
+                stroke: new Stroke({
+                    color: "rgb(76, 127, 255)",
+                    width: 1.5
+                })
+            }),
         });
 
         groundwaterLayerVector.set("id", "groundwater");
@@ -140,16 +148,16 @@ export class HydrologicalMapProvider implements MapConfigProvider {
         // geologicalLayer (VECTOR)
         const geologicalPolygonsLayer = new VectorLayer({
             source: new VectorSource({
-                url: "https://i-cisk.dev.52north.org/data/collections/ll_spain_geological_polygons/items?f=json&limit=7000",
+                url: "https://i-cisk.dev.52north.org/data/collections/ll_spain_geology_simplified_epsg_4326/items?f=json",
                 format: new GeoJSON()
             }),
             visible: false,
             style: function (feature) {
-                const type = feature.getProperties().CODE_COTR;
+                const color = feature.getProperties().Color;
 
                 return new Style({
                     fill: new Fill({
-                        color: getGeologicalPolygonColor(type)
+                        color: color
                     })
                 });
             }
@@ -161,19 +169,13 @@ export class HydrologicalMapProvider implements MapConfigProvider {
         // geologicalLayer (VECTOR)
         const geologicalLinesLayer = new VectorLayer({
             source: new VectorSource({
-                url: "https://i-cisk.dev.52north.org/data/collections/ll_spain_geological_lines/items?f=json&limit=15000",
+                url: "https://i-cisk.dev.52north.org/data/collections/ll_spain_geology_simplified_lines_epsg_3857/items?f=json",
                 format: new GeoJSON()
             }),
             visible: false,
             style: function (feature) {
-                const lineType = feature.getProperties().CODE_LINE1;
-
-                return new Style({
-                    stroke: new Stroke({
-                        color: getGeologicalLineColor(lineType),
-                        width: 1
-                    })
-                });
+                const lineType = feature.getProperties().id;
+                return getGeologicalLineStyle(lineType);
             }
         });
 
@@ -221,7 +223,7 @@ export class HydrologicalMapProvider implements MapConfigProvider {
 
         const geoWMS = new TileLayer({
             source: new TileWMS({
-                url: "https://mapas.igme.es/gis/services/Cartografia_Geologica/IGME_Geode_50/MapServer/WMSServer",
+                url: "https://i-cisk.dev.52north.org/data/collections/ll_spain_geology_simplified_epsg_4326/items?f=json",
                 params: { "LAYERS": "1" },
                 serverType: "mapserver",
                 transition: 0
@@ -340,38 +342,6 @@ export class HydrologicalMapProvider implements MapConfigProvider {
 
         landUseLayer.set("id", "thematic-1");
         landUseLayer.set("thematic", true);
-
-        // Style for the measure stations
-        const getColorByFuente = (fuente: string): string => {
-            switch (fuente) {
-                case "IGME Base de datos de puntos de agua":
-                    return "red";
-                case "Red piezométrica - C.H.Guadiana":
-                    return "green";
-                case "Red de aforos - C.H.Guadiana":
-                    return "lightblue";
-                case "Red de calidad de aguas subterráneas - C.H.Guadiana":
-                    return "purple";
-                case "Red de calidad de aguas subterráneas - - C.H.Guadalquivir":
-                    return "yellow";
-                case "Universidad de Córdoba":
-                    return "blue";
-                default:
-                    return "gray";
-            }
-        };
-
-        const styleFuntcionMeasureStations = (feature: any) => {
-            const fuente = feature.get("Fuente");
-            const color = getColorByFuente(fuente);
-            return new Style({
-                image: new CircleStyle({
-                    radius: 6,
-                    fill: new Fill({ color }),
-                    stroke: new Stroke({ color: "black", width: 1 })
-                })
-            });
-        };
 
         const measureStations = new VectorLayer({
             source: new VectorSource({

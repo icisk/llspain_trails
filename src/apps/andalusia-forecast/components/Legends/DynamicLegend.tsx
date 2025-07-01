@@ -91,7 +91,7 @@ export const DynamicLegend = ({ variable, position }: { variable: string, positi
             { value: 3, color: speicolors.extrem_wet, label: "> 2" }
         ]
     } else if (variable === "CDD"){
-        text = intl.formatMessage({id: "global.vars.cdd"})
+        text = intl.formatMessage({id: "global.vars.DSC"})
         colorMapping = [
             { value: 0, color: hextoRGBA(phenoColors.cdd_01, 0.75), label: "0 días" },
             { value: 20, color: hextoRGBA(phenoColors.cdd_02, 0.75), label: "25 días" },
@@ -107,7 +107,7 @@ export const DynamicLegend = ({ variable, position }: { variable: string, positi
             { value: 3, color: uncertaintyColors.green, label: intl.formatMessage({id: "global.legend.uncertainty.green"})},
         ]
     } else if (variable === "CSU"){
-        text = intl.formatMessage({ id: "global.vars.csu" });
+        text = intl.formatMessage({ id: "global.vars.DVC" });
         colorMapping = [
             { value: 0, color: hextoRGBA(phenoColors.cdd_01, 0.75), label: "0 días" },
             { value: 20, color: hextoRGBA(phenoColors.cdd_02, 0.75), label: "25 días" },
@@ -116,7 +116,7 @@ export const DynamicLegend = ({ variable, position }: { variable: string, positi
             { value: 80, color: hextoRGBA(phenoColors.cdd_05, 0.75), label: "100 días" },
         ];
     } else if (variable === "SU") {
-        text = intl.formatMessage({ id: "global.vars.su" });
+        text = intl.formatMessage({ id: "global.vars.DV" });
         colorMapping = [
             { value: 0,  color: hextoRGBA(phenocolors_SU.su_00, 0.75), label: intl.formatMessage({ id: "global.legend.su.su_00" }) },
             { value: 2,  color: hextoRGBA(phenocolors_SU.su_01, 0.75), label: intl.formatMessage({ id: "global.legend.su.su_01" }) },
