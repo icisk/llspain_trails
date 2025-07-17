@@ -195,12 +195,18 @@ export function Phenology() {
                 .then((data) => {
                     if (data?.ranges?.[selectedIndicator]?.values) {
                         if (selectedIndicator === "SU") {
-                            // For SU, limit the values to 1080 to 2160 to getthe values for 25 degrees
-                            const limitedValues = data.ranges[selectedIndicator].values.slice(
-                                1080,
-                                2160
-                            );
-                            setIndicatorValues(limitedValues);
+                            let selectedValues = [];
+                            console.log("length of values:", data.ranges[selectedIndicator].values.length);
+                            
+                            const length = data.ranges[selectedIndicator].values.length;
+
+                            for (let i = 0; i < length; i++) {
+                                // select every 4th value starting from index 1 for the values for 23 degrees
+                                if (i % 4 === 1) {
+                                    selectedValues.push(data.ranges[selectedIndicator].values[i]);
+                                }
+                            }
+                            setIndicatorValues(selectedValues);
                         } else {
                             setIndicatorValues(data.ranges[selectedIndicator].values);
                         }
@@ -355,53 +361,79 @@ export function Phenology() {
                                 {(selectedIndicator === "CDD" || selectedIndicator === "CSU") && (
                                     <>
                                         <Box mt={2}>
-                                            <p>
-                                                Seleccione el período entre:{" "}
-                                                {dateObjects?.[0] && getSeasonLabel(dateObjects[0])}{" "}
-                                                -{" "}
-                                                {dateObjects?.length > 0 &&
-                                                    getSeasonLabel(
-                                                        dateObjects[dateObjects.length - 1]
-                                                    )}
-                                            </p>
+                                            <HStack>
+                                                <p>
+                                                    Seleccione el período entre:{" "}
+                                                    {dateObjects?.[0] && getSeasonLabel(dateObjects[0])}{" "}
+                                                    -{" "}
+                                                    {dateObjects?.length > 0 &&
+                                                        getSeasonLabel(
+                                                            dateObjects[dateObjects.length - 1]
+                                                        )}
+                                                </p>
+                                                <InfoTooltip i18n_path="phenology.info_slider"></InfoTooltip>
+                                            </HStack>
                                         </Box>
 
-                                        <Slider
-                                            min={0}
-                                            max={dateObjects.length - 1}
-                                            step={1}
-                                            value={sliderValue}
-                                            onChange={(value) => setSliderValue(value)}
-                                        >
-                                            <SliderTrack bg="gray.200">
-                                                <SliderFilledTrack bg="blue.450" />
+                                        <Box position="relative" width="100%">
+                                            <Slider
+                                                min={0}
+                                                max={dateObjects.length - 1}
+                                                step={1}
+                                                value={sliderValue}
+                                                onChange={(value) => setSliderValue(value)}
+                                            >
+                                                <SliderTrack bg="gray.200">
+                                                    <SliderFilledTrack bg="blue.450" />
+                                                    {dateObjects.map((date, index) => {
+                                                        const year = date.getFullYear();
+                                                        const isFirstOfYear =
+                                                            index === 0 || dateObjects[index - 1].getFullYear() !== year;
+                                                        const isFifthYear = isFirstOfYear && year % 5 === 0;
+
+                                                        return (
+                                                            isFirstOfYear && (
+                                                                <Box
+                                                                    key={`tick-${year}`}
+                                                                    position="absolute"
+                                                                    left={`${(index / (dateObjects.length - 1)) * 100}%`}
+                                                                    bottom="-8px"
+                                                                    width="2px"
+                                                                    height={isFifthYear ? "30px" : "10px"}
+                                                                    bg="black"
+                                                                />
+                                                            )
+                                                        );
+                                                    })}
+                                                </SliderTrack>
+                                                <SliderThumb boxSize={30} bg="blue.450" />
+                                            </Slider>
+
+                                            <Box position="relative" mt="0.5" height="20px">
                                                 {dateObjects.map((date, index) => {
                                                     const year = date.getFullYear();
                                                     const isFirstOfYear =
-                                                        index === 0 ||
-                                                        dateObjects[index - 1].getFullYear() !==
-                                                            year;
-                                                    const isFifthYear =
-                                                        isFirstOfYear && year % 5 === 0;
+                                                        index === 0 || dateObjects[index - 1].getFullYear() !== year;
+                                                    const isFifthYear = isFirstOfYear && year % 5 === 0;
+
                                                     return (
-                                                        isFirstOfYear && (
-                                                            <Box
-                                                                key={year}
+                                                        isFifthYear && (
+                                                            <Text
+                                                                key={`label-${year}`}
                                                                 position="absolute"
                                                                 left={`${(index / (dateObjects.length - 1)) * 100}%`}
-                                                                bottom="-8px"
-                                                                width="2px"
-                                                                height={
-                                                                    isFifthYear ? "30px" : "10px"
-                                                                }
-                                                                bg="black"
-                                                            />
+                                                                transform="translateX(-50%)"
+                                                                fontSize="xs"
+                                                                whiteSpace="nowrap"
+                                                            >
+                                                                {year}
+                                                            </Text>
                                                         )
                                                     );
                                                 })}
-                                            </SliderTrack>
-                                            <SliderThumb boxSize={30} bg="blue.450" />
-                                        </Slider>
+                                            </Box>
+                                        </Box>
+
                                         <Box
                                             mt={2}
                                             textAlign="center"
@@ -417,53 +449,78 @@ export function Phenology() {
                                 {selectedIndicator === "SU" && (
                                     <>
                                         <Box mt={2}>
-                                            <p>
-                                                Seleccione el período entre:{" "}
-                                                {dateObjects_SU?.[0] &&
-                                                    dateObjects_SU[0].getFullYear()}{" "}
-                                                –{" "}
-                                                {dateObjects_SU?.[dateObjects_SU.length - 1] &&
-                                                    dateObjects_SU[
-                                                        dateObjects_SU.length - 1
-                                                    ].getFullYear()}
-                                            </p>
+                                            <HStack>
+                                                <p>
+                                                    Seleccione el período entre:{" "}
+                                                    {dateObjects_SU?.[0] &&
+                                                        dateObjects_SU[0].getFullYear()}{" "}
+                                                    –{" "}
+                                                    {dateObjects_SU?.[dateObjects_SU.length - 1] &&
+                                                        dateObjects_SU[
+                                                            dateObjects_SU.length - 1
+                                                        ].getFullYear()}
+                                                </p>
+                                                <InfoTooltip i18n_path="phenology.info_slider"></InfoTooltip>
+                                            </HStack>
                                         </Box>
-                                        <Slider
-                                            min={0}
-                                            max={dateObjects_SU.length - 1}
-                                            step={1}
-                                            value={sliderValue}
-                                            onChange={(value) => setSliderValue(value)}
-                                        >
-                                            <SliderTrack bg="gray.200">
-                                                <SliderFilledTrack bg="blue.450" />
+                                        <Box position="relative" width="100%">
+                                            <Slider
+                                                min={0}
+                                                max={dateObjects_SU.length - 1}
+                                                step={1}
+                                                value={sliderValue}
+                                                onChange={(value) => setSliderValue(value)}
+                                            >
+                                                <SliderTrack bg="gray.200">
+                                                    <SliderFilledTrack bg="blue.450" />
+                                                    {dateObjects_SU.map((date, index) => {
+                                                        const year = date.getFullYear();
+                                                        const isFirstOfYear =
+                                                            index === 0 || dateObjects_SU[index - 1].getFullYear() !== year;
+                                                        const isFifthYear = isFirstOfYear && year % 5 === 0;
+                                                        return (
+                                                            isFirstOfYear && (
+                                                                <Box
+                                                                    key={`tick-${year}`}
+                                                                    position="absolute"
+                                                                    left={`${(index / (dateObjects_SU.length - 1)) * 100}%`}
+                                                                    bottom="-8px"
+                                                                    width="2px"
+                                                                    height={isFifthYear ? "30px" : "10px"}
+                                                                    bg="black"
+                                                                />
+                                                            )
+                                                        );
+                                                    })}
+                                                </SliderTrack>
+                                                <SliderThumb boxSize={30} bg="blue.450" />
+                                            </Slider>
+
+                                            <Box position="relative" mt="0.5" height="20px">
                                                 {dateObjects_SU.map((date, index) => {
                                                     const year = date.getFullYear();
                                                     const isFirstOfYear =
-                                                        index === 0 ||
-                                                        dateObjects_SU[index - 1].getFullYear() !==
-                                                            year;
-                                                    const isFifthYear =
-                                                        isFirstOfYear && year % 5 === 0;
+                                                        index === 0 || dateObjects_SU[index - 1].getFullYear() !== year;
+                                                    const isFifthYear = isFirstOfYear && year % 5 === 0;
+
                                                     return (
-                                                        isFirstOfYear && (
-                                                            <Box
-                                                                key={year}
+                                                        isFifthYear && (
+                                                            <Text
+                                                                key={`label-${year}`}
                                                                 position="absolute"
                                                                 left={`${(index / (dateObjects_SU.length - 1)) * 100}%`}
-                                                                bottom="-8px"
-                                                                width="2px"
-                                                                height={
-                                                                    isFifthYear ? "30px" : "10px"
-                                                                }
-                                                                bg="black"
-                                                            />
+                                                                transform="translateX(-50%)"
+                                                                fontSize="xs"
+                                                                whiteSpace="nowrap"
+                                                            >
+                                                                {year}
+                                                            </Text>
                                                         )
                                                     );
                                                 })}
-                                            </SliderTrack>
-                                            <SliderThumb boxSize={30} bg="blue.450" />
-                                        </Slider>
+                                            </Box>
+                                        </Box>
+
                                         <Box
                                             mt={2}
                                             textAlign="center"

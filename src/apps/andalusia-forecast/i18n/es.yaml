@@ -157,6 +157,7 @@ messages:
     heading_descr_end: .
     info: "Generado con información del Servicio de Cambio Climático de Copernicus [2019]. Datos elaborados a partir de proyecciones climáticas correspondientes al escenario de cambio climático RCP4.5 para el período 2011-2040. Ni la Comisión Europea ni el ECMWF son responsables del uso que pueda hacerse de la información o los datos de Copernicus que contiene. Copernicus Climate Change Service (2019): Agroclimatic indicators from 1951 to 2099 derived from climate projections. Copernicus Climate Change Service (C3S) Climate Data Store (CDS). DOI: 10.24381/cds.dad6e055. https://cds.climate.copernicus.eu/datasets/sis-agroclimatic-indicators "
     select_indicator: Seleccione indicador
+    info_slider: Utilice las teclas de flecha para navegar por el control deslizante de tiempo
     plot:
       title_cdd: 'DSC: Días secos consecutivos (estacional)'
       title_csu: 'DVC: Días de verano consecutivos (estacional)'
