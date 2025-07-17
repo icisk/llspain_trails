@@ -50,9 +50,6 @@ export function HydrologicalService() {
             "https://www.juntadeandalucia.es/medioambiente/mapwms/REDIAM_siose_2020?language=spa&version=1.3.0&service=WMS&request=GetLegendGraphic&sld_version=1.1.0&layer=raster_recon_siose20&format=image/png&STYLE=default",
         "thematic-2":"",
         "thematic-3":"",
-        "thematic-4":"",
-        "thematic-5":
-            "https://mapas.igme.es/gis/services/Cartografia_Geologica/IGME_Geode_50/MapServer/WmsServer?request=GetLegendGraphic%26version=1.3.0%26format=image/png%26layer=1"
     };
 
     const updateVisibleLegends = (layerId: string, show: boolean) => {
@@ -152,7 +149,7 @@ export function HydrologicalService() {
                     </p>
                     <RadioGroup onChange={setThematicMap} value={thematicMap}>
                         <VStack align="start">
-                            {["", "1", "2", "3", "4", "5"].map((value) => {
+                            {["", "1", "2", "3"].map((value) => {
                                 const legendKey = value ? `thematic-${value}` : null;
                                 const hasLegend = legendKey && !!legendUrls[legendKey];
                                 const labelId =
@@ -162,8 +159,6 @@ export function HydrologicalService() {
                                               "land_use",
                                               "geological",
                                               "groundwater",
-                                              "authorities",
-                                              "geological"
                                           ][+value - 1];
                                 const label = `${intl.formatMessage({ id: `hydro_service.selection_options.thematic_maps.${labelId}` })}${hasLegend ? " 🗺️" : ""}`;
                                 return (

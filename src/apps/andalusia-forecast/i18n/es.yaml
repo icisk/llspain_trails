@@ -16,16 +16,16 @@ messages:
       uncertainty: Grado de incertidumbre
       SPEI: Índice de sequía (SPEI)
       SPI: Índice de sequía (SPI)
-      spei3: Índice de sequía (SPEI) 3 meses
-      spei6: Índice de sequía (SPEI) 6 meses
-      spei9: Índice de sequía (SPEI) 9 meses
-      spei12: Índice de sequía (SPEI) 12 meses
-      spei24: Índice de sequía (SPEI) 24 meses
-      spi3: Índice de sequía (SPI) 3 meses
-      spi6: Índice de sequía (SPI) 6 meses
-      spi9: Índice de sequía (SPI) 9 meses
-      spi12: Índice de sequía (SPI) 12 meses
-      spi24: Índice de sequía (SPI) 24 meses
+      spei3: SPEI 3 meses
+      spei6: SPEI 6 meses
+      spei9: SPEI 9 meses
+      spei12: SPEI 12 meses
+      spei24: SPEI 24 meses
+      spi3: SPI 3 meses
+      spi6: SPI 6 meses
+      spi9: SPI 9 meses
+      spi12: SPI 12 meses
+      spi24: SPI 24 meses
       year: año
       month: mes
       date: Fecha
@@ -101,7 +101,7 @@ messages:
 
         Índice Estandarizado de Precipitación-Evapotranspiración (SPEI) (Vicente-Serrano et al, 2009) amplía el concepto del SPI al incorporar también la demanda atmosférica de agua, es decir, la evapotranspiración potencial (PET), que depende principalmente de la temperatura...
 
-        Haz clic para obtener más información
+        Haz clic en la 'i' para obtener más información.
 
       indicators_title: Indicadores de sequía
       indicators:  |
@@ -158,9 +158,9 @@ messages:
     info: "Generado con información del Servicio de Cambio Climático de Copernicus [2019]. Datos elaborados a partir de proyecciones climáticas correspondientes al escenario de cambio climático RCP4.5 para el período 2011-2040. Ni la Comisión Europea ni el ECMWF son responsables del uso que pueda hacerse de la información o los datos de Copernicus que contiene. Copernicus Climate Change Service (2019): Agroclimatic indicators from 1951 to 2099 derived from climate projections. Copernicus Climate Change Service (C3S) Climate Data Store (CDS). DOI: 10.24381/cds.dad6e055. https://cds.climate.copernicus.eu/datasets/sis-agroclimatic-indicators "
     select_indicator: Seleccione indicador
     plot:
-      title_cdd: Número de días secos consecutivos por trimestre
-      title_csu: Número de días secos consecutivos por trimestre
-      title_su: SU
+      title_cdd: 'DSC: Días secos consecutivos (estacional)'
+      title_csu: 'DVC: Días de verano consecutivos (estacional)'
+      title_su: 'DV: Días de verano (10-días)'
       xAxis: Número de días secos
       yAxis: Número de días
       popupvar: Número de días secos consecutivos

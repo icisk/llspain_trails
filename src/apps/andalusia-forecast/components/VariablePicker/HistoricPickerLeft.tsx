@@ -84,6 +84,7 @@ export function HistoricPickerLeft(props: HistoricPickerProps) {
 
         if (currentVar.startsWith("spei") || currentVar.startsWith("spi")) {
 
+
             let indicatorType = currentVar.startsWith("spei") ? "SPEI" : "SPI";
 
             const map = {

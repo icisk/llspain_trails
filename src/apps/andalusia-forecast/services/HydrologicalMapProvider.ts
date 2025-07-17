@@ -28,6 +28,8 @@ import XYZ from "ol/source/XYZ";
 import { get } from "http";
 import { Tile } from "ol";
 
+import { getVectorContext } from "ol/render";
+
 proj4.defs(
     "EPSG:25830",
     "+proj=utm +zone=30 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs"
@@ -182,27 +184,6 @@ export class HydrologicalMapProvider implements MapConfigProvider {
         geologicalLinesLayer.set("id", "thematic-2");
         geologicalLinesLayer.set("thematic", true);
 
-        // geologicalLayer (VECTOR)
-        const authoritiesLayer = new VectorLayer({
-            source: new VectorSource({
-                url: "https://i-cisk.dev.52north.org/data/collections/ll_spain_authorities/items?f=json&limit=3",
-                format: new GeoJSON()
-            }),
-            visible: false,
-            style: new Style({
-                fill: new Fill({
-                    color: "rgba(128, 0, 128, 0.4)"
-                }),
-                stroke: new Stroke({
-                    color: "#800080",
-                    width: 1.5
-                })
-            })
-        });
-
-        authoritiesLayer.set("id", "thematic-4");
-        authoritiesLayer.set("thematic", true);
-
         // authorities layer (VECTOR)
         const authoritiesLayerVector = new VectorLayer({
             source: new VectorSource({
@@ -220,22 +201,6 @@ export class HydrologicalMapProvider implements MapConfigProvider {
 
         authoritiesLayerVector.set("id", "authorities_boundaries");
         authoritiesLayerVector.set("vector", true);
-
-        const geoWMS = new TileLayer({
-            source: new TileWMS({
-                url: "https://i-cisk.dev.52north.org/data/collections/ll_spain_geology_simplified_epsg_4326/items?f=json",
-                params: { "LAYERS": "1" },
-                serverType: "mapserver",
-                transition: 0
-            }),
-            minResolution: 0.01,
-            extent: extent3857,
-            visible: false
-            // extent: ext3857
-        });
-
-        geoWMS.set("id", "thematic-5");
-        geoWMS.set("thematic", true);
 
         // hydro network layer (WMS)
         const networkLayer = new TileLayer({
@@ -326,7 +291,7 @@ export class HydrologicalMapProvider implements MapConfigProvider {
         });
 
         catchmentGuadalquivir.set("id", "catchmentGuadalquivir");
-        catchmentGuadalquivir.set("vector", true);
+        catchmentGuadalquivir.set("vector", true);      
 
         const landUseLayer = new TileLayer({
             source: new TileWMS({
@@ -401,16 +366,6 @@ export class HydrologicalMapProvider implements MapConfigProvider {
                 new SimpleLayer({
                     title: "GeologicalLines",
                     olLayer: geologicalLinesLayer,
-                    isBaseLayer: false
-                }),
-                new SimpleLayer({
-                    title: "authorities",
-                    olLayer: authoritiesLayer,
-                    isBaseLayer: false
-                }),
-                new SimpleLayer({
-                    title: "xxx",
-                    olLayer: geoWMS,
                     isBaseLayer: false
                 }),
 

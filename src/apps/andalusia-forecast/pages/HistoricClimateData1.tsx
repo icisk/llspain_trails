@@ -38,6 +38,8 @@ import {
     CS02_SPEIfullTimeSeriesChartOptions
 } from "../components/Charts/ChartOptions";
 
+import Swipe from "ol-ext/control/Swipe";
+
 // Marker layer for displaying clicks
 const markerSource = new VectorSource();
 const markerLayer = new VectorLayer({ source: markerSource, zIndex: 100 });

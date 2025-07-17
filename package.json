@@ -75,11 +75,13 @@
         "@testing-library/user-event": "catalog:",
         "@types/js-yaml": "catalog:",
         "@types/node": "catalog:",
+        "@types/ol-ext": "npm:@siedlerchr/types-ol-ext@^3.6.2",
         "@types/react": "catalog:",
         "@types/react-dom": "catalog:",
         "@typescript-eslint/eslint-plugin": "catalog:",
         "@typescript-eslint/parser": "catalog:",
         "@vitejs/plugin-react-swc": "catalog:",
+        "chroma-js": "^3.1.2",
         "eslint": "catalog:",
         "eslint-config-prettier": "catalog:",
         "eslint-import-resolver-typescript": "catalog:",
@@ -92,6 +94,8 @@
         "fast-glob": "catalog:",
         "handlebars": "catalog:",
         "happy-dom": "catalog:",
+        "highcharts": "^11.4.8",
+        "highcharts-react-official": "^3.2.1",
         "husky": "catalog:",
         "js-yaml": "catalog:",
         "jsdom": "catalog:",
@@ -105,14 +109,14 @@
         "typescript": "catalog:",
         "vite": "catalog:",
         "vite-plugin-eslint": "catalog:",
-        "vitest": "catalog:",
-        "highcharts": "^11.4.8",
-        "highcharts-react-official": "^3.2.1",
-        "chroma-js": "^3.1.2"
+        "vitest": "catalog:"
     },
     "engines": {
         "node": ">= 18",
         "pnpm": "^9"
     },
-    "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0"
+    "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0",
+    "dependencies": {
+        "ol-ext": "^4.0.33"
+    }
 }

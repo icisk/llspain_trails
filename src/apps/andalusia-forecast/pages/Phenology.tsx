@@ -195,9 +195,10 @@ export function Phenology() {
                 .then((data) => {
                     if (data?.ranges?.[selectedIndicator]?.values) {
                         if (selectedIndicator === "SU") {
+                            // For SU, limit the values to 1080 to 2160 to getthe values for 25 degrees
                             const limitedValues = data.ranges[selectedIndicator].values.slice(
-                                0,
-                                1080
+                                1080,
+                                2160
                             );
                             setIndicatorValues(limitedValues);
                         } else {
@@ -207,7 +208,7 @@ export function Phenology() {
                         console.warn("No values found for indicator:", selectedIndicator);
                         setIndicatorValues([]);
                     }
-                    console.log("Fetched data:", data);
+                    // console.log("Fetched data:", data);
                 })
                 .catch((error) => console.error("Error fetching data:", error))
                 .finally(() => setChartLoading(false));
@@ -219,19 +220,23 @@ export function Phenology() {
         const startYear = 2011;
         const endYear = 2040;
         const days = [5, 15, 25];
-
+    
         for (let year = startYear; year <= endYear; year++) {
             for (let month = 0; month < 12; month++) {
                 for (const day of days) {
                     const date = new Date(year, month, day);
-                    const label = date.toLocaleDateString("sv-SE"); // YYYY-MM-DD
+                    const dd = String(date.getDate()).padStart(2, '0');
+                    const mm = String(date.getMonth() + 1).padStart(2, '0');
+                    const yyyy = date.getFullYear();
+                    const label = `${dd}-${mm}-${yyyy}`;
                     labels.push(label);
                 }
             }
         }
-
+    
         return labels;
     }
+    
 
     useEffect(() => {
         if (IndicatorValues.length > 0) {
