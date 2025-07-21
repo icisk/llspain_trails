@@ -81,8 +81,14 @@ export function Phenology() {
         if (selectedIndicator === "SU") {
             const oneDayInMs = 24 * 60 * 60 * 1000; // 24 Stunden in Millisekunden
             const nextDay = new Date(date.getTime() + oneDayInMs);
-            return nextDay.toISOString().split("T")[0]; // YYYY-MM-DD
+        
+            const day = String(nextDay.getDate()).padStart(2, "0");
+            const month = String(nextDay.getMonth() + 1).padStart(2, "0"); // Monate sind 0-basiert
+            const year = nextDay.getFullYear();
+        
+            return `${day}-${month}-${year}`; // dd mm yyyy
         }
+        
 
         const month = date.getMonth() + 1; // months are 0-indexed
         const year = date.getFullYear();
@@ -254,14 +260,14 @@ export function Phenology() {
                     ...prevOptions,
                     title: { text: intl.formatMessage({ id: "phenology.plot.title_cdd" }) },
                     xAxis: { ...prevOptions.xAxis, categories: seasonLabels },
-                    series: [{ ...prevOptions.series[0], data: IndicatorValues }]
+                    series: [{ ...prevOptions.series[0], data: IndicatorValues, name: intl.formatMessage({ id: "phenology.plot.title_cdd" }) }]
                 }));
             } else if (selectedIndicator === "CSU") {
                 setChartOptions((prevOptions) => ({
                     ...prevOptions,
                     title: { text: intl.formatMessage({ id: "phenology.plot.title_csu" }) },
                     xAxis: { ...prevOptions.xAxis, categories: seasonLabels },
-                    series: [{ ...prevOptions.series[0], data: IndicatorValues }]
+                    series: [{ ...prevOptions.series[0], data: IndicatorValues, name: intl.formatMessage({ id: "phenology.plot.title_csu" })}]
                 }));
             } else if (selectedIndicator === "SU") {
                 const suDateLabels = generateSUDateLabels();
@@ -269,7 +275,7 @@ export function Phenology() {
                     ...prevOptions,
                     title: { text: intl.formatMessage({ id: "phenology.plot.title_su" }) },
                     xAxis: { ...prevOptions.xAxis, categories: suDateLabels },
-                    series: [{ ...prevOptions.series[0], data: IndicatorValues }]
+                    series: [{ ...prevOptions.series[0], data: IndicatorValues, name: intl.formatMessage({ id: "phenology.plot.title_su" }) }]
                 }));
             }
 
