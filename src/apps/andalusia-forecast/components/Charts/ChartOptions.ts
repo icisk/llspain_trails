@@ -1,6 +1,5 @@
 import {useIntl, useService} from "open-pioneer:react-hooks";
 
-
 export const espanolChartOptions = (intl)=> ({
     lang: {
         // Basic Date/Time Names
@@ -153,14 +152,16 @@ export const CS02_TPfullTimeSeriesChartOptions =(
         intl,
         precipTSDATA,
         tempTSDATA,
+        oldestDateOfAllTS,
+        newestDateOfAllTS
             ) => ({
-    chart: { type: "column", zoomType: "x" },
+    chart: { type: "column", zoomType: "x", marginLeft: 80, marginRight: 60 },
     title: { text: intl.formatMessage({ id: "global.plot.header_temp_precip" }) },
     xAxis: { type: 'datetime',
         title: {text: intl.formatMessage({ id: "global.vars.date" })},
         categories: undefined,
-        min: null,
-        max: null},
+        min: new Date(oldestDateOfAllTS).getTime(),
+        max: new Date(newestDateOfAllTS).getTime()},
     yAxis: [
         {title: {text: intl.formatMessage({ id: "global.vars.precip" }) + " (mm)" }, min: 0, max: 400, opposite: false},
         {title: {text: intl.formatMessage({ id: "global.vars.temp" }) + " (°C)" }, min: -10, max: 40, opposite: true}
@@ -189,36 +190,47 @@ export const CS02_TPfullTimeSeriesChartOptions =(
 
 export const CS02_SPEIfullTimeSeriesChartOptions =(
     intl,
-    spei3TSDATA,
-    spei24TSDATA) => ({
-    chart: { type: "column", zoomType: "x" },
-    title: { text: intl.formatMessage({ id: "global.plot.header_spei" }) },
+    DataLeft,
+    DataRight,
+    varLeft,
+    varRight,
+    oldestDateOfAllTS,
+    newestDateOfAllTS
+    ) => {
+    
+    const series = [{
+        name: intl.formatMessage({ id: `global.vars.${varLeft}` }),
+        data: DataLeft || [],
+        type: "spline",
+        color: "#FF6961",
+        yAxis: 0
+    }]
+    if (varLeft !== varRight || DataLeft !== DataRight) {
+        series.push({
+            name: intl.formatMessage({ id: `global.vars.${varRight}` }),
+            data: DataRight || [],
+            type: "spline",
+            color: "#FFD600",
+            yAxis: 0
+        });
+    }
+
+    return {
+    chart: { type: "column", zoomType: "x", marginLeft: 80, marginRight: 60 },
+    title: { text: intl.formatMessage({ id: "global.plot.header_indicator" }) },
     xAxis: { type: 'datetime',
         title: {text: intl.formatMessage({ id: "global.vars.date" })},
         categories: undefined,
-        min: null,
-        max: null},
+        min: new Date(oldestDateOfAllTS).getTime(),
+        max: new Date(newestDateOfAllTS).getTime()
+    },
     yAxis: [
-        {title: {text: intl.formatMessage({ id: "global.vars.SPEI" }) + " " }, min: -3, max: 3, opposite: false},
+        {title: {text: intl.formatMessage({ id: "global.vars.indicators" })}, min: -3, max: 3, opposite: false},
     ],
     tooltip: {
         valueDecimals: 1,
         xDateFormat: '%Y-%m-%d',
     },
-    series: [
-        {
-            name: intl.formatMessage({ id: "global.vars.SPEI3" }),
-            data: spei3TSDATA || [],
-            type: "spline",
-            color: "#FF6961",
-            yAxis: 0
-        },
-        {
-            name: intl.formatMessage({ id: "global.vars.SPEI24" }),
-            data: spei24TSDATA || [],
-            type: "spline",
-            color: "#0066ff",
-            yAxis: 0
-        },
-    ]
-});
+    series: series
+    }
+};

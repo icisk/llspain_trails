@@ -10,8 +10,8 @@ import { register } from "ol/proj/proj4";
 import proj4 from "proj4";
 import { get as getProjection } from "ol/proj";
 import { createCazorlaLayer, createLosPedrochesLayer } from "../components/utils/regionLayers";
-import {DeclaredService} from "@open-pioneer/runtime";
-import {Month, Variable} from "./PrecipitationLayerHandler";
+import { DeclaredService } from "@open-pioneer/runtime";
+import { Month, Variable } from "./PrecipitationLayerHandler";
 // Registrierung von EPSG:25830
 proj4.defs(
     "EPSG:25830",
@@ -19,27 +19,24 @@ proj4.defs(
 );
 register(proj4);
 
-export const MAP_ID2= "historical-climate2";
+export const MAP_ID2 = "historical-climate2";
 
 //temperature colors
-const pink = '#eb7fe9BC'
-const cold_blue = '#4f59cdBC'
-const ice_blue = '#1ceae1BC'
-const green = '#5fdf65BC'
-const yellow = '#eade57BC'
-const orange = '#ec8647BC'
-const red = '#832525BC'
-const dark_red = '#53050aBC'
+const pink = "#eb7fe9BC";
+const cold_blue = "#4f59cdBC";
+const ice_blue = "#1ceae1BC";
+const green = "#5fdf65BC";
+const yellow = "#eade57BC";
+const orange = "#ec8647BC";
+const red = "#832525BC";
+const dark_red = "#53050aBC";
 
-
-export interface HistoricMapProviderFace
-    extends DeclaredService<"app.HistoricMapProvider"> {
+export interface HistoricMapProviderFace extends DeclaredService<"app.HistoricMapProvider"> {
     currentMonth: Month;
     currentVariable: Variable;
     setMonth(month: Month): void;
     setVariable(variable: Variable): void;
 }
-
 
 export class HistoricClimateMapProvider2 implements HistoricMapProviderFace {
     mapId = MAP_ID2;
@@ -77,28 +74,30 @@ export class HistoricClimateMapProvider2 implements HistoricMapProviderFace {
                             ]
                         }),
                         style: {
-                            color: 
-
-                                [
+                            color: [
                                 "case",
-                                    ["all", ["==", ["*", ["band", 1], 50], 0], ["==", ["*", ["band", 2], 50], 0]],
-                                    [0, 0, 0, 0], // Transparent for 0 values outside the area of interest
-                                    ["<", ["band", 1], -10],
-                                    pink,
-                                    ["<=", ["band", 1], 0],
-                                    cold_blue,
-                                    ["<=", ["band", 1], 10],
-                                    ice_blue,
-                                    ["<=", ["band", 1], 20],
-                                    green,
-                                    ["<=", ["band", 1], 30],
-                                    yellow,
-                                    ["<=", ["band", 1], 40],
-                                    orange,
-                                    ["<=", ["band", 1], 50],
-                                    red,
-                                    dark_red
-                                ]
+                                [
+                                    "all",
+                                    ["==", ["*", ["band", 1], 50], 0],
+                                    ["==", ["*", ["band", 2], 50], 0]
+                                ],
+                                [0, 0, 0, 0], // Transparent for 0 values outside the area of interest
+                                ["<", ["band", 1], -10],
+                                pink,
+                                ["<=", ["band", 1], 0],
+                                cold_blue,
+                                ["<=", ["band", 1], 10],
+                                ice_blue,
+                                ["<=", ["band", 1], 20],
+                                green,
+                                ["<=", ["band", 1], 30],
+                                yellow,
+                                ["<=", ["band", 1], 40],
+                                orange,
+                                ["<=", ["band", 1], 50],
+                                red,
+                                dark_red
+                            ]
                         },
                         properties: { title: "Mean Temperature (2000-01)" }
                     }),

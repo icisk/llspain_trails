@@ -8,9 +8,8 @@ import proj4 from "proj4";
 import { createCazorlaLayer, createLosPedrochesLayer } from "../components/utils/regionLayers";
 import WebGLTileLayer from "ol/layer/WebGLTile";
 import GeoTIFF from "ol/source/GeoTIFF";
-import {phenoColorGradient, tempColorGradient} from "../components/utils/globals";
+import { phenoColorGradient, tempColorGradient } from "../components/utils/globals";
 import XYZ from "ol/source/XYZ";
-
 
 proj4.defs(
     "EPSG:25830",
@@ -19,12 +18,7 @@ proj4.defs(
 register(proj4);
 
 export const MAP_ID = "bioindicator";
-const ex = [
-    -794753.04,
-    4345052.37,
-    -194771.63,
-    4757383.53
-] //epsg 3857
+const ex = [-794753.04, 4345052.37, -194771.63, 4757383.53]; //epsg 3857
 
 export class BioindicatorMapProvider implements MapConfigProvider {
     mapId = MAP_ID;
@@ -42,8 +36,8 @@ export class BioindicatorMapProvider implements MapConfigProvider {
                     title: "ESRI Gray",
                     olLayer: new WebGLTileLayer({
                         source: new XYZ({
-                            url: 'https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
-                            attributions: '&copy; Esri, HERE, Garmin, OpenStreetMap contributors'
+                            url: "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+                            attributions: "&copy; Esri, HERE, Garmin, OpenStreetMap contributors"
                         }),
                         properties: { title: "ESRI Gray" }
                     }),
@@ -53,14 +47,13 @@ export class BioindicatorMapProvider implements MapConfigProvider {
                     id: "tif",
                     title: "CDD",
                     olLayer: new WebGLTileLayer({
-                        opacity: 0.5,
+                        opacity: 0.75,
                         source: new GeoTIFF({
                             normalize: false,
                             sources: [
                                 {
                                     url: "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/spain/agro_indicator/CDD/CDD_2011-04-16.tif",
-                                    nodata: -5.3e+37
-
+                                    nodata: -5.3e37
                                 }
                             ]
                         }),

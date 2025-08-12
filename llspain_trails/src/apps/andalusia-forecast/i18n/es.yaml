@@ -1,5 +1,0 @@
-# at least one empty yaml file must exist for each supported language
-# (might be empty if all messages are defined in the packages used by this app)
-messages:
-  heading: Pronósticos meteorológicos a medio plazo (hasta 6 meses)
-  description: Predicciones climáticas para planificar actividades económicas - monterías, explotaciones ganaderas y agrícolas, actividades forestales y de formación.

@@ -32,8 +32,8 @@ export class StoryMapProvider implements MapConfigProvider {
                     title: "ESRI Gray",
                     olLayer: new WebGLTileLayer({
                         source: new XYZ({
-                            url: 'https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
-                            attributions: '&copy; Esri, HERE, Garmin, OpenStreetMap contributors'
+                            url: "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+                            attributions: "&copy; Esri, HERE, Garmin, OpenStreetMap contributors"
                         }),
                         properties: { title: "ESRI Gray" }
                     }),

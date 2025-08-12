@@ -92,12 +92,13 @@ export const speiColorGradient = [
 
 
 export const phenoColors = {
-    "cdd_01": "rgba(0, 191, 255, 0.75)",   // Blue (0 - 20 days)
-    "cdd_02": "rgba(42,202,130,0.75)",    // Light Blue (21 - 40 days)
-    "cdd_03": "rgba(255, 255, 0, 0.75)",   // Yellow (41 - 60 days)
-    "cdd_04": "rgba(255, 165, 0, 0.75)",   // Orange (61 - 80 days)
-    "cdd_05": "rgba(255, 0, 0, 0.75)"      // Red (81 - 100 days)
+    "cdd_01": "#00bfff",   // Blue (0 - 20 days)
+    "cdd_02": "#2acb82",   // Light Blue (21 - 40 days)
+    "cdd_03": "#ffff00",   // Yellow (41 - 60 days)
+    "cdd_04": "#ffa500",   // Orange (61 - 80 days)
+    "cdd_05": "#ff0000",   // Red (81 - 100 days)
 };
+
 const boundaries_pheno = [-10, 0, 20, 40, 60, 80, 100];
 const gradientColors_pheno = [
     tempColors.black,
@@ -111,6 +112,33 @@ export const phenoColorGradient = [
     ...boundaries_pheno.flatMap((boundary) => [boundary, colorScale_pheno(boundary).hex()])
 ];
 
+export const phenocolors_SU = {
+    "su_00": "#1e90ff",  // DodgerBlue
+    "su_01": "#00bfff",  // DeepSkyBlue
+    "su_02": "#40e0d0",  // Turquoise
+    "su_03": "#2aca82",  // MediumAquamarine
+    "su_04": "#adff2f",  // GreenYellow
+    "su_05": "#ffff00",  // Yellow
+    "su_06": "#ffd700",  // Gold
+    "su_07": "#ffa500",  // Orange
+    "su_08": "#ff8c00",  // DarkOrange
+    "su_09": "#ff4500",  // OrangeRed
+    "su_10": "#ff0000",  // Red
+    "su_11": "#8b0000",  // DarkRed
+};  
+
+const boundaries_pheno_SU = [-10, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+const gradientColors_pheno_SU = [
+    tempColors.black,
+    ...Object.values(phenocolors_SU)
+];
+const colorScale_pheno_SU = chroma.scale(gradientColors_pheno_SU).domain(boundaries_pheno_SU).mode('lab');
+export const phenoColorGradient_SU = [
+    "interpolate",
+    ["linear"],
+    ["band", 1],
+    ...boundaries_pheno_SU.flatMap((boundary) => [boundary, colorScale_pheno_SU(boundary).hex()])
+];
 
 export const stationValueColors = {
     red: "#e01616", //#e01616

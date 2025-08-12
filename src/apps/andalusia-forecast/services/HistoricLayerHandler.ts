@@ -1,12 +1,15 @@
-import {DeclaredService, ServiceOptions} from "@open-pioneer/runtime";
-import {useIntl} from "open-pioneer:react-hooks";
-import {MapRegistry, SimpleLayer} from "@open-pioneer/map";
+import { DeclaredService, ServiceOptions } from "@open-pioneer/runtime";
+import { useIntl } from "open-pioneer:react-hooks";
+import { MapRegistry, SimpleLayer } from "@open-pioneer/map";
 import WebGLTileLayer from "ol/layer/WebGLTile";
-import {reactive, Reactive} from "@conterra/reactivity-core";
-import {MAP_ID} from "./HistoricClimateMapProvider";
-import {precipColorGradient, tempColorGradient, speiColorGradient} from "../components/utils/globals";
-import {GeoTIFF} from "ol/source";
-
+import { reactive, Reactive } from "@conterra/reactivity-core";
+import { MAP_ID } from "./HistoricClimateMapProvider";
+import {
+    precipColorGradient,
+    tempColorGradient,
+    speiColorGradient
+} from "../components/utils/globals";
+import { GeoTIFF } from "ol/source";
 
 export enum Month {
     January = "01",
@@ -20,17 +23,18 @@ export enum Month {
     September = "09",
     October = "10",
     November = "11",
-    December = "12",
+    December = "12"
 }
 
-export enum Year  { "dummy" = 2000, 
-                    "dummy2" = 2005
-};
+export enum Year {
+    "dummy" = 2000,
+    "dummy2" = 2005
+}
 
 export enum Variable {
     Precipitation = "precip",
     Temperature = "temp",
-    SPEI = "spei",
+    SPEI = "spei"
 }
 // console.log(tempColorGradient)
 // console.log(precipColorGradient)
@@ -49,7 +53,7 @@ export const getLocalizedMonthName = (month: Month): string => {
         [Month.September]: intl.formatMessage({ id: "global.months.sep" }),
         [Month.October]: intl.formatMessage({ id: "global.months.oct" }),
         [Month.November]: intl.formatMessage({ id: "global.months.nov" }),
-        [Month.December]: intl.formatMessage({ id: "global.months.dec" }),
+        [Month.December]: intl.formatMessage({ id: "global.months.dec" })
     };
     return monthNames[month];
 };
@@ -62,13 +66,16 @@ export interface HistoricLayerHandler extends DeclaredService<"app.HistoricLayer
     setMonthRight(month: Month): void;
     setYearRight(year: number): void;
     setVarRight(variable: Variable): void;
+    setUrlLeft(url: string): void;
+    setUrlRight(url: string): void;
     currentMonthLeft: Month;
     currentYearLeft: Year;
     currentVarLeft: Variable;
     currentMonthRight: Month;
     currentYearRight: Year;
     currentVarRight: Variable;
-    
+    currentUrlLeft: string;
+    currentUrlRight: string;
 }
 
 interface References {
@@ -86,17 +93,22 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
     #currentMonthRight: Reactive<Month> = reactive(1);
     #currentYearRight: Reactive<Year> = reactive(Year.dummy2);
     #currentVarRight: Reactive<Variable> = reactive("temp");
-   
-
+    #currentUrlLeft: Reactive<string> = reactive(
+        "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_2000_08_MeanTemperature_v0.tif"
+    );
+    #currentUrlRight: Reactive<string> = reactive(
+        "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_2005_01_MeanTemperature_v0.tif"
+    );
 
     constructor(options: ServiceOptions<References>) {
         const { mapRegistry } = options.references;
         this.mapRegistry = mapRegistry;
 
         this.mapRegistry.getMapModel(MAP_ID).then((model) => {
-            this.layerLeft = (model?.layers.getLayerById('left') as SimpleLayer).olLayer as WebGLTileLayer
-            this.layerRight = (model?.layers.getLayerById('right') as SimpleLayer).olLayer as WebGLTileLayer
-
+            this.layerLeft = (model?.layers.getLayerById("left") as SimpleLayer)
+                .olLayer as WebGLTileLayer;
+            this.layerRight = (model?.layers.getLayerById("right") as SimpleLayer)
+                .olLayer as WebGLTileLayer;
         });
     }
 
@@ -106,12 +118,12 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
     get currentVarRight(): Variable {
         return this.#currentVarRight.value;
     }
-    async setVarLeft(variable: Variable): void {
+    async setVarLeft(variable: Variable): Promise<void> {
         this.#currentVarLeft.value = variable;
         const newSource = await this.createSourceLeft();
         if (newSource) {
             this.layerLeft?.setSource(newSource);
-            this.layerLeft?.setStyle({ color: this.getColorStyleLeft()});
+            this.layerLeft?.setStyle({ color: this.getColorStyleLeft() });
         }
     }
     async setVarRight(variable: Variable): Promise<void> {
@@ -122,124 +134,144 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
             this.layerRight?.setStyle({ color: this.getColorStyleRight() });
         }
     }
-    
+
     get currentMonthLeft(): Month {
         return this.#currentMonthLeft.value;
     }
     get currentMonthRight(): Month {
         return this.#currentMonthRight.value;
     }
-    async setMonthLeft(month: Month): void {
+    async setMonthLeft(month: Month): Promise<void> {
         this.#currentMonthLeft.value = month;
         const source = await this.createSourceLeft();
         if (source) {
             this.layerLeft?.setSource(source);
-            this.layerLeft?.setStyle({ color: this.getColorStyleLeft()});
+            this.layerLeft?.setStyle({ color: this.getColorStyleLeft() });
         }
     }
-    async setMonthRight(month: Month): void {
+    async setMonthRight(month: Month): Promise<void> {
         this.#currentMonthRight.value = month;
-        const source = await this.createSourceRight()
+        const source = await this.createSourceRight();
         if (source) {
             this.layerRight?.setSource(source);
             this.layerRight?.setStyle({ color: this.getColorStyleRight() });
-        }        
+        }
     }
 
-    
     get currentYearLeft(): Year {
         return this.#currentYearLeft.value;
     }
     get currentYearRight(): Year {
         return this.#currentYearRight.value;
     }
-    async setYearLeft(year: number): void {
+    async setYearLeft(year: number): Promise<void> {
         this.#currentYearLeft.value = year;
         const source = await this.createSourceLeft();
         if (source) {
             this.layerLeft?.setSource(source);
-            this.layerLeft?.setStyle({ color: this.getColorStyleLeft()});
+            this.layerLeft?.setStyle({ color: this.getColorStyleLeft() });
         }
     }
-    async setYearRight(year: number): void {
+    async setYearRight(year: number): Promise<void> {
         this.#currentYearRight.value = year;
         const source = await this.createSourceRight();
         if (source) {
             this.layerRight?.setSource(source);
             this.layerRight?.setStyle({ color: this.getColorStyleRight() });
         }
-        
     }
 
+    get currentUrlLeft(): string {
+        return this.#currentUrlLeft.value;
+    }
+    get currentUrlRight(): string {
+        return this.#currentUrlRight.value;
+    }
+    set currentUrlLeft(url: string) {
+        this.#currentUrlLeft.value = url;
+    }
+    set currentUrlRight(url: string) {
+        this.#currentUrlRight.value = url;
+    }
 
     getColorStyleLeft() {
-        if (this.#currentVarLeft.value === "temp") {
-            return tempColorGradient;
-        }  if (this.#currentVarLeft.value === "precip") {
-            return precipColorGradient;
-        }  if (this.#currentVarLeft.value.startsWith("spei")) {
-            return speiColorGradient;
-        }
+        return this.getColorStyle(this.#currentVarLeft.value);
     }
     getColorStyleRight() {
-        if (this.#currentVarRight.value === "temp") {
-            return tempColorGradient;
-        }  if (this.#currentVarRight.value === "precip") {
-            return precipColorGradient;
-        } if (this.#currentVarRight.value.startsWith("spei")) {
-            return speiColorGradient;
+        return this.getColorStyle(this.#currentVarRight.value);
+    }
+    getColorStyle(value: string) {
+        switch (value) {
+            case "temp":
+                return tempColorGradient;
+            case "precip":
+                return precipColorGradient;
+            default:
+                return speiColorGradient;
         }
     }
 
+    private createSource(value: string, year: Year, month: Month) {
+        let historicLayer: string = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/`;
+        let year_month: string = `${year}_${month.toString().padStart(2, "0")}`;
+        switch (value) {
+            case "temp":
+                historicLayer += `temp/COG_${year_month}_MeanTemperature_v0.tif`;
+                break;
+            case "precip":
+                historicLayer += `precip/COG_${year_month}_precipitation_v1.tif`;
+                break;
+            //
+            // SPEI
+            //
+            case "spei3":
+                historicLayer += `data/SPEI/SPEI_3months/COG_SPEI3_${year_month}.tif`;
+                break;
+            case "spei6":
+                historicLayer += `data/SPEI/SPEI_6months/COG_SPEI6_${year_month}.tif`;
+                break;
+            case "spei9":
+                historicLayer += `data/SPEI/SPEI_9months/COG_SPEI9_${year_month}.tif`;
+                break;
+            case "spei12":
+                historicLayer += `data/SPEI/SPEI_12months/COG_SPEI12_${year_month}.tif`;
+                break;
+            case "spei24":
+                historicLayer += `data/SPEI/SPEI_24months/COG_SPEI24_${year_month}.tif`;
+                break;
+            //
+            // SPI
+            //
+            case "spi3":
+                historicLayer += `data/SPI/SPI_G_3months/COG_SPI_G3_${year_month}.tif`;
+                break;
+            case "spi6":
+                historicLayer += `data/SPI/SPI_G_6months/COG_SPI_G6_${year_month}.tif`;
+                break;
+            case "spi9":
+                historicLayer += `data/SPI/SPI_G_9months/COG_SPI_G9_${year_month}.tif`;
+                break;
+            case "spi12":
+                historicLayer += `data/SPI/SPI_G_12months/COG_SPI_G12_${year_month}.tif`;
+                break;
+            case "spi24":
+                historicLayer += `data/SPI/SPI_G_24months/COG_SPI_G24_${year_month}.tif`;
+                break;
+            default:
+                break;
+        }
+        return historicLayer;
+    }
 
     private async createSourceLeft() {
-        let historicLayer: string;
-        if (this.#currentVarLeft.value === "temp") {
-             historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}_MeanTemperature_v0.tif`;
-        }  if (this.#currentVarLeft.value === "precip") {
-             historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/precip/COG_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}_precipitation_v1.tif`;
-        } if (this.#currentVarLeft.value === "spei3") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_3months/COG_SPEI3_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tif`
-        } if (this.#currentVarLeft.value === "spei24") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_24months/COG_SPEI24_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tif`
-        }
-
+        let historicLayer: string = this.createSource(
+            this.#currentVarLeft.value,
+            this.currentYearLeft,
+            this.currentMonthLeft
+        );
         try {
-            const response = await fetch(historicLayer,
-                {
-                    method: "HEAD",
-                    mode: "cors",
-                    headers: {
-                        "Access-Control-Allow-Origin": "*"
-                    }
-                });
-            if (!response.ok) return undefined;
-        } catch {
-            return undefined;
-        }
-        
-        return new GeoTIFF({
-            normalize: false,
-            sources: [{url: historicLayer,
-                nodata: -5.3e+37
-            }]
-        });
-    }
-    private async createSourceRight() {
-        let historicLayer: string;
-        if (this.#currentVarRight.value === "temp") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}_MeanTemperature_v0.tif`;
-        }  if (this.#currentVarRight.value === "precip") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/precip/COG_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}_precipitation_v1.tif`;
-        } if (this.#currentVarRight.value === "spei3") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_3months/COG_SPEI3_${this.currentYearRight}_${this.currentMonthRight.toString().padStart(2,'0')}.tif`
-        } if (this.#currentVarRight.value === "spei24") {
-            historicLayer = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/SPEI/SPEI_24months/COG_SPEI24_${this.currentYearLeft}_${this.currentMonthLeft.toString().padStart(2,'0')}.tif`
-        }
-
-        try {
-            const response = await fetch(historicLayer, 
-                {
+            this.#currentUrlLeft.value = historicLayer;
+            const response = await fetch(historicLayer, {
                 method: "HEAD",
                 mode: "cors",
                 headers: {
@@ -250,13 +282,37 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
         } catch {
             return undefined;
         }
-        
+
         return new GeoTIFF({
             normalize: false,
-            sources: [{url: historicLayer,
-                       nodata: -5.3e+37
-            }]
+            sources: [{ url: historicLayer, nodata: -5.3e37 }]
         });
     }
-    
+
+    private async createSourceRight() {
+        let historicLayer: string = this.createSource(
+            this.#currentVarRight.value,
+            this.currentYearRight,
+            this.currentMonthRight
+        );
+
+        try {
+            this.#currentUrlRight.value = historicLayer;
+            const response = await fetch(historicLayer, {
+                method: "HEAD",
+                mode: "cors",
+                headers: {
+                    "Access-Control-Allow-Origin": "*"
+                }
+            });
+            if (!response.ok) return undefined;
+        } catch {
+            return undefined;
+        }
+
+        return new GeoTIFF({
+            normalize: false,
+            sources: [{ url: historicLayer, nodata: -5.3e37 }]
+        });
+    }
 }

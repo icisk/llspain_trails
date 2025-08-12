@@ -4,7 +4,7 @@ import OSM from "ol/source/OSM";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import GeoJSON from "ol/format/GeoJSON";
-import { Style, Stroke, Circle, Fill } from 'ol/style';
+import { Style, Stroke, Circle, Fill } from "ol/style";
 import { register } from "ol/proj/proj4";
 import proj4 from "proj4";
 import { createCazorlaLayer, createLosPedrochesLayer } from "../components/utils/regionLayers";
@@ -18,7 +18,7 @@ proj4.defs(
 );
 proj4.defs(
     "EPSG:4326",
-    "+proj=longlat +datum=WGS84 +no_defs"  // WGS84 (für GeoJSON)
+    "+proj=longlat +datum=WGS84 +no_defs" // WGS84 (für GeoJSON)
 );
 register(proj4);
 
@@ -32,14 +32,14 @@ export class HistoricClimateStationsMapProvider implements MapConfigProvider {
     constructor() {
         this.stationsLayer = new VectorLayer({
             source: new VectorSource({
-                url: 'https://i-cisk.dev.52north.org/data/collections/ll_spain_aemet_stations/items?f=json&limit=1000',
+                url: "https://i-cisk.dev.52north.org/data/collections/ll_spain_aemet_stations/items?f=json&limit=1000",
                 format: new GeoJSON(),
-                projection: 'EPSG:4326'
+                projection: "EPSG:4326"
             }),
             style: (feature) => {
-                const val = feature.get('VARS');
+                const val = feature.get("VARS");
                 let color;
-        
+
                 if (val === "both") {
                     color = stationValueColors.purple;
                 } else if (val === "precip") {
@@ -47,7 +47,7 @@ export class HistoricClimateStationsMapProvider implements MapConfigProvider {
                 } else {
                     color = stationValueColors.red;
                 }
-        
+
                 return new Style({
                     image: new Circle({
                         radius: 5,
@@ -55,7 +55,7 @@ export class HistoricClimateStationsMapProvider implements MapConfigProvider {
                             color: color
                         }),
                         stroke: new Stroke({
-                            color: 'black',
+                            color: "black",
                             width: 1
                         })
                     })
@@ -63,42 +63,41 @@ export class HistoricClimateStationsMapProvider implements MapConfigProvider {
             },
             zIndex: 200
         });
-        this.stationsLayer.set('title', 'Stations');
-        
+        this.stationsLayer.set("title", "Stations");
 
         this.studyAreaOutlineLayer = new VectorLayer({
             source: new VectorSource({
-                url: 'https://i-cisk.dev.52north.org/data/collections/ll_spain_ll_area/items?f=json',
+                url: "https://i-cisk.dev.52north.org/data/collections/ll_spain_ll_area/items?f=json",
                 format: new GeoJSON(),
-                projection: 'EPSG:4326'
+                projection: "EPSG:4326"
             }),
             style: new Style({
                 stroke: new Stroke({
-                    color: 'black',
+                    color: "black",
                     width: 2
                 })
             }),
             zIndex: 100
         });
-        this.studyAreaOutlineLayer.set('title', 'Study Area Outline');
+        this.studyAreaOutlineLayer.set("title", "Study Area Outline");
     }
 
     async getMapConfig(): Promise<MapConfig> {
         return {
             initialView: {
                 kind: "position",
-                center: { x: -460000, y: 4540000 }, 
+                center: { x: -460000, y: 4540000 },
                 zoom: 8
             },
-            projection: "EPSG:3857", 
+            projection: "EPSG:3857",
             layers: [
                 // OpenStreetMap as background
                 new SimpleLayer({
                     title: "ESRI Gray",
                     olLayer: new WebGLTileLayer({
                         source: new XYZ({
-                            url: 'https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
-                            attributions: '&copy; Esri, HERE, Garmin, OpenStreetMap contributors'
+                            url: "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+                            attributions: "&copy; Esri, HERE, Garmin, OpenStreetMap contributors"
                         }),
                         properties: { title: "ESRI Gray" }
                     }),
@@ -124,7 +123,6 @@ export class HistoricClimateStationsMapProvider implements MapConfigProvider {
                     olLayer: this.stationsLayer,
                     isBaseLayer: false
                 })
-                
             ]
         };
     }

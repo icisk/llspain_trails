@@ -14,13 +14,26 @@ messages:
       precip: Precipitación 
       precip_cum:  Precipitación acumulada mensual 
       uncertainty: Grado de incertidumbre
-      SPEI: Índice de sequía
-      SPEI3: Índice de sequía 3 meses 
-      SPEI24: Índice de sequía 24 meses 
+      SPEI: Índice de sequía (SPEI)
+      SPI: Índice de sequía (SPI)
+      spei3: SPEI 3 meses
+      spei6: SPEI 6 meses
+      spei9: SPEI 9 meses
+      spei12: SPEI 12 meses
+      spei24: SPEI 24 meses
+      spi3: SPI 3 meses
+      spi6: SPI 6 meses
+      spi9: SPI 9 meses
+      spi12: SPI 12 meses
+      spi24: SPI 24 meses
       year: año
       month: mes
       date: Fecha
-      csd: Días secos consecutivos
+      DSC: DSC
+      DVC: DVC
+      DV: DV
+      indicators: Índices de sequía
+      placeholder_indicator: Seleccione un indicador
     controls:
       sel_month: Seleccione el mes 
       sel_year: Seleccione el año
@@ -34,12 +47,25 @@ messages:
       header_temp_precip: Precipitación (acumulada mensual) y temperatura media mensual
       header_precip: Datos de precipitación
       header_temp: Datos de temperatura
-      header_spei: Índice de sequía SPEI
+      header_indicator: Datos de indicadores
     legend:
       uncertainty:
         red: alta
         yellow: media
         green: baja
+      su:
+        su_00: "0 días"
+        su_01: "1 día"
+        su_02: "2 días"
+        su_03: "3 días"
+        su_04: "4 días"
+        su_05: "5 días"
+        su_06: "6 días"
+        su_07: "7 días"
+        su_08: "8 días"
+        su_09: "9 días"
+        su_10: "10 días"
+        su_11: "11 días"
     months:
       jan: Enero
       feb: Febrero
@@ -70,13 +96,34 @@ messages:
     heading: Mapas climáticos históricos
     heading_descr: Explore los mapas generados a partir de datos históricos de la red de estaciones meteorológicas de la AEMET entre los años 2000 y 2020.
     info:
-      SPEI: 'Índice de Precipitación Evapotranspiración Estandarizada. Muestra la severidad de la sequía meteorológica teniendo en cuenta la Precipitación y la Demanda de agua por parte de la atmósfera. Cuanto más negativo es el valor, más severa es la sequía meteorológica.'
+      indicators_short: |
+        Índice de Precipitación Estandarizado (SPI) (McKee et al 1993) es un índice ampliamente utilizado para cuantificar condiciones de sequía meteorológica...
+
+        Índice Estandarizado de Precipitación-Evapotranspiración (SPEI) (Vicente-Serrano et al, 2009) amplía el concepto del SPI al incorporar también la demanda atmosférica de agua, es decir, la evapotranspiración potencial (PET), que depende principalmente de la temperatura...
+
+        Haz clic en la 'i' para obtener más información.
+
+      indicators_title: Indicadores de sequía
+      indicators:  |
+        Índice de Precipitación Estandarizado (SPI) (McKee et al 1993) es un índice ampliamente utilizado para cuantificar condiciones de sequía meteorológica. Se basa exclusivamente en datos de precipitación y permite evaluar anomalías de humedad en diferentes escalas temporales (3, 6, 9, 12 y 24 meses). Para su cálculo, se ajusta una distribución de probabilidad gamma (Lloyd-Hughes y Saunders, 2002) descrita por a la serie histórica de precipitaciones, y luego se transforma a una distribución normal estándar. Los valores negativos del SPI indican condiciones más secas de lo normal, mientras que los valores positivos indican condiciones más húmedas. El SPI permite comparar condiciones de sequía entre regiones con diferentes regímenes climáticos. 
+
+        Índice Estandarizado de Precipitación-Evapotranspiración (SPEI) (Vicente-Serrano et al, 2009) amplía el concepto del SPI al incorporar también la demanda atmosférica de agua, es decir, la evapotranspiración potencial (PET), que depende principalmente de la temperatura. Esto permite una evaluación más completa del balance hídrico, especialmente útil en el contexto del cambio climático, donde el aumento de temperaturas puede intensificar la sequía incluso sin una disminución significativa en la precipitación. El SPEI también se calcula a diferentes escalas temporales (3, 6, 9, 12 y 24 meses) y utiliza una metodología similar al SPI, pero aplicada al déficit hídrico (precipitación menos PET). 
+        Computación en base al modulo SPI_SPEI, MiraMon (https://www.miramon.cat/Index_spa.htm) 
+        
+        Lloyd-Hughes B, Saunders MA. 2002. A drought climatology for Europe. International Journal of Climatology, 22, 1571-1592. https://doi.org/10.1002/joc.846 
+
+        McKee T B, Doesken NJ,  Kleist J. 1993. The relationship of drought frequency and duration to time scales. Preprints, Eighth Conf. on Applied Climatology. Anaheim, CA, Amer. Meteor. Soc., 179-184. 
+
+        Vicente-Serrano SM, Beguería S, López-Moreno JI. 2010. A Multiscalar Drought Index Sensitive to Global Warming: The Standardized Precipitation Evapotranspiration Index. Journal of Climate. Vol 23:7, 1696-1718. https://doi.org/10.1175/2009JCLI2909.1 
+
+      SPI: 'Índice de Precipitación Estandarizada. Muestra la severidad de la sequía meteorológica teniendo en cuenta únicamente la Precipitación. Cuanto más negativo es el valor, más severa es la sequía meteorológica.'
       temp: 'Modelización de la temperatura media mensual (unidades: ºC) generada por regresión múltiple lineal e interpolación de residuos a partir de los valores en las estaciones y variables geográficas. (Ninyerola M, Pons X Roure JM. 2000. A methodological approach of climatological modelling of air temperature and precipitation through GIS techniques. Int. J. Climatol. 20: 1823–1841)'
       precip: 'Precipitación acumulada mensual (unidades: mm). Modelización de la precipitación mensual acumulada (unidades: mm) generada por regresión múltiple lineal e interpolación de residuos a partir de los valores en las estaciones y variables geográficas. (Ninyerola M, Pons X Roure JM. 2000. A methodological approach of climatological modelling of air temperature and precipitation through GIS techniques. Int. J. Climatol. 20: 1823–1841)'
     radio_buttons:
       heading: 'Seleccionar modo de visualización de datos:'
       full_series: Serie temporal completa
       compare: Comparar años
+    download_button: descargar datos
   historic_station:
     nav: Datos de estaciones
     heading: Datos históricos de estaciones
@@ -87,6 +134,7 @@ messages:
     heading_descr: Datos históricos de estaciones climáticas
     heading_legend: Conjuntos de datos disponibles
     select_stations: Seleccione estación
+    mouseoverInfo: Pase el cursor sobre una estación
     radio_buttons:
       temp: Temperatura
       precip: Precipitación
@@ -102,14 +150,27 @@ messages:
     heading_descr: Proyecciones climáticas hasta 2100
   phenology:
     nav: Indicadores agroclimáticos
-    heading: Número máximo de días secos consecutivos.
-    heading_descr: "Período más largo de días consecutivos dentro de un trimestre con suma de precipitación diaria inferior a 1 mm. Las fechas corresponden a los días centrales de los trimestres:\n\n• Dic, Ene, Feb (invierno)\n• Mar, Abr, May (primavera)\n• Jun, Jul, Ago (verano)\n• Sep, Oct, Nov (otoño)"
+    heading: Indicadores agroclimáticos de 2011 a 2040 derivados de proyecciones climáticas
+    heading_descr: "Este conjunto de datos proporciona indicadores agroclimáticos utilizados para caracterizar las interacciones planta-clima para la agricultura global. Los indicadores agroclimáticos son útiles para transmitir la variabilidad y el cambio climático en términos que sean significativos para el sector agrícola. En este conjunto de datos se proporciona un total de 3 indicadores con una resolución espacial de 50 km x 50 km. La resolución temporal de las variables difiere según el indicador: están disponibles en resolución de 10 días consecutivos (10 días) o estacional. Los datos fueron elaborados por el "
+    heading_descr_link: "https://cds.climate.copernicus.eu/datasets/sis-agroclimatic-indicators?tab=overview"
+    heading_descr_link_text: Servicio de Cambio Climático Copernicus
+    heading_descr_end: .
     info: "Generado con información del Servicio de Cambio Climático de Copernicus [2019]. Datos elaborados a partir de proyecciones climáticas correspondientes al escenario de cambio climático RCP4.5 para el período 2011-2040. Ni la Comisión Europea ni el ECMWF son responsables del uso que pueda hacerse de la información o los datos de Copernicus que contiene. Copernicus Climate Change Service (2019): Agroclimatic indicators from 1951 to 2099 derived from climate projections. Copernicus Climate Change Service (C3S) Climate Data Store (CDS). DOI: 10.24381/cds.dad6e055. https://cds.climate.copernicus.eu/datasets/sis-agroclimatic-indicators "
+    select_indicator: Seleccione indicador
+    info_slider: Utilice las teclas de flecha para navegar por el control deslizante de tiempo
     plot:
-      title: Número de días secos consecutivos por trimestre
+      title_cdd: 'DSC: Días secos consecutivos (estacional)'
+      title_csu: 'DVC: Días de verano consecutivos (estacional)'
+      title_su: 'DV: Días de verano (10-días)'
       xAxis: Número de días secos
       yAxis: Número de días
       popupvar: Número de días secos consecutivos
+    cdd: 'DSC: Número máximo de días secos consecutivos (estacional)'
+    csu: 'DVC: Número máximo de días de verano consecutivos (estacional)'
+    su: 'DV: Días de verano (10-días)'
+    cdd_info: 'Período más largo de días consecutivos dentro de un trimestre con suma de precipitación diaria inferior a 1 mm. Los trimestres corresponden a las estaciones: Dic-Ene-Feb (invierno), Mar-Abr-May (primavera), Jun-Jul-Ago (verano), Sep-Oct-Nov (otoño). Este indicador se utiliza para el seguimiento de la sequía.'
+    csu_info: 'Período más largo de días consecutivos dentro de un trimestre con temperatura máxima diaria superior a 25°C. Los trimestres corresponden a las estaciones: Dic-Ene-Feb (invierno), Mar-Abr-May (primavera), Jun-Jul-Ago (verano), Sep-Oct-Nov (otoño). Este indicador proporciona información sobre el estrés por sequía.'
+    su_info: 'Número de días dentro de intervalos fijos de 10 días con temperatura máxima diaria superior a 25°C. Las fechas corresponden a los días centrales de los períodos: 1-10, 11-20, 21 – fin de mes. Este indicador proporciona una indicación de la aparición de estrés por calor.'
   hydro_service:
     legend:
         hide: ocultar leyenda
@@ -138,6 +199,7 @@ messages:
         puntos_acui: Puntos Acuiferos
         catchmentGuadiana: Captaciones Guadiana
         catchmentGuadalquivir: Captaciones Guadalquivir
+        measure_stations: Puntos de datos disponibles
         
       aquifer_info: 'Chismorreos del acuífero'
   historic_stations:

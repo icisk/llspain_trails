@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from './pages/Home';
+import Home from "./pages/Home";
 import { Forecast } from "./pages/Forecast";
 import HistoricClimateData1 from "./pages/HistoricClimateData1";
 import Projections from "./pages/Projections";
@@ -12,10 +12,10 @@ import { useIntl, useService } from "open-pioneer:react-hooks";
 import { ApplicationContext } from "@open-pioneer/runtime";
 
 const AppUI = () => {
-    const baseUrl = import.meta.env['BASE_URL']
+    const baseUrl = import.meta.env["BASE_URL"];
     return (
         <Router basename={baseUrl}>
-            <Navbar/>
+            <Navbar />
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/forecast" element={<Forecast />} />

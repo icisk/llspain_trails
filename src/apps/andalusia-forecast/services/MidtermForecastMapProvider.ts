@@ -9,7 +9,6 @@ import { createCazorlaLayer, createLosPedrochesLayer } from "../components/utils
 import WebGLTileLayer from "ol/layer/WebGLTile";
 import XYZ from "ol/source/XYZ";
 
-
 proj4.defs(
     "EPSG:25830",
     "+proj=utm +zone=30 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs"
@@ -34,8 +33,8 @@ export class MidtermForecastMapProvider implements MapConfigProvider {
                     title: "ESRI Gray",
                     olLayer: new WebGLTileLayer({
                         source: new XYZ({
-                            url: 'https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
-                            attributions: '&copy; Esri, HERE, Garmin, OpenStreetMap contributors'
+                            url: "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+                            attributions: "&copy; Esri, HERE, Garmin, OpenStreetMap contributors"
                         }),
                         properties: { title: "ESRI Gray" }
                     }),
