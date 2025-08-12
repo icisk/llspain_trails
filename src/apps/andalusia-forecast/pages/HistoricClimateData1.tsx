@@ -202,6 +202,8 @@ const HistoricClimateData1 = () => {
 
             const minDate = new Date(Math.min(...dates));
             const maxDate = new Date(Math.max(...dates));
+            
+            console.log(minDate, maxDate)
 
             setOldestDateOfAllTS(minDate);
             setNewestDateOfAllTS(maxDate);
@@ -209,9 +211,11 @@ const HistoricClimateData1 = () => {
 
         const fetchMetaData = async () => {
             const tempMetadataUrl =
-                "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/creaf_historic_temperature_metrics.zarr/.zmetadata";
+                "https://i-cisk.dev.52north.org/data/collections/creaf_historic_temperature/position?coords=POINT(0 0)&f=json";
+                //"https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/creaf_historic_temperature_metrics.zarr/.zmetadata";
             const precipMetadataUrl =
-                "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/creaf_historic_precip_metrics.zarr/.zmetadata";
+                "https://i-cisk.dev.52north.org/data/collections/creaf_historic_precip/position?coords=POINT(0 0)&f=json";
+                //"https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/creaf_historic_precip_metrics.zarr/.zmetadata";
 
             const spei3MetaDataUrl =
                 "https://i-cisk.dev.52north.org/data/collections/creaf_historic_SPEI_3months/position?coords=POINT(0 0)&f=json";
@@ -265,9 +269,13 @@ const HistoricClimateData1 = () => {
                     fetch(spi12MetaDataUrl).then((res) => res.json()),
                     fetch(spi24MetaDataUrl).then((res) => res.json())
                 ]);
+                
+                //
+                //const tempMetrics = tempMetadata.metadata[".zattrs"].metrics;
+                //const precipMetrics = precipMetadata.metadata[".zattrs"].metrics;
 
-                const tempMetrics = tempMetadata.metadata[".zattrs"].metrics;
-                const precipMetrics = precipMetadata.metadata[".zattrs"].metrics;
+                const tempMetrics = tempMetadata?.domain.axes.time;
+                const precipMetrics = precipMetadata?.domain.axes.time;
 
                 const spei3Metrics = spei3Metadata?.domain.axes.time;
                 const spei6Metrics = spei6Metadata?.domain.axes.time;
@@ -281,8 +289,20 @@ const HistoricClimateData1 = () => {
                 const spi12Metrics = spi12Metadata?.domain.axes.time;
                 const spi24Metrics = spi24Metadata?.domain.axes.time;
 
-                const tempTimeSeries = meta2TS(tempMetrics);
-                const precipTimeSeries = meta2TS(precipMetrics);
+                //const tempTimeSeries = meta2TS(tempMetrics);
+                //const precipTimeSeries = meta2TS(precipMetrics);
+                
+                const tempTimeSeries = coords2TS(
+                    tempMetrics.start,
+                    tempMetrics.stop,
+                    tempMetrics.num
+                )
+                
+                const precipTimeSeries = coords2TS(
+                    precipMetrics.start,
+                    precipMetrics.stop,
+                    precipMetrics.num
+                )
 
                 const spei3TimeSeries = coords2TS(
                     spei3Metrics.start,
