@@ -83,6 +83,14 @@ messages:
       slider:
         title: Mueva el control deslizante para ajustar la comparación de capas del mapa.
 
+  footer:
+    info: Los usuarios deben verificar la información de forma independiente y utilizar el servicio bajo su propio riesgo.
+    fullDisclaimerText: |
+      Este servicio web integra y combina diversas fuentes de datos disponibles públicamente, incluidos datos e información del Servicio de Cambio Climático de Copernicus (C3S) y de otros componentes de Copernicus. El servicio ha sido desarrollado como parte del proyecto europeo de Investigación y Desarrollo I-CISK, y los productos de información aquí proporcionados han sido elaborados con cuidado y según nuestro mejor conocimiento.
+      El servicio puede procesar, integrar o transformar datos de Copernicus. Aunque nos esforzamos por ofrecer información útil y de alta calidad, los resultados no son productos oficiales de Copernicus. La Unión Europea y el programa Copernicus no asumen ninguna responsabilidad por el uso de los datos o la información presentada a través de este servicio.
+      Asimismo, la información proporcionada a través de este servicio se ofrece “tal cual”, sin ningún tipo de garantía, ya sea expresa o implícita, incluyendo, entre otras, la idoneidad para un propósito particular, precisión, exhaustividad, actualidad o fiabilidad.
+      Rechazamos toda responsabilidad por cualquier pérdida, daño o inconveniente que pueda resultar del uso del servicio o de la confianza en sus resultados. Se recomienda encarecidamente a los usuarios que verifiquen de manera independiente la información y utilicen este servicio bajo su propio riesgo.
+      Al utilizar este servicio web, usted reconoce y acepta estos términos.
   home:
     nav: Portada
     heading: Servicios climáticos I-CISK
