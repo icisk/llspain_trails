@@ -93,8 +93,9 @@ messages:
       Al utilizar este servicio web, usted reconoce y acepta estos términos.
   home:
     nav: Portada
-    heading: Servicios climáticos I-CISK
-    heading_descr: Esta página da acceso a los servicios climáticos desarrollados en el marco del proyecto I-CISK para el Laboratorio Vivo Andalucía-Los Pedroches. 🇪🇸  
+    heading: Servicios climáticos I-CISK para Los Pedroches
+    heading_descr: "Esta página da acceso a los servicios climáticos desarrollados en el marco del proyecto I-CISK para el Laboratorio Vivo Andalucía-Los Pedroches. Para más información:"
+    icisk_link: https://icisk.eu/living-labs/living-lab-details-es/  
   forecast:
     nav: Mapas previsión a 6 meses
     heading: Pronósticos meteorológicos mensuales a medio plazo (hasta 6 meses)

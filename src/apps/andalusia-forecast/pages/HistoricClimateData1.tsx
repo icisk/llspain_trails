@@ -799,93 +799,95 @@ const HistoricClimateData1 = () => {
     useEffect(() => {}, [histLayerHandler]);
 
     return (
-        <Box>
-            <Header subpage={"historic_compare"} />
+        <Container minWidth={"container.xl"}>  
             <Box>
-                <HStack>
-                    <HistoricPickerLeft onChange={onLeftPickerChange} />
-                    <HistoricPickerRight onChange={onRightPickerChange} />
-                </HStack>
-                <Container flex={2} minWidth={"container.xl"}>
-                    <Box width="100%" height="540px" position="relative">
-                        {/*<MainMap MAP_ID={MAP_ID}/>*/}
+                <Header subpage={"historic_compare"} />
+                <Box>
+                    <HStack>
+                        <HistoricPickerLeft onChange={onLeftPickerChange} />
+                        <HistoricPickerRight onChange={onRightPickerChange} />
+                    </HStack>
+                    <Container flex={2} minWidth={"container.xl"}>
+                        <Box width="100%" height="540px" position="relative">
+                            {/*<MainMap MAP_ID={MAP_ID}/>*/}
 
-                        <Box height={"500px"} pt={2} overflow="visible">
-                            <MapContainer mapId={MAP_ID} role="main">
-                                <MapAnchor
-                                    position="bottom-right"
-                                    horizontalGap={10}
-                                    verticalGap={30}
-                                >
-                                    <Flex
-                                        role="bottom-right"
-                                        direction="column"
-                                        gap={1}
-                                        padding={1}
+                            <Box height={"500px"} pt={2} overflow="visible">
+                                <MapContainer mapId={MAP_ID} role="main">
+                                    <MapAnchor
+                                        position="bottom-right"
+                                        horizontalGap={10}
+                                        verticalGap={30}
                                     >
-                                        <ZoomIn mapId={MAP_ID} />
-                                        <ZoomOut mapId={MAP_ID} />
-                                    </Flex>
-                                </MapAnchor>
-                            </MapContainer>
-                        </Box>
-                        <Box mb={4}>
-                            <CoordsScaleBar MAP_ID={MAP_ID} />
-                        </Box>
-
-                        <DynamicLegend variable={varLeft} position={"left"} />
-                        <DynamicLegend variable={varRight} position={"right"} />
-                    </Box>
-
-                    {leftLayers && rightLayers && mapModel.map && (
-                        <LayerSwipe
-                            map={mapModel.map}
-                            sliderValue={sliderValue}
-                            onSliderValueChanged={(newValue) => {
-                                setSliderValue(newValue);
-                            }}
-                            leftLayers={leftLayers}
-                            rightLayers={rightLayers}
-                        />
-                    )}
-                    <Box mb={4} gap={10}>
-                        <RegionZoom MAP_ID={MAP_ID} />
-                    </Box>
-                    <Box mt={4}>
-                        <RadioGroup
-                            onChange={(value) => {
-                                setIsComparisonMode(value === "true");
-                            }}
-                            value={isComparisonMode ? "true" : "false"}
-                        >
-                            <Box>
-                                {intl.formatMessage({
-                                    id: "historic_compare.radio_buttons.heading"
-                                })}
+                                        <Flex
+                                            role="bottom-right"
+                                            direction="column"
+                                            gap={1}
+                                            padding={1}
+                                        >
+                                            <ZoomIn mapId={MAP_ID} />
+                                            <ZoomOut mapId={MAP_ID} />
+                                        </Flex>
+                                    </MapAnchor>
+                                </MapContainer>
                             </Box>
-                            <Stack direction="row">
-                                <Radio value="true">
+                            <Box mb={4}>
+                                <CoordsScaleBar MAP_ID={MAP_ID} />
+                            </Box>
+
+                            <DynamicLegend variable={varLeft} position={"left"} />
+                            <DynamicLegend variable={varRight} position={"right"} />
+                        </Box>
+
+                        {leftLayers && rightLayers && mapModel.map && (
+                            <LayerSwipe
+                                map={mapModel.map}
+                                sliderValue={sliderValue}
+                                onSliderValueChanged={(newValue) => {
+                                    setSliderValue(newValue);
+                                }}
+                                leftLayers={leftLayers}
+                                rightLayers={rightLayers}
+                            />
+                        )}
+                        <Box mb={4} gap={10}>
+                            <RegionZoom MAP_ID={MAP_ID} />
+                        </Box>
+                        <Box mt={4}>
+                            <RadioGroup
+                                onChange={(value) => {
+                                    setIsComparisonMode(value === "true");
+                                }}
+                                value={isComparisonMode ? "true" : "false"}
+                            >
+                                <Box>
                                     {intl.formatMessage({
-                                        id: "historic_compare.radio_buttons.compare"
+                                        id: "historic_compare.radio_buttons.heading"
                                     })}
-                                </Radio>
-                                <Radio value="false">
-                                    {intl.formatMessage({
-                                        id: "historic_compare.radio_buttons.full_series"
-                                    })}
-                                </Radio>
-                            </Stack>
-                        </RadioGroup>
-                        <div>
-                            <HighchartsReact highcharts={Highcharts} options={chartOptions} />
-                        </div>
-                        <div>
-                            <HighchartsReact highcharts={Highcharts} options={speiChartOptions} />
-                        </div>
-                    </Box>
-                </Container>
+                                </Box>
+                                <Stack direction="row">
+                                    <Radio value="true">
+                                        {intl.formatMessage({
+                                            id: "historic_compare.radio_buttons.compare"
+                                        })}
+                                    </Radio>
+                                    <Radio value="false">
+                                        {intl.formatMessage({
+                                            id: "historic_compare.radio_buttons.full_series"
+                                        })}
+                                    </Radio>
+                                </Stack>
+                            </RadioGroup>
+                            <div>
+                                <HighchartsReact highcharts={Highcharts} options={chartOptions} />
+                            </div>
+                            <div>
+                                <HighchartsReact highcharts={Highcharts} options={speiChartOptions} />
+                            </div>
+                        </Box>
+                    </Container>
+                </Box>
             </Box>
-        </Box>
+        </Container>
     );
 };
 

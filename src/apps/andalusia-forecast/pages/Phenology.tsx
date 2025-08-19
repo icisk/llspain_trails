@@ -297,28 +297,28 @@ export function Phenology() {
             {/*    ))}*/}
             {/*/>*/}
 
-            <Box border="2px solid #3498DB" borderRadius="10px" padding={3}>
-                <HStack>
-                    <Box fontSize="xl">{intl.formatMessage({ id: "phenology.heading" })}</Box>
-                    <InfoTooltip i18n_path="phenology.info" />
-                </HStack>
-                <Box pt={1}>
-                    <p>
-                        {intl.formatMessage({ id: "phenology.heading_descr" })}{" "}
-                        <a
-                        href={intl.formatMessage({ id: "phenology.heading_descr_link" })}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{ color: "#1a0dab", textDecoration: "underline" }}
-                        >
-                        {intl.formatMessage({ id: "phenology.heading_descr_link_text" })}
-                        </a>
-                        {intl.formatMessage({ id: "phenology.heading_descr_end" })}
-                    </p>
-                </Box>
-            </Box>
-
             <Container flex={2} minWidth={"container.xl"}>
+                <Box border="2px solid #3498DB" borderRadius="10px" padding={3}>
+                    <HStack>
+                        <Box fontSize="xl">{intl.formatMessage({ id: "phenology.heading" })}</Box>
+                        <InfoTooltip i18n_path="phenology.info" />
+                    </HStack>
+                    <Box pt={1}>
+                        <p>
+                            {intl.formatMessage({ id: "phenology.heading_descr" })}{" "}
+                            <a
+                            href={intl.formatMessage({ id: "phenology.heading_descr_link" })}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ color: "#1a0dab", textDecoration: "underline" }}
+                            >
+                            {intl.formatMessage({ id: "phenology.heading_descr_link_text" })}
+                            </a>
+                            {intl.formatMessage({ id: "phenology.heading_descr_end" })}
+                        </p>
+                    </Box>
+                </Box>
+
                 <Box mt={4}>
                     <Text>{intl.formatMessage({ id: "phenology.select_indicator" })}:</Text>
                     <VStack align={"start"}>
