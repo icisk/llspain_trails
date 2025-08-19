@@ -36,6 +36,7 @@ const Footer: React.FC = () => {
             left={0}
             w="100%"
             boxShadow="md"
+            zIndex={1000}
         >
             <Flex justify="space-between" align="center">
                 <Image src={baseUrl + "images/logo.png"} alt="I-CISK Logo" h="40px" />
