@@ -96,9 +96,22 @@ messages:
     heading: Servicios climáticos I-CISK
     heading_descr: Esta página da acceso a los servicios climáticos desarrollados en el marco del proyecto I-CISK para el Laboratorio Vivo Andalucía-Los Pedroches. 🇪🇸  
   forecast:
-    nav: Mapas previsión a 6 meses
-    heading: Pronósticos meteorológicos mensuales a medio plazo (hasta 6 meses)
-    heading_descr: 'Este servicio ofrece pronósticos estacionales de precipitación y temperatura para los próximos seis meses. Los mapas muestran el percentil 50 de 51 miembros del pronóstico, con corrección de sesgo a nivel estacional seguida de una regresión lineal múltiple con interpolación de residuos, con una resolución espacial de 231m. Al seleccionar un píxel, se visualiza gráficamente la serie temporal con los percentiles 5 a 95, facilitando el análisis de incertidumbre.'
+    nav: "Mapas previsión a 6 meses"
+    heading: "Pronósticos meteorológicos mensuales a medio plazo (hasta 6 meses)"
+    heading_descr: |
+      Este servicio ofrece pronósticos estacionales de precipitación y temperatura para los próximos seis meses. 
+      Los mapas muestran el percentil 50 de 51 miembros del pronóstico, con corrección de sesgo a nivel estacional 
+      seguida de una regresión lineal múltiple con interpolación de residuos, con una resolución espacial de 231m. 
+      Al seleccionar un píxel, se visualiza gráficamente la serie temporal con los percentiles 5 a 95, facilitando el análisis de incertidumbre.
+    info:
+      uncertainty: |
+        Incertidumbre: Distribución espacial de la variabilidad de los 51 miembros que componen el pronóstico mensual de precipitación y temperatura.  
+        Capa generada a partir de la interpolación por Inverso de la Distancia (IDW; exponente 3.5 para precipitación, 1.75 para temperatura) de la desviación estándar de la variable (precipitación o temperatura) calculada a partir de los 51 miembros del conjunto de la previsión.  
+        El ráster resultante se ha reclasificado en tres niveles de incertidumbre:
+
+        - Baja: valores por debajo del percentil 25  
+        - Media: valores entre los percentiles 25 y 75  
+        - Alta: valores por encima del percentil 75 de la desviación estándar
   historic_compare:
     nav: Mapas climáticos históricos
     heading: Mapas climáticos históricos
@@ -112,19 +125,25 @@ messages:
         Haz clic en la 'i' para obtener más información.
 
       indicators_title: Indicadores de sequía
-      indicators:  |
-        Índice de Precipitación Estandarizado (SPI) (McKee et al 1993) es un índice ampliamente utilizado para cuantificar condiciones de sequía meteorológica. Se basa exclusivamente en datos de precipitación y permite evaluar anomalías de humedad en diferentes escalas temporales (3, 6, 9, 12 y 24 meses). Para su cálculo, se ajusta una distribución de probabilidad gamma (Lloyd-Hughes y Saunders, 2002) descrita por a la serie histórica de precipitaciones, y luego se transforma a una distribución normal estándar. Los valores negativos del SPI indican condiciones más secas de lo normal, mientras que los valores positivos indican condiciones más húmedas. El SPI permite comparar condiciones de sequía entre regiones con diferentes regímenes climáticos. 
+      indicators: |
+        Índice de Precipitación Estandarizado (SPI) (McKee et al 1993) es un índice ampliamente utilizado para cuantificar condiciones de sequía meteorológica. 
+        Se basa exclusivamente en datos de precipitación y permite evaluar anomalías de humedad en diferentes escalas temporales (3, 6, 9, 12 y 24 meses). 
+        Para su cálculo, se ajusta una distribución de probabilidad gamma (Lloyd-Hughes y Saunders, 2002) descrita por a la serie histórica de precipitaciones, 
+        y luego se transforma a una distribución normal estándar. Los valores negativos del SPI indican condiciones más secas de lo normal, mientras que los 
+        valores positivos indican condiciones más húmedas. El SPI permite comparar condiciones de sequía entre regiones con diferentes regímenes climáticos. 
 
-        Índice Estandarizado de Precipitación-Evapotranspiración (SPEI) (Vicente-Serrano et al, 2009) amplía el concepto del SPI al incorporar también la demanda atmosférica de agua, es decir, la evapotranspiración potencial (PET), que depende principalmente de la temperatura. Esto permite una evaluación más completa del balance hídrico, especialmente útil en el contexto del cambio climático, donde el aumento de temperaturas puede intensificar la sequía incluso sin una disminución significativa en la precipitación. El SPEI también se calcula a diferentes escalas temporales (3, 6, 9, 12 y 24 meses) y utiliza una metodología similar al SPI, pero aplicada al déficit hídrico (precipitación menos PET). 
-        Computación en base al modulo SPI_SPEI, MiraMon (https://www.miramon.cat/Index_spa.htm) 
+        Índice Estandarizado de Precipitación-Evapotranspiración (SPEI) (Vicente-Serrano et al, 2009) amplía el concepto del SPI al incorporar también la demanda 
+        atmosférica de agua, es decir, la evapotranspiración potencial (PET), que depende principalmente de la temperatura. Esto permite una evaluación más completa 
+        del balance hídrico, especialmente útil en el contexto del cambio climático, donde el aumento de temperaturas puede intensificar la sequía incluso sin una 
+        disminución significativa en la precipitación. El SPEI también se calcula a diferentes escalas temporales (3, 6, 9, 12 y 24 meses) y utiliza una metodología 
+        similar al SPI, pero aplicada al déficit hídrico (precipitación menos PET). 
         
-        Lloyd-Hughes B, Saunders MA. 2002. A drought climatology for Europe. International Journal of Climatology, 22, 1571-1592. https://doi.org/10.1002/joc.846 
-
-        McKee T B, Doesken NJ,  Kleist J. 1993. The relationship of drought frequency and duration to time scales. Preprints, Eighth Conf. on Applied Climatology. Anaheim, CA, Amer. Meteor. Soc., 179-184. 
-
-        Vicente-Serrano SM, Beguería S, López-Moreno JI. 2010. A Multiscalar Drought Index Sensitive to Global Warming: The Standardized Precipitation Evapotranspiration Index. Journal of Climate. Vol 23:7, 1696-1718. https://doi.org/10.1175/2009JCLI2909.1 
-
-      SPI: 'Índice de Precipitación Estandarizada. Muestra la severidad de la sequía meteorológica teniendo en cuenta únicamente la Precipitación. Cuanto más negativo es el valor, más severa es la sequía meteorológica.'
+        Computación en base al modulo SPI_SPEI, MiraMon (https://www.miramon.cat/Index_spa.htm)  
+        Lloyd-Hughes B, Saunders MA. 2002. A drought climatology for Europe. International Journal of Climatology, 22, 1571–1592. https://doi.org/10.1002/joc.846
+        McKee T B, Doesken NJ,  Kleist J. 1993. The relationship of drought frequency and duration to time scales. Preprints, Eighth Conf. on Applied Climatology. Anaheim, CA, Amer. Meteor. Soc., 179–184.
+        Vicente-Serrano SM, Beguería S, López-Moreno JI. 2010. A Multiscalar Drought Index Sensitive to Global Warming: The Standardized Precipitation Evapotranspiration Index. Journal of Climate. Vol 23:7, 1696-1718. https://doi.org/10.1175/2009JCLI2909.1
+  
+      SPI: "Índice de Precipitación Estandarizada. Muestra la severidad de la sequía meteorológica teniendo en cuenta únicamente la Precipitación. Cuanto más negativo es el valor, más severa es la sequía meteorológica."
       temp: 'Modelización de la temperatura media mensual (unidades: ºC) generada por regresión múltiple lineal e interpolación de residuos a partir de los valores en las estaciones y variables geográficas. (Ninyerola M, Pons X Roure JM. 2000. A methodological approach of climatological modelling of air temperature and precipitation through GIS techniques. Int. J. Climatol. 20: 1823–1841)'
       precip: 'Precipitación acumulada mensual (unidades: mm). Modelización de la precipitación mensual acumulada (unidades: mm) generada por regresión múltiple lineal e interpolación de residuos a partir de los valores en las estaciones y variables geográficas. (Ninyerola M, Pons X Roure JM. 2000. A methodological approach of climatological modelling of air temperature and precipitation through GIS techniques. Int. J. Climatol. 20: 1823–1841)'
     radio_buttons:

@@ -22,6 +22,7 @@ import { useReactiveSnapshot } from "@open-pioneer/reactivity";
 import { Select, Switch, Text } from "@chakra-ui/react";
 import { DynamicLegend } from "../components/Legends/DynamicLegend";
 import { espanolChartOptions } from "../components/Charts/ChartOptions";
+import {InfoTooltip} from "../components/InfoTooltip/InfoTooltip";
 
 // Marker layer for displaying clicks
 const markerSource = new VectorSource();
@@ -205,6 +206,7 @@ export function Forecast() {
                     <HStack>
                         <Switch size="lg" isChecked={showUncert} onChange={handleUncertChange} />
                         <Text>Mostrar incertidumbre</Text>
+                        <InfoTooltip i18n_path="forecast.info.uncertainty" />
                     </HStack>
                 </HStack>
             </Center>
