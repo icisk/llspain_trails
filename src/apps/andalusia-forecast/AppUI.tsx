@@ -16,8 +16,9 @@ const AppUI = () => {
     const baseUrl = import.meta.env["BASE_URL"];
     return (
         <Router basename={baseUrl}> 
-                <Box pb="60px">   
-                    <Navbar />
+            <Box pb="60px">   
+                <Navbar />
+                <Box flex={1}>
                     <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/forecast" element={<Forecast />} />
@@ -29,6 +30,7 @@ const AppUI = () => {
                     </Routes>
                 </Box>
                 <Footer />
+            </Box>
         </Router>
     );
 };
