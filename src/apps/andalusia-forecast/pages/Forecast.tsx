@@ -122,7 +122,9 @@ export function Forecast() {
                     <HStack>
                         <Box whiteSpace="nowrap">Seleccionar mes de forecast</Box>
                         <Select value={selectedForecastMonth} onChange={e=>setSelectedForecastMonth(e.target.value)}>
-                            {getNextSixMonths(selectedStartMonth).map(month=><option key={month} value={month}>{month}</option>)}
+                            {getNextSixMonths(selectedStartMonth).map((month, index) => (
+                                <option key={month} value={month}>{month} ({index})</option>
+                            ))}
                         </Select>
                     </HStack>
                     <HStack>
