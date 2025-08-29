@@ -34,7 +34,7 @@ export function Forecast() {
     const precipitationService = useService<PrecipitationLayerHandler>("app.PrecipitationLayerHandler");
 
     const [clickedCoordinates, setClickedCoordinates] = useState<number[] | null>(null);
-    const { data } = useFetchData(clickedCoordinates, variable);
+    const { data } = useFetchData(clickedCoordinates, variable, selectedStartMonth);
     const [chartOptions, setChartOptions] = useState<any>({
         title: { text: "" },
         xAxis: { type: "datetime" },
