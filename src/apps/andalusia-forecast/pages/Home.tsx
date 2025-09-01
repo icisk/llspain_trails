@@ -10,12 +10,12 @@ const Home = () => {
     const baseUrl = import.meta.env["BASE_URL"];
 
     const tilesData = [
-        { id: 'tab1', title: 'forecast', url: "/forecast", png: "/images/cs1.PNG" },
-        { id: 'tab2', title: 'historic_compare', url: "/historicclimatedata1", png: "/images/cs2.PNG" },
-        { id: 'tab3', title: 'historic_climate_stations', url: "/historicclimatestations", png: "/images/cs3.PNG" },
+        { id: 'tab1', title: 'forecast', url: "/forecast", png: baseUrl + "/images/cs1.PNG" },
+        { id: 'tab2', title: 'historic_compare', url: "/historicclimatedata1", png: baseUrl + "/images/cs2.PNG" },
+        { id: 'tab3', title: 'historic_climate_stations', url: "/historicclimatestations", png: baseUrl + "/images/cs3.PNG" },
         { id: 'tab5', title: 'projections', url: "/projections" },
-        { id: 'tab6', title: 'phenology', url: "/phenology", png: "/images/cs5.PNG" },
-        { id: 'tab7', title: 'hydro_service', url: "/hydrologicalservice", png: "/images/cs6.PNG" },
+        { id: 'tab6', title: 'phenology', url: "/phenology", png: baseUrl + "/images/cs5.PNG" },
+        { id: 'tab7', title: 'hydro_service', url: "/hydrologicalservice", png: baseUrl + "/images/cs6.PNG" },
     ];
 
     return (
