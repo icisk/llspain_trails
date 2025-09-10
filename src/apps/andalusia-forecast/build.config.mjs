@@ -8,7 +8,8 @@ export default defineBuildConfig({
     ],
     ui: {
         references: [
-            "app.PrecipitationLayerHandler", 
+            "app.PrecipitationLayerHandler",
+            "app.ProjectionLayerHandler",
             "app.HistoricLayerHandler",
             "app.StationDataHandler",
             "app.BioindicatorLayerHandler"
@@ -32,6 +33,12 @@ export default defineBuildConfig({
         },
         BioindicatorLayerHandlerImpl: {
             provides: ["app.BioindicatorLayerHandler"],
+            references: {
+                mapRegistry: "map.MapRegistry"
+            }
+        },
+        ProjectionLayerHandlerImpl: {
+            provides: ["app.ProjectionLayerHandler"],
             references: {
                 mapRegistry: "map.MapRegistry"
             }

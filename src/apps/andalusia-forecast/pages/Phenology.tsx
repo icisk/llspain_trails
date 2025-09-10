@@ -35,8 +35,7 @@ import Highcharts from "highcharts";
 import { PhenologyLegend } from "../components/Legends/PhenologyLegend";
 import React, { useEffect, useState } from "react";
 import { DynamicLegend } from "../components/Legends/DynamicLegend";
-import { header } from "typedoc/dist/lib/output/themes/default/partials/header";
-import description = meta.docs.description;
+
 import { InfoTooltip } from "../components/InfoTooltip/InfoTooltip";
 
 export function Phenology() {

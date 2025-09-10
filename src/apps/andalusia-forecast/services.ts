@@ -13,3 +13,4 @@ export { HistoricClimateMapProvider2 } from "./services/HistoricClimateMapProvid
 export { HistoricClimateStationsMapProvider } from "./services/HistoricClimateStationsMapProvider";
 export { StationDataHandlerImpl } from "./services/StationDataHandler";
 export { BioindicatorLayerHandlerImpl } from "./services/BioindicatorLayerHandler";
+export { ProjectionLayerHandlerImpl } from "./services/ProjectionLayerHandler";
