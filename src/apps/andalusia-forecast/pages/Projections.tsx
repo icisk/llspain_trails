@@ -20,7 +20,12 @@ import { DynamicLegend } from "../components/Legends/DynamicLegend";
 import {ZoomIn, ZoomOut} from "@open-pioneer/map-navigation";
 import {CoordsScaleBar} from "../components/CoordsScaleBar/CoordsScaleBar";
 import {espanolChartOptions} from "../components/Charts/ChartOptions";
+import VectorLayer from "ol/layer/Vector";
+import VectorSource from "ol/source/Vector";
+import { createMarker, markerStyle } from "../components/utils/marker";
 
+const markerSource = new VectorSource();
+const markerLayer = new VectorLayer({ source: markerSource, zIndex: 100 });
 
 const Projections = () => {
     const intl = useIntl();
@@ -58,6 +63,11 @@ const Projections = () => {
         const newEndpointBaseUrl = "https://i-cisk.dev.52north.org/data/collections/creaf_projection/position";
         // console.log("Map clicked at (lon, lat):", lon, lat);
         setItemsUrl(`${newEndpointBaseUrl}?f=json&coords=POINT(${lon.toString()} ${lat.toString()})`);
+
+        // Update marker position
+        markerSource.clear();
+        const marker = createMarker(event.coordinate, markerStyle);
+        markerSource.addFeature(marker);
     }, []);
 
     React.useEffect(() => {
@@ -115,6 +125,27 @@ const Projections = () => {
         projectionService.setcurrentVariable(variable)
     }, [variable, projectionService]);
 
+    // Marker on click
+    useEffect(() => {
+        if (mapState?.map?.olMap) {
+            const olMap = mapState.map.olMap;
+            olMap.addLayer(markerLayer);
+            olMap.on("click", handleMapClick);
+            return () => {
+                olMap.removeLayer(markerLayer);
+                olMap.un("click", handleMapClick);
+            }
+        }
+
+    }, [mapState]);
+
+    function getSeasonLabel(date: Date) {
+        const month = date.getMonth();
+        const year = date.getFullYear();
+        const monthlabels = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+        return `${intl.formatMessage({id: `global.months.${monthlabels[month]}`})} ${year}`;
+    }
+
     return (
         <Container minWidth={"container.xl"}>
             <Header subpage={"projections"} />
@@ -164,6 +195,13 @@ const Projections = () => {
                 </SliderTrack>
                 <SliderThumb boxSize={30} bg="blue.450" />
             </Slider>
+            <Box
+                mt={2}
+                textAlign="center"
+                fontSize={"lg"}
+            >
+                {sliderValue ? getSeasonLabel(sliderValue) : ""}
+            </Box>
             
             <Box position="relative" mt="0.5" height="20px">
                 {timestamps.map((date, index) => {
