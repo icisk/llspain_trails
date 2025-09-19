@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 
 const Home = () => {
     const intl = useIntl();
-    // const baseUrl = import.meta.env["BASE_URL"];
-    const baseUrl = "";
+    const baseUrl = import.meta.env["BASE_URL"];
+    // const baseUrl = "";
 
     const tilesData = [
         { id: 'tab1', title: 'forecast', url: "/forecast", png: baseUrl + "/images/cs1.PNG" },
