@@ -175,7 +175,7 @@ messages:
   projections:
     nav: Proyecciones climáticas 
     heading: Proyecciones climáticas
-    heading_descr: Proyecciones climáticas hasta 2100
+    heading_descr: Este servicio climático ofrece acceso a proyecciones climáticas para el dominio europeo de EuroCORDEX. Los datos corresponden al escenario de emisiones RCP4.5 (estabilización moderada de gases de efecto invernadero), con una resolución espacial de 0,11° . La información procede del modelo climático regional (RCM) REMO2009, desarrollado por MPI-CSC, a partir del modelo climático global (GCM) MPI-ESM-LR. El mapa muestra el promedio de las realizaciones r1i1p1 y r2i1p1, para el futuro cercano (2026–2040). Estos mapas no representan promedios climáticos agregados del periodo, sino estimaciones mensuales. En ellos se visualizan la temperatura media mensual (°C) y la precipitación acumulada mensual (mm), mes a mes con los posibles valores extremos que pueden generar algunos modelos predictivos.
   phenology:
     nav: Indicadores agroclimáticos
     heading: Indicadores agroclimáticos de 2011 a 2040 derivados de proyecciones climáticas
