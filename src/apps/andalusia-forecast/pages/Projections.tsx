@@ -194,15 +194,7 @@ const Projections = () => {
                     })}
                 </SliderTrack>
                 <SliderThumb boxSize={30} bg="blue.450" />
-            </Slider>
-            <Box
-                mt={2}
-                textAlign="center"
-                fontSize={"lg"}
-            >
-                {sliderValue ? getSeasonLabel(sliderValue) : ""}
-            </Box>
-            
+            </Slider>            
             <Box position="relative" mt="0.5" height="20px">
                 {timestamps.map((date, index) => {
                     const year = date.getFullYear();
@@ -225,7 +217,13 @@ const Projections = () => {
                     );
                 })}
             </Box>
-                        
+            <Box
+                mt={2}
+                textAlign="center"
+                fontSize={"lg"}
+            >
+                {sliderValue ? getSeasonLabel(sliderValue) : ""}
+            </Box>                        
             <Container flex={2} minWidth={"container.xl"}>
                 <Box width="100%" height="540px" position="relative">
                     <Box height={"500px"}>
