@@ -217,7 +217,7 @@ messages:
         opacity: 'Transparencia:'
       hydro_data:
         title: 'Datos hidrológicos:'
-        groundwater: Límite de las masas de agua subterránea
+        groundwater_bounds: Límite de las masas de agua subterránea
         authorities_boundaries: Límite las demarcaciones dentro de la comarca
         municipalities: Municipios
         network: Red hidrográfica
@@ -227,9 +227,21 @@ messages:
         puntos_acui: Puntos Acuiferos
         catchmentGuadiana: Captaciones Guadiana
         catchmentGuadalquivir: Captaciones Guadalquivir
-        measure_stations: Puntos de datos disponibles
-        
-      aquifer_info: 'Chismorreos del acuífero'
+        measure_stations: Puntos de datos disponiblessobre agua
+      aquifer_info: 'Descripción de la hidrogeología'
+    info:
+      land_use: Mapa de usos de suelo del SIOSE (2020) disponible en el catálogo de REDIAM.
+      geological: Esquema simplificado del mapa geológico de Los Pedroches basado en la cartografía geológica nacional a escala 1:50.000 realizada por el IGME.
+      groundwater: Mapas de la profundidad del nivel freático respecto a la cota del terreno (metros sobre el nivel del mar) elaborados a partir de las campañas de campo del proyecto.
+      groundwater_bounds: Límite de las masas de agua subterráneas oficialmente denominadas como ‘Los Pedroches’ en la Demarcación Hidrográfica del Guadiana y ‘Los Pedroches-Sierra de Andújar’ en la del Guadalquivir.
+      authorities_boundaries: límites de los municipios que conforman la comarca de Los Pedroches.
+      network: ríos y arroyos principales de la red hídrica de Los Pedroches y su entorno basado en la red hidrográfica superficial del REDIAM.
+      springs: surgencias de agua subterránea identificadas en el proyecto ‘Conoce tus Fuentes’.
+      measure_stations: puntos de agua subterránea (pozos, sondeos o manantiales) y estaciones de aforo de río con datos puntuales o continuos en la comarca de Los Pedroches.
+      catchmentGuadiana: captaciones autorizadas en la Demarcación Hidrográfica del Guadiana.
+      catchmentGuadalquivir: captaciones autorizadas en la Demarcación Hidrográfica del Guadalquivir.
+      desc_hydro: breve descripción de las dos masas de agua subterránea y las pizarras en la comarca de Los Pedroches, basada en los trabajos del MAGNA (IGME), el proyecto AFA (ENRESA) y el proyecto I-CISK.
+  
   historic_stations:
     nav: Estaciones Climáticas Históricas
     heading:  Registros climáticos históricos en las estaciones

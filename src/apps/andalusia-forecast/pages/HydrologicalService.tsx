@@ -21,6 +21,7 @@ import {
 import { InfoBoxComponent } from "info-box";
 import { useIntl } from "open-pioneer:react-hooks";
 import { buildCustomLegend } from "../components/Legends/buildCustomLegendHydroService";
+import { InfoTooltip } from "../components/InfoTooltip/InfoTooltip";
 
 export function HydrologicalService() {
     const mapModel = useMapModel(MAP_ID);
@@ -162,9 +163,14 @@ export function HydrologicalService() {
                                           ][+value - 1];
                                 const label = `${intl.formatMessage({ id: `hydro_service.selection_options.thematic_maps.${labelId}` })}${hasLegend ? " 🗺️" : ""}`;
                                 return (
-                                    <Radio key={value} value={value}>
-                                        {label}
-                                    </Radio>
+                                    <HStack>
+                                        <Radio key={value} value={value}>
+                                            {label}
+                                        </Radio>
+                                        {value !== "" && (
+                                            <InfoTooltip i18n_path={`hydro_service.info.${["land_use","geological","groundwater"][value-1]}`}/>
+                                            )}
+                                    </HStack>
                                 );
                             })}
                         </VStack>
@@ -206,7 +212,7 @@ export function HydrologicalService() {
                     </p>
                     <VStack align="start">
                         {[
-                            "groundwater",
+                            "groundwater_bounds",
                             "authorities_boundaries",
                             "municipalities",
                             "network",
@@ -221,13 +227,16 @@ export function HydrologicalService() {
                             const hasLegend = !!legendUrls[layerId];
                             const label = `${intl.formatMessage({ id: `hydro_service.selection_options.hydro_data.${layerId}` })}${hasLegend ? " 🗺️" : ""}`;
                             return (
-                                <Checkbox
-                                    key={layerId}
-                                    isChecked={activeVectorLayers.includes(layerId)}
-                                    onChange={() => toggleVectorLayer(layerId)}
-                                >
-                                    {label}
-                                </Checkbox>
+                                <HStack>
+                                    <Checkbox
+                                        key={layerId}
+                                        isChecked={activeVectorLayers.includes(layerId)}
+                                        onChange={() => toggleVectorLayer(layerId)}
+                                    >
+                                        {label}
+                                    </Checkbox>
+                                    <InfoTooltip i18n_path={`hydro_service.info.${layerId}`}/>
+                                </HStack>  
                             );
                         })}
                     </VStack>
@@ -244,6 +253,7 @@ export function HydrologicalService() {
                                 id: "hydro_service.selection_options.aquifer_info"
                             })}
                         </Checkbox>
+                        <InfoTooltip i18n_path={'hydro_service.info.desc_hydro'}/>
                     </HStack>
                 </VStack>
             </Flex>
