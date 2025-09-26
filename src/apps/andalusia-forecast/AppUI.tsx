@@ -7,6 +7,7 @@ import Projections from "./pages/Projections";
 import Phenology from "./pages/Phenology";
 import HydrologicalService from "./pages/HydrologicalService";
 import HistoricClimateStations from "./pages/HistoricClimateStations";
+import OliveOil from "./pages/OliveOil";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import { useIntl, useService } from "open-pioneer:react-hooks";
@@ -27,6 +28,7 @@ const AppUI = () => {
                         <Route path="/projections" element={<Projections />} />
                         <Route path="/phenology" element={<Phenology />} />
                         <Route path="/hydrologicalservice" element={<HydrologicalService />} />
+                        <Route path="/oliveoil" element={<OliveOil />} />
                     </Routes>
                 </Box>
                 <Footer />

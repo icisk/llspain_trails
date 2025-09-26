@@ -7,6 +7,7 @@ export { PrecipitationLayerHandlerImpl } from "./services/PrecipitationLayerHand
 export { BioindicatorMapProvider } from "./services/BioindicatorMapProvider";
 export { HydrologicalMapProvider } from "./services/HydrologicalMapProvider";
 export { ProjectionMapProvider } from "./services/ProjectionMapProvider";
+export { OliveOilMapProvider } from "./services/OliveOilMapProvider";
 export { HistoricLayerHandlerImpl } from "./services/HistoricLayerHandler";
 export { HistoricClimateMapProvider } from "./services/HistoricClimateMapProvider";
 export { HistoricClimateMapProvider2 } from "./services/HistoricClimateMapProvider2";
@@ -14,3 +15,4 @@ export { HistoricClimateStationsMapProvider } from "./services/HistoricClimateSt
 export { StationDataHandlerImpl } from "./services/StationDataHandler";
 export { BioindicatorLayerHandlerImpl } from "./services/BioindicatorLayerHandler";
 export { ProjectionLayerHandlerImpl } from "./services/ProjectionLayerHandler";
+export { OliveOilLayerHandlerImpl } from "./services/OliveOilLayerHandler";

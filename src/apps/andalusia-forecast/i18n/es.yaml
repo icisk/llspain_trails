@@ -234,7 +234,8 @@ messages:
       geological: Esquema simplificado del mapa geológico de Los Pedroches basado en la cartografía geológica nacional a escala 1:50.000 realizada por el IGME.
       groundwater: Mapas de la profundidad del nivel freático respecto a la cota del terreno (metros sobre el nivel del mar) elaborados a partir de las campañas de campo del proyecto.
       groundwater_bounds: Límite de las masas de agua subterráneas oficialmente denominadas como ‘Los Pedroches’ en la Demarcación Hidrográfica del Guadiana y ‘Los Pedroches-Sierra de Andújar’ en la del Guadalquivir.
-      authorities_boundaries: límites de los municipios que conforman la comarca de Los Pedroches.
+      municipalities: límites de los municipios que conforman la comarca de Los Pedroches.
+      authorities_boundaries: " "
       network: ríos y arroyos principales de la red hídrica de Los Pedroches y su entorno basado en la red hidrográfica superficial del REDIAM.
       springs: surgencias de agua subterránea identificadas en el proyecto ‘Conoce tus Fuentes’.
       measure_stations: puntos de agua subterránea (pozos, sondeos o manantiales) y estaciones de aforo de río con datos puntuales o continuos en la comarca de Los Pedroches.
@@ -246,6 +247,10 @@ messages:
     nav: Estaciones Climáticas Históricas
     heading:  Registros climáticos históricos en las estaciones
     heading_descr: Este mapa muestra las series temporales de datos recolectados en la red nacional de estaciones meteorológicas de la AEMET
+  oliveoil:
+    nav: OliveOil
+    heading: OliveOil model
+    heading_descr: description of oliveoilmodel
 overrides:
   '@open-pioneer/map-navigation':
     zoom-out:

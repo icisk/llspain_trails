@@ -12,7 +12,8 @@ export default defineBuildConfig({
             "app.ProjectionLayerHandler",
             "app.HistoricLayerHandler",
             "app.StationDataHandler",
-            "app.BioindicatorLayerHandler"
+            "app.BioindicatorLayerHandler",
+            "app.OliveOilLayerHandler"
                     ]
     },
     services: {
@@ -28,11 +29,20 @@ export default defineBuildConfig({
         ProjectionMapProvider: {
             provides: ["map.MapConfigProvider"]
         },
+        OliveOilMapProvider: {
+            provides: ["map.MapConfigProvider"]
+        },
         BioindicatorMapProvider: {
             provides: ["map.MapConfigProvider"]
         },
         BioindicatorLayerHandlerImpl: {
             provides: ["app.BioindicatorLayerHandler"],
+            references: {
+                mapRegistry: "map.MapRegistry"
+            }
+        },
+        OliveOilLayerHandlerImpl: {
+            provides: ["app.OliveOilLayerHandler"],
             references: {
                 mapRegistry: "map.MapRegistry"
             }

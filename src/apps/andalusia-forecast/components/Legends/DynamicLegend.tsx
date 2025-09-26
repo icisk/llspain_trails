@@ -2,7 +2,7 @@
 import React from "react";
 import {Box, Text, HStack, VStack} from "@open-pioneer/chakra-integration";
 import {useIntl} from "open-pioneer:react-hooks";
-import {phenoColors, phenocolors_SU, speicolors, uncertaintyColors} from "../utils/globals";
+import {phenoColors, phenocolors_SU, speicolors, uncertaintyColors, oliveOilColors} from "../utils/globals";
 
 //temperature colors
 const pink = '#eb7fe9BC'
@@ -130,6 +130,24 @@ export const DynamicLegend = ({ variable, position }: { variable: string, positi
             { value: 18, color: hextoRGBA(phenocolors_SU.su_09, 0.75), label: intl.formatMessage({ id: "global.legend.su.su_09" }) },
             { value: 20, color: hextoRGBA(phenocolors_SU.su_10, 0.75), label: intl.formatMessage({ id: "global.legend.su.su_10" }) },
             { value: 25, color: hextoRGBA(phenocolors_SU.su_11, 0.75), label: intl.formatMessage({ id: "global.legend.su.su_11" }) },
+        ];
+    } else if (variable === 'oliveoil') {
+        text = 'legend'
+        colorMapping = [
+            { value: 0,    color: hextoRGBA(oliveOilColors.oo1, 0.75),  label: "0" },
+            { value: 500,  color: hextoRGBA(oliveOilColors.oo2, 0.75),  label: "500" },
+            { value: 1000, color: hextoRGBA(oliveOilColors.oo3, 0.75),  label: "1000" },
+            { value: 1500, color: hextoRGBA(oliveOilColors.oo4, 0.75),  label: "1500" },
+            { value: 2000, color: hextoRGBA(oliveOilColors.oo5, 0.75),  label: "2000" },
+            { value: 2500, color: hextoRGBA(oliveOilColors.oo6, 0.75),  label: "2500" },
+            { value: 3000, color: hextoRGBA(oliveOilColors.oo7, 0.75),  label: "3000" },
+            { value: 3500, color: hextoRGBA(oliveOilColors.oo8, 0.75),  label: "3500" },
+            { value: 4000, color: hextoRGBA(oliveOilColors.oo9, 0.75),  label: "4000" },
+            { value: 4500, color: hextoRGBA(oliveOilColors.oo10, 0.75), label: "4500" },
+            { value: 5000, color: hextoRGBA(oliveOilColors.oo11, 0.75), label: "5000" },
+            { value: 5500, color: hextoRGBA(oliveOilColors.oo12, 0.75), label: "5500" },
+            { value: 6000, color: hextoRGBA(oliveOilColors.oo13, 0.75), label: "6000" },
+            { value: 6500, color: hextoRGBA(oliveOilColors.oo14, 0.75), label: "6500" }
         ];
     }
     

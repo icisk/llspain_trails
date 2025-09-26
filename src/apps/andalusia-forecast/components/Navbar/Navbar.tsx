@@ -22,6 +22,7 @@ const Navbar: React.FC = () => {
                 <NavButton to="/projections" id="projections.nav" />
                 <NavButton to="/phenology" id="phenology.nav" />
                 <NavButton to="/hydrologicalservice" id="hydro_service.nav" />
+                <NavButton to="/oliveoil" id="oliveoil.nav" />
             </HStack>
         </Box>
     );

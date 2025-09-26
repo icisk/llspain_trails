@@ -157,3 +157,50 @@ export const uncertaintyColors = {
     green: '#00ff00',
     yellow: '#fffa00',
 }
+
+// const oliveOilColors = {
+//     0:    "#ffffff00", // very light green
+//     500:  "#c7e9c0",
+//     1000: "#a1d99b",
+//     1500: "#74c476",
+//     2000: "#41ab5d",
+//     2500: "#238b45",
+//     3000: "#006d2c",
+//     3500: "#005824",
+//     4000: "#00441b",
+//     4500: "#003716",
+//     5000: "#002b11",
+//     5500: "#00200d",
+//     6000: "#001708",
+//     6500: "#000f05"  // almost black green
+// };
+export const oliveOilColors = {
+    oo1: "#ffffff00", // very light green
+    oo2: "#c7e9c0",
+    oo3: "#a1d99b",
+    oo4: "#74c476",
+    oo5: "#41ab5d",
+    oo6: "#238b45",
+    oo7: "#006d2c",
+    oo8: "#005824",
+    oo9: "#00441b",
+    oo10:"#003716",
+    oo11:"#002b11",
+    oo12:"#00200d",
+    oo13:"#001708",
+    oo14:"#000f05" // almost black green
+};
+
+const boundaries_oliveoil = [-10, 0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500];
+const gradientColors_oliveoil = [
+    tempColors.black,
+    ...Object.values(oliveOilColors)
+];
+const colorScale_oliveoil = chroma.scale(gradientColors_oliveoil).domain(boundaries_oliveoil).mode('lab');
+export const oliveOilColorGradient = [
+    "interpolate",
+    ["linear"],
+    ["band", 1],
+    ...boundaries_oliveoil.flatMap((boundary) => [boundary, colorScale_oliveoil(boundary).hex()])
+];
+
