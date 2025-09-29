@@ -248,7 +248,7 @@ messages:
     heading:  Registros climáticos históricos en las estaciones
     heading_descr: Este mapa muestra las series temporales de datos recolectados en la red nacional de estaciones meteorológicas de la AEMET
   oliveoil:
-    nav: OliveOil
+    nav: Olive Oil
     heading: OliveOil model
     heading_descr: description of oliveoilmodel
 overrides:

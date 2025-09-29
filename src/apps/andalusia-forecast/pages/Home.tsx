@@ -15,6 +15,7 @@ const Home = () => {
         { id: 'tab5', title: 'projections', url: "/projections", png: baseUrl + "/images/cs4.PNG" },
         { id: 'tab6', title: 'phenology', url: "/phenology", png: baseUrl + "/images/cs5.PNG" },
         { id: 'tab7', title: 'hydro_service', url: "/hydrologicalservice", png: baseUrl + "/images/cs6.PNG" },
+        { id: 'tab8', title: 'oliveoil', url: "/oliveoil", png: baseUrl + "/images/cs7.PNG" },
     ];
 
     console.log("Base URL:", baseUrl);
