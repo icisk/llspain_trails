@@ -169,6 +169,30 @@ export function buildCustomLegend(layerId: string): React.ReactNode | undefined 
                         </HStack>
                     </Box>
                 );
+            case "hydro_description":
+                return (
+                    <Box>
+                        <Text fontWeight="bold" mb={2}>
+                            Descripción hidrogeológica
+                        </Text>
+                        <HStack mb={1}>
+                            <Box w="20px" h="20px" bg="rgba(255,255,0,0.25)" border="1px solid black" />
+                            <Text fontSize="sm">Acuífero de Los Pedroches (Guadiana)</Text>
+                        </HStack>
+                        <HStack mb={1}>
+                            <Box w="20px" h="20px" bg="rgba(0,128,0,0.25)" border="1px solid black" />
+                            <Text fontSize="sm">Acuífero de Los Pedroches-Sierra de Andújar (Guadalquivir)</Text>
+                        </HStack>
+                        <HStack mb={1}>
+                            <Box w="20px" h="20px" bg="rgba(0,0,255,0.25)" border="1px solid black" />
+                            <Text fontSize="sm">Batolito de Los Pedroches</Text>
+                        </HStack>
+                        <HStack>
+                            <Box w="20px" h="20px" bg="rgba(255,0,0,0.25)" border="1px solid black" />
+                            <Text fontSize="sm">Pizarras</Text>
+                        </HStack>
+                    </Box>
+                );
         default:
             return undefined;
     }

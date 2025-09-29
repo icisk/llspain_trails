@@ -15,10 +15,11 @@ import {
     getGeologicalLineColor,
     getGeologicalLineStyle,
     styleFuntcionMeasureStations,
+    styleFunctionHydroDescription
 } from "../components/utils/geologicalLayersColorHandler";
 import { pedrochesPoint } from "../components/utils/globals";
 import { TileWMS } from "ol/source";
-import { Vector as VectorLayer } from "ol/layer";
+import { Image, Vector as VectorLayer } from "ol/layer";
 import { Vector as VectorSource } from "ol/source";
 import GeoJSON from "ol/format/GeoJSON";
 import { transformExtent } from "ol/proj";
@@ -29,6 +30,9 @@ import { get } from "http";
 import { Tile } from "ol";
 
 import { getVectorContext } from "ol/render";
+
+import GeoTIFF from "ol/source/GeoTIFF";
+import GeoTIFFSource from "ol/source/GeoTIFF";
 
 proj4.defs(
     "EPSG:25830",
@@ -58,25 +62,25 @@ export class HydrologicalMapProvider implements MapConfigProvider {
         // landUseLayer.set("thematic", true);
 
         // groundwater layer
-        const groundwaterLayer = new VectorLayer({
-            source: new VectorSource({
-                url: "https://i-cisk.dev.52north.org/data/collections/ll_spain_groundwater/items?f=json",
-                format: new GeoJSON()
-            }),
-            visible: false,
-            style: new Style({
-                fill: new Fill({
-                    color: "rgba(128, 0, 128, 0.4)"
-                }),
-                stroke: new Stroke({
-                    color: "#800080",
-                    width: 1.5
-                })
-            })
-        });
+        const groundwaterRasterLayer = new TileLayer({
+            source: new GeoTIFF({
+                sources: [
+                    {
+                        url: "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/HYDROMAP/isolines/ICISK_abril_2023.tif",
+                        nodata: -9999,
+                        bands: [1],
+                    }
+                ],
+                projection: "EPSG:25830",
 
-        groundwaterLayer.set("id", "thematic-3");
-        groundwaterLayer.set("thematic", true);
+            }),
+            visible: true,
+            opacity: 0.8,
+            zIndex: 1000,
+        });
+        
+        groundwaterRasterLayer.set("id", "thematic-3");
+        groundwaterRasterLayer.set("thematic", true);
 
         // groundwater layer (VECTOR)
         const groundwaterLayerVector = new VectorLayer({
@@ -323,6 +327,23 @@ export class HydrologicalMapProvider implements MapConfigProvider {
         measureStations.set("id", "measure_stations");
         measureStations.set("vector", true);
 
+
+        // Hydro description GeoJSON Layer
+
+        const hydroDescriptionLayer = new VectorLayer({
+            source: new VectorSource({
+                url: "https://i-cisk.dev.52north.org/data/collections/ll_spain_hidro_description/items?f=json",
+                format: new GeoJSON({
+                    dataProjection: "EPSG:4326",
+                    featureProjection: "EPSG:3857"
+                })
+            }),
+            visible: false,
+            style: styleFunctionHydroDescription
+        });
+        hydroDescriptionLayer.set("id", "hydro_description");
+        hydroDescriptionLayer.set("hydro_desc", true);
+
         return {
             initialView: {
                 kind: "position",
@@ -354,8 +375,8 @@ export class HydrologicalMapProvider implements MapConfigProvider {
                     isBaseLayer: false
                 }),
                 new SimpleLayer({
-                    title: "Groundwater",
-                    olLayer: groundwaterLayer,
+                    title: "Groundwater Raster",
+                    olLayer: groundwaterRasterLayer,
                     isBaseLayer: false
                 }),
                 new SimpleLayer({
@@ -366,6 +387,13 @@ export class HydrologicalMapProvider implements MapConfigProvider {
                 new SimpleLayer({
                     title: "GeologicalLines",
                     olLayer: geologicalLinesLayer,
+                    isBaseLayer: false
+                }),
+
+                // Hydro description
+                new SimpleLayer({
+                    title: "Hydro Description",
+                    olLayer: hydroDescriptionLayer,
                     isBaseLayer: false
                 }),
 

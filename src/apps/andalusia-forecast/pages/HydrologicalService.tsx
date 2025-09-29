@@ -16,12 +16,17 @@ import {
     SliderThumb,
     SliderTrack,
     Text,
-    VStack
+    VStack,
+    Select
 } from "@open-pioneer/chakra-integration";
 import { InfoBoxComponent } from "info-box";
 import { useIntl } from "open-pioneer:react-hooks";
 import { buildCustomLegend } from "../components/Legends/buildCustomLegendHydroService";
 import { InfoTooltip } from "../components/InfoTooltip/InfoTooltip";
+import ImageLayer from "ol/layer/Image";
+import TileLayer from "ol/layer/Tile";
+import GeoTIFF from "ol/source/GeoTIFF";
+import { map } from "highcharts";
 
 export function HydrologicalService() {
     const mapModel = useMapModel(MAP_ID);
@@ -34,6 +39,7 @@ export function HydrologicalService() {
     const [visibleLegends, setVisibleLegends] = useState<legendEntry[]>([]);
     const [showLegends, setShowLegends] = useState(true);
 
+    const [selectedMonth_groundwater, setSelectedMonth_groundwater] = useState("abril_2023");
     type legendEntry = 
         | { type: "image"; url: string }
         | { type: "custom"; content: React.ReactNode, id: string };
@@ -51,6 +57,7 @@ export function HydrologicalService() {
             "https://www.juntadeandalucia.es/medioambiente/mapwms/REDIAM_siose_2020?language=spa&version=1.3.0&service=WMS&request=GetLegendGraphic&sld_version=1.1.0&layer=raster_recon_siose20&format=image/png&STYLE=default",
         "thematic-2":"",
         "thematic-3":"",
+        hydro_description: ""
     };
 
     const updateVisibleLegends = (layerId: string, show: boolean) => {
@@ -89,23 +96,17 @@ export function HydrologicalService() {
     useEffect(() => {
         if (!mapModel || !mapModel.map?.olMap) return;
         const mapLayers = mapModel.map.olMap.getLayers().getArray();
-
+    
+        // Thematische Layer
         mapLayers.forEach((layer) => {
             if (layer.get("thematic")) {
                 const isActive = layer.get("id") === `thematic-${thematicMap}`;
                 layer.setVisible(isActive);
-                if (isActive) {
-                    layer.setOpacity(opacity);
-                }
+                if (isActive) layer.setOpacity(opacity);
             }
         });
-
-        Object.keys(legendUrls)
-            .filter((id) => id.startsWith("thematic-"))
-            .forEach((id) => {
-                updateVisibleLegends(id, id === `thematic-${thematicMap}`);
-            });
-
+    
+        // Vektor-Layer
         mapLayers.forEach((layer) => {
             if (layer.get("vector")) {
                 const id = layer.get("id");
@@ -114,12 +115,25 @@ export function HydrologicalService() {
                 updateVisibleLegends(id, isActive);
             }
         });
-
-        const chismorreosLayer = mapLayers.find((layer) => layer.get("id") === "chismorreos");
-        if (chismorreosLayer) {
-            chismorreosLayer.setVisible(chismorreosActive);
-        }
+    
+        // Chismorreos / hydro_desc Layer
+        mapLayers.forEach((layer) => {
+            if (layer.get("id") === "hydro_description") {
+                const id = layer.get("id");
+                const isActive = chismorreosActive;
+                layer.setVisible(isActive);
+                updateVisibleLegends(id, isActive);
+            }
+        });
+    
+        // Legenden für thematische Layer aktualisieren
+        Object.keys(legendUrls)
+            .filter((id) => id.startsWith("thematic-"))
+            .forEach((id) => {
+                updateVisibleLegends(id, id === `thematic-${thematicMap}`);
+            });
     }, [thematicMap, activeVectorLayers, opacity, chismorreosActive, mapModel]);
+    
 
     const toggleVectorLayer = (layerId: string) => {
         setActiveVectorLayers((prev) => {
@@ -132,6 +146,39 @@ export function HydrologicalService() {
     useEffect(() => {
         console.log("Visible Legends Updated:", visibleLegends);
     }, [visibleLegends]);
+
+    // Display different groundwater layer based on selected month
+    useEffect(() => {
+        if (!mapModel?.map?.olMap) return;
+    
+        const mapLayers = mapModel.map.olMap.getLayers().getArray();
+
+        console.log("mapLayers:", mapLayers);
+
+        const groundwaterLayer = mapLayers.find(l => l.get("id") === "thematic-3");
+
+        if (groundwaterLayer) {
+
+            console.log("groundwaterLayer found:", groundwaterLayer);
+            const newSource = new GeoTIFF({
+                sources: [
+                    {
+                        url: `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/HYDROMAP/isolines/COG_ICISK_${selectedMonth_groundwater}.tif`,
+                        nodata: -9999,
+                        bands: [1],
+                    }
+                ],
+                projection: "EPSG:25830"
+            });
+    
+            groundwaterLayer.setSource(newSource);
+    
+
+            groundwaterLayer.setVisible(thematicMap === "3");
+            groundwaterLayer.setOpacity(opacity);
+        }
+    }, [selectedMonth_groundwater, thematicMap, opacity, mapModel]);
+    
 
     return (
         <Container minWidth={"container.xl"}>
@@ -156,26 +203,45 @@ export function HydrologicalService() {
                                 const labelId =
                                     value === ""
                                         ? "none"
-                                        : [
-                                              "land_use",
-                                              "geological",
-                                              "groundwater",
-                                          ][+value - 1];
-                                const label = `${intl.formatMessage({ id: `hydro_service.selection_options.thematic_maps.${labelId}` })}${hasLegend ? " 🗺️" : ""}`;
+                                        : ["land_use", "geological", "groundwater"][+value - 1];
+                                const label = `${intl.formatMessage({
+                                    id: `hydro_service.selection_options.thematic_maps.${labelId}`
+                                })}${hasLegend ? " 🗺️" : ""}`;
+
                                 return (
-                                    <HStack>
-                                        <Radio key={value} value={value}>
-                                            {label}
-                                        </Radio>
-                                        {value !== "" && (
-                                            <InfoTooltip i18n_path={`hydro_service.info.${["land_use","geological","groundwater"][value-1]}`}/>
+                                    <VStack key={value} align="start">
+                                        <HStack>
+                                            <Radio value={value}>{label}</Radio>
+                                            {value !== "" && (
+                                                <InfoTooltip
+                                                    i18n_path={`hydro_service.info.${[
+                                                        "land_use",
+                                                        "geological",
+                                                        "groundwater"
+                                                    ][+value - 1]}`}
+                                                />
                                             )}
-                                    </HStack>
+                                        </HStack>
+                                        {thematicMap === "3" && value === "3" && (
+                                            <Select
+                                                value={selectedMonth_groundwater}
+                                                onChange={(e) =>
+                                                    setSelectedMonth_groundwater(e.target.value)
+                                                }
+                                                w="200px"
+                                            >
+                                                <option value="abril_2023">Abril 2023</option>
+                                                <option value="noviembre_2023">Noviembre 2023</option>
+                                                <option value="abril_2024">Abril 2024</option>
+                                                <option value="noviembre_2024">Noviembre 2024</option>
+                                                <option value="abril_2025">Abril 2025</option>
+                                            </Select>
+                                        )}
+                                    </VStack>
                                 );
                             })}
                         </VStack>
                     </RadioGroup>
-
                     {thematicMap && (
                         <VStack align="start" mt={4} w="full">
                             <p>

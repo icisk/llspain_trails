@@ -135,3 +135,33 @@ export const styleFuntcionMeasureStations = (feature: any) => {
         })
     });
 };
+
+
+export const styleFunctionHydroDescription = (feature: any) => {
+    const id = feature.getId();
+    console.log("Feature id: ", id);
+    const color = id === 0 ? "yellow" :
+                  id === 1 ? "green" :
+                  id === 3 ? "blue" :
+                  "red";
+
+    return new Style({
+        fill: new Fill({
+            color: `rgba(${hexToRgb(color)}, 0.25)`
+        }),
+        stroke: new Stroke({
+            color: "#000000",
+            width: 1
+        })
+    });
+};
+
+function hexToRgb(colorName: string): string {
+    const colors: Record<string, string> = {
+        yellow: "255,255,0",
+        green: "0,128,0",
+        blue: "0,0,255",
+        red: "255,0,0"
+    };
+    return colors[colorName] || "0,0,0";
+}
