@@ -26,6 +26,7 @@ import { transformExtent } from "ol/proj";
 import { Style, Circle as CircleStyle, Fill, Stroke } from "ol/style";
 import WebGLTileLayer from "ol/layer/WebGLTile";
 import XYZ from "ol/source/XYZ";
+import { groundwaterColorGradient } from "../components/utils/globals";
 import { get } from "http";
 import { Tile } from "ol";
 
@@ -62,21 +63,40 @@ export class HydrologicalMapProvider implements MapConfigProvider {
         // landUseLayer.set("thematic", true);
 
         // groundwater layer
-        const groundwaterRasterLayer = new TileLayer({
+        const groundwaterRasterLayer = new WebGLTileLayer({            
             source: new GeoTIFF({
                 sources: [
                     {
                         url: "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/HYDROMAP/isolines/ICISK_abril_2023.tif",
-                        nodata: -9999,
-                        bands: [1],
+                        // nodata: -99999,
+                        // bands: [1],
                     }
                 ],
                 projection: "EPSG:25830",
-
             }),
             visible: true,
             opacity: 0.8,
             zIndex: 1000,
+            style: {
+                // color: groundwaterColorGradient
+                // color: [128,128,128]
+                // color: [
+                //     "case",
+                //     ["<", ["band", 1], 250], [239,243,255,255],
+                //     ["<", ["band", 1], 300], [198,219,239,255],
+                //     ["<", ["band", 1], 350], [158,202,225,255],
+                //     ["<", ["band", 1], 400], [107,174,214,255],
+                //     ["<", ["band", 1], 450], [66,146,198,255],
+                //     ["<", ["band", 1], 500], [33,113,181,255],
+                //     ["<", ["band", 1], 550], [8,81,156,255],
+                //     ["<", ["band", 1], 600], [8,48,107,255],
+                //     ["<", ["band", 1], 650], [0,0,90,255],
+                //     ["<", ["band", 1], 700], [0,0,70,255],
+                //     ["<", ["band", 1], 750], [0,0,50,255],
+                //     ["<", ["band", 1], 800], [0,0,30,255],
+                //     [0,0,10,255]
+                // ]
+            }
         });
         
         groundwaterRasterLayer.set("id", "thematic-3");

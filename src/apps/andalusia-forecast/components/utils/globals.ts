@@ -204,3 +204,29 @@ export const oliveOilColorGradient = [
     ...boundaries_oliveoil.flatMap((boundary) => [boundary, colorScale_oliveoil(boundary).hex()])
 ];
 
+export const groundwaterColors = {
+    gw1: "#f7fbff",
+    gw2: "#deebf7",
+    gw3: "#c6dbef",
+    gw4: "#9ecae1",
+    gw5: "#6baed6",
+    gw6: "#4292c6",
+    gw7: "#2171b5",
+    gw8: "#08519c",
+    gw9: "#08306b"
+};
+
+// Define the value boundaries for each color step
+const boundaries_groundwater = [250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800];
+
+// Build the gradient scale
+const gradientColors_groundwater = Object.values(groundwaterColors);
+const colorScale_groundwater = chroma.scale(gradientColors_groundwater).domain([boundaries_groundwater[0], boundaries_groundwater[boundaries_groundwater.length - 1]]).mode('lab');
+
+// Create the OpenLayers WebGLTileLayer color expression
+export const groundwaterColorGradient = [
+    "interpolate",
+    ["linear"],
+    ["band", 1],
+    ...boundaries_groundwater.flatMap(boundary => [boundary, colorScale_groundwater(boundary).hex()])
+];

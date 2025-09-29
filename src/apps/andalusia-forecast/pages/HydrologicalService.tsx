@@ -149,10 +149,8 @@ export function HydrologicalService() {
 
     // Display different groundwater layer based on selected month
     useEffect(() => {
-        if (!mapModel?.map?.olMap) return;
-    
+        if (!mapModel?.map?.olMap) return;    
         const mapLayers = mapModel.map.olMap.getLayers().getArray();
-
         console.log("mapLayers:", mapLayers);
 
         const groundwaterLayer = mapLayers.find(l => l.get("id") === "thematic-3");
@@ -164,15 +162,14 @@ export function HydrologicalService() {
                 sources: [
                     {
                         url: `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/HYDROMAP/isolines/COG_ICISK_${selectedMonth_groundwater}.tif`,
-                        nodata: -9999,
+                        nodata: -99999,
                         bands: [1],
                     }
                 ],
                 projection: "EPSG:25830"
             });
     
-            groundwaterLayer.setSource(newSource);
-    
+            groundwaterLayer.setSource(newSource);    
 
             groundwaterLayer.setVisible(thematicMap === "3");
             groundwaterLayer.setOpacity(opacity);
