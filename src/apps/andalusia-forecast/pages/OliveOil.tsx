@@ -49,7 +49,7 @@ const OliveOil = () => {
     const mapState = useMapModel(MAP_ID);
     const oliveoilService = useService<OliveOilLayerHandler>("app.OliveOilLayerHandler");
     const timestamps:Date[] = [];
-    for (let year = 2002; year <= 2022; year++) {
+    for (let year = 2002; year <= 2040; year++) {
             timestamps.push(new Date(Date.UTC(year, 0, 1)));        
     }
     const [sliderValue, setSliderValue] = React.useState(timestamps[0]);
