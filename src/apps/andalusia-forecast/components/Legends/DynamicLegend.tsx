@@ -132,7 +132,7 @@ export const DynamicLegend = ({ variable, position }: { variable: string, positi
             { value: 25, color: hextoRGBA(phenocolors_SU.su_11, 0.75), label: intl.formatMessage({ id: "global.legend.su.su_11" }) },
         ];
     } else if (variable === 'oliveoil') {
-        text = 'legend'
+        text = 'producción [Kg/ha]'
         colorMapping = [
             { value: 0,    color: hextoRGBA(oliveOilColors.oo1, 0.75),  label: "0" },
             { value: 500,  color: hextoRGBA(oliveOilColors.oo2, 0.75),  label: "500" },

@@ -33,15 +33,15 @@ const OliveOil = () => {
     const [itemsUrl, setItemsUrl] = React.useState<string | null>(null);
 
     const [chartOptions, setChartOptions] = React.useState<any>({
-        title: { text: "OliveOil ModelPlot" },
+        title: { text: "Evolución de la producción" },
         xAxis: {
             type: "datetime",
-            title: { text: "Fecha" },
+            title: { text: "Año" },
             labels: {
-                format: '{value:%d %b %Y}'
+                format: '{value:%Y}'
             }
         },
-        yAxis: { title: { text: "Valor" } },
+        yAxis: { title: { text: "producción [Kg/ha]" } },
         tooltip: { valueDecimals: 2 },
         series: []
     });
@@ -89,7 +89,7 @@ const OliveOil = () => {
                     if (timestamps.length > 0 && itemsData.ranges) {
                                 const values = itemsData.ranges.yield.values;
                                 const seriesData = values.map((value: number, index: number)=> [timestamps[index]?.getTime(), value] )
-                                newSeries.push({name: 'oliveoil', data: seriesData});
+                                newSeries.push({name: 'Producción aceituna', data: seriesData});
                     }
                     // console.log(newSeries);
                     setChartOptions((prev: any) => ({

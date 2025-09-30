@@ -67,7 +67,7 @@ export class HydrologicalMapProvider implements MapConfigProvider {
             source: new GeoTIFF({
                 sources: [
                     {
-                        url: "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/HYDROMAP/isolines/ICISK_abril_2023.tif",
+                        url: "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/HYDROMAP/isolines/COG_ICISK_abril_2023.tiff",
                         // nodata: -99999,
                         // bands: [1],
                     }

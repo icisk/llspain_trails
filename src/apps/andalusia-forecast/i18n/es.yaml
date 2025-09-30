@@ -248,9 +248,9 @@ messages:
     heading:  Registros climáticos históricos en las estaciones
     heading_descr: Este mapa muestra las series temporales de datos recolectados en la red nacional de estaciones meteorológicas de la AEMET
   oliveoil:
-    nav: Olive Oil
-    heading: OliveOil model
-    heading_descr: description of oliveoilmodel
+    nav: Producción aceituna
+    heading: Modelo de producción de aceituna
+    heading_descr: Este modelo ofrece una estimación de la producción de aceitunas en kg/ha en función de las condiciones climáticas y las condiciones de altitud y orientación del terreno. Se ofrecen valores históricos desde 2002 hasta 2022 generados en base a datos empíricos, y valores de predicción de 2023 a 2040, calculados usando las proyecciones climáticas mensuales de temperatura y precipitación para el dominio europeo de EuroCORDEX incluidas en la pestaña Proyecciones climáticas.
 overrides:
   '@open-pioneer/map-navigation':
     zoom-out:

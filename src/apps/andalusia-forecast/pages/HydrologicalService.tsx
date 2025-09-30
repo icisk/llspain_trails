@@ -161,7 +161,7 @@ export function HydrologicalService() {
             const newSource = new GeoTIFF({
                 sources: [
                     {
-                        url: `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/HYDROMAP/isolines/COG_ICISK_${selectedMonth_groundwater}.tif`,
+                        url: `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/HYDROMAP/isolines/COG_ICISK_${selectedMonth_groundwater}.tiff`,
                         nodata: -99999,
                         bands: [1],
                     }
