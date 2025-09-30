@@ -1,4 +1,5 @@
 import React from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import { Forecast } from "./pages/Forecast";
@@ -15,6 +16,16 @@ import { ApplicationContext } from "@open-pioneer/runtime";
 import { Flex, Box } from "@open-pioneer/chakra-integration";
 const AppUI = () => {
     const baseUrl = import.meta.env["BASE_URL"];
+    const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsDesktop(window.innerWidth >= 768);
+        };
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+    
     return (
         <Router basename={baseUrl}> 
             <Box pb="60px">   
@@ -31,7 +42,7 @@ const AppUI = () => {
                         <Route path="/oliveoil" element={<OliveOil />} />
                     </Routes>
                 </Box>
-                <Footer />
+                {isDesktop && <Footer />}
             </Box>
         </Router>
     );
