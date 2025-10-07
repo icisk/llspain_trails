@@ -250,7 +250,7 @@ messages:
   oliveoil:
     nav: Producción aceituna
     heading: Modelo de producción de aceituna
-    heading_descr: Este modelo ofrece una estimación de la producción de aceitunas en kg/ha en función de las condiciones climáticas y las condiciones de altitud y orientación del terreno. Se ofrecen valores históricos desde 2002 hasta 2022 generados en base a datos empíricos, y valores de predicción de 2023 a 2040, calculados usando las proyecciones climáticas mensuales de temperatura y precipitación para el dominio europeo de EuroCORDEX incluidas en la pestaña Proyecciones climáticas.
+    heading_descr: Este modelo ofrece una estimación de la producción de aceitunas en kg/ha en localizaciones potenciales en función de las condiciones climáticas y de altitud y orientación del terreno, a una escala de 230 m. Se ofrecen valores históricos desde 2002 hasta 2022 generados en base a datos empíricos, y valores de predicción de 2023 a 2040, calculados usando las proyecciones climáticas mensuales de temperatura y precipitación para el dominio europeo de EuroCORDEX incluidas en la pestaña Proyecciones climáticas.
 overrides:
   '@open-pioneer/map-navigation':
     zoom-out:
