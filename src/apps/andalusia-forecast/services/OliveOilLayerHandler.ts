@@ -60,7 +60,7 @@ export class OliveOilLayerHandlerImpl implements OliveOilLayerHandler {
     private createSource() {
         const year = this.#currentDate.value.getFullYear();
 
-        const layerURL = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/OLIVEOIL/historical/COG_250m_Mediana_prediccion_produccion_aceitunas_${year}_def.tif`;
+        const layerURL = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/OLIVEOIL/historical/COG_230m_Mediana_prediccion_produccion_aceitunas_${year}_def.tif`;
         //https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/OLIVEOIL/historical/COG_250m_Mediana_prediccion_produccion_aceitunas_2002_def.tif
         // console.log("🔗 Using layer URL:", layerURL);
         return new GeoTIFF({
