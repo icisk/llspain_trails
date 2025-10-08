@@ -175,23 +175,23 @@ export const uncertaintyColors = {
 //     6500: "#000f05"  // almost black green
 // };
 export const oliveOilColors = {
-    oo1: "#ffffff00", // very light green
-    oo2: "#c7e9c0",
-    oo3: "#a1d99b",
-    oo4: "#74c476",
-    oo5: "#41ab5d",
-    oo6: "#238b45",
-    oo7: "#006d2c",
-    oo8: "#005824",
-    oo9: "#00441b",
-    oo10:"#003716",
-    oo11:"#002b11",
-    oo12:"#00200d",
-    oo13:"#001708",
-    oo14:"#000f05" // almost black green
+    oo1: "#ffff99", 
+    oo2: "#ffe066",
+    oo3: "#f0e130",
+    oo4: "#ffbf00",
+    oo5: "#f9a602",
+    oo6: "#b08d57",
+    oo7: "#9c9f7d",
+    oo8: "#98ff98",
+    oo9: "#50c878",
+    oo10:"#00ff00",
+    oo11:"#7bb952",
+    oo12:"#8a9a5b",
+    oo13:"#3b5a2e",
+    oo14:"#2e4224" 
 };
 
-const boundaries_oliveoil = [-10, 0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500];
+const boundaries_oliveoil = [0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500];
 const gradientColors_oliveoil = [
     tempColors.black,
     ...Object.values(oliveOilColors)
