@@ -27,9 +27,12 @@ export function HistoricPickerRight(props: HistoricPickerProps) {
     const [months, setMonths] = useState<number[]>([]);
     const [yearMonthMap, setYearMonthMap] = useState<Record<number, Set<number>>>({});
 
-    const meta_precip: string = 'https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/creaf_historic_precip_metrics.zarr/.zmetadata'
-    const meta_temp: string = 'https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/creaf_historic_temperature_metrics.zarr/.zmetadata'
-    
+    // const meta_precip = 'https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/creaf_historic_precip_metrics.zarr/.zmetadata';
+    const meta_precip = 'https://i-cisk.dev.52north.org/data/collections/creaf_historic_precip/position?coords=POINT(0 0)&f=json'
+
+    // const meta_temp = 'https://52n-i-cisk.obs.eu-de.otc.t-systems.com/data-ingestor/creaf_historic_temperature_metrics.zarr/.zmetadata';
+    const meta_temp = 'https://i-cisk.dev.52north.org/data/collections/creaf_historic_temperature/position?coords=POINT(0 0)&f=json'
+
     const [mainVar, setMainVar] = useState(
             currentVar.startsWith("spei") || currentVar.startsWith("spi") ? "indicators" : currentVar
         );
@@ -45,16 +48,39 @@ export function HistoricPickerRight(props: HistoricPickerProps) {
             fetch(link)
                 .then((response) => response.json())
                 .then((data) => {
-                    const metrics = data.metadata[".zattrs"].metrics;
+                    // console.log(data);
+                    const startDate = new Date(data.domain.axes.time.start);
+                    const endDate = new Date(data.domain.axes.time.stop);
                     const yearMonthMap: Record<number, Set<number>> = {};
 
-                    Object.keys(metrics).forEach((dateString) => {
-                        const date = new Date(dateString);
-                        const year = date.getFullYear();
-                        const month = date.getMonth() + 1;
-                        if (!yearMonthMap[year]) yearMonthMap[year] = new Set();
-                        yearMonthMap[year].add(month);
-                    });
+                    const startYear = startDate.getFullYear();
+                    const endYear = endDate.getFullYear();
+                    
+                    for (let y = startYear; y <= endYear; y++) {
+                        yearMonthMap[y] = new Set();
+                    
+                        if (y === startYear && y === endYear) {
+                            // Start- und Endjahr gleich
+                            for (let m = startDate.getMonth() + 1; m <= endDate.getMonth() + 1; m++) {
+                                yearMonthMap[y].add(m);
+                            }
+                        } else if (y === startYear) {
+                            // Erstes Jahr
+                            for (let m = startDate.getMonth() + 1; m <= 12; m++) {
+                                yearMonthMap[y].add(m);
+                            }
+                        } else if (y === endYear) {
+                            // Letztes Jahr
+                            for (let m = 1; m <= endDate.getMonth() + 1; m++) {
+                                yearMonthMap[y].add(m);
+                            }
+                        } else {
+                            // Alle Zwischenjahre
+                            for (let m = 1; m <= 12; m++) {
+                                yearMonthMap[y].add(m);
+                            }
+                        }
+                    }
 
                     const availableYears = Object.keys(yearMonthMap).map(Number);
                     setYears(availableYears);
@@ -64,7 +90,7 @@ export function HistoricPickerRight(props: HistoricPickerProps) {
                     setYearMonthMap(yearMonthMap);
                 })
                 .catch((error) => console.error("Error fetching data:", error));
-        }  
+        }
     }, [currentYear, currentVar]);
 
     useEffect(() => {
