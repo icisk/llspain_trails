@@ -94,10 +94,10 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
     #currentYearRight: Reactive<Year> = reactive(Year.dummy2);
     #currentVarRight: Reactive<Variable> = reactive("temp");
     #currentUrlLeft: Reactive<string> = reactive(
-        "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_2000_08_MeanTemperature_v0.tif"
+        "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/Historical_TEMPERATURE_models/COG_TEMP_2000_08.tif"
     );
     #currentUrlRight: Reactive<string> = reactive(
-        "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/temp/COG_2005_01_MeanTemperature_v0.tif"
+        "https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/Historical_TEMPERATURE_models/COG_TEMP_2005_01.tif"
     );
 
     constructor(options: ServiceOptions<References>) {
@@ -216,10 +216,12 @@ export class HistoricLayerHandlerImpl implements HistoricLayerHandler {
         let year_month: string = `${year}_${month.toString().padStart(2, "0")}`;
         switch (value) {
             case "temp":
-                historicLayer += `temp/COG_${year_month}_MeanTemperature_v0.tif`;
+                //historicLayer += `temp/COG_${year_month}_MeanTemperature_v0.tif`;
+                historicLayer += `data/Historical_TEMPERATURE_models/COG_TEMP_${year_month}.tif`;
                 break;
             case "precip":
-                historicLayer += `precip/COG_${year_month}_precipitation_v1.tif`;
+                //historicLayer += `precip/COG_${year_month}_precipitation_v1.tif`;
+                historicLayer += `data/Historical_PRECIPITATION_models/COG_PL_${year_month}.tif`;
                 break;
             //
             // SPEI

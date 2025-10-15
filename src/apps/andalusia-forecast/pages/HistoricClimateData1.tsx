@@ -207,7 +207,7 @@ const HistoricClimateData1 = () => {
             const minDate = new Date(Math.min(...dates));
             const maxDate = new Date(Math.max(...dates));
             
-            console.log(minDate, maxDate)
+            // console.log(minDate, maxDate)
 
             setOldestDateOfAllTS(minDate);
             setNewestDateOfAllTS(maxDate);
