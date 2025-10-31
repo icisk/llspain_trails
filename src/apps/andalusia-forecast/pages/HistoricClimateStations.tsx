@@ -683,7 +683,9 @@ const HistoricClimateStations = () => {
                     {/* Map section */}
                     <div style={{ flex: 1 }}>{/* Removed year and month selection */}</div>
                     <Box width="100%" height="500px" position="relative">
+
                         <MainMap MAP_ID={MAP_ID} />
+
                         <Box
                             position="absolute"
                             top="10px"

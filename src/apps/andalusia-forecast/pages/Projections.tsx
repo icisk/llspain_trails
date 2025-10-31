@@ -91,7 +91,7 @@ const Projections = () => {
                     // console.log(timestamps);
                     if (timestamps.length > 0 && itemsData.ranges) {
                         for (const varName in itemsData.ranges) {
-                            const isTemp = varName.includes("temp");
+                            const isTemp = varName.includes("tas");
                             const isPrecip = varName.includes("pr");
                             if ((variable === "temp" && isTemp) || (variable === "precip" && isPrecip)) {
                                 const values = itemsData.ranges[varName].values;
@@ -100,7 +100,7 @@ const Projections = () => {
                             }
                         }
                     }
-                    console.log(newSeries);
+                    // console.log(newSeries);
                     setChartOptions((prev: any) => ({
                         ...prev,
                         series: newSeries
@@ -245,7 +245,11 @@ const Projections = () => {
 
                             </MapAnchor>                            
                         </MapContainer>
+
                     </Box>
+                    <>
+                        {intl.formatMessage({id: "global.click"})}
+                    </>
                     <Box mb={4}>
                         <CoordsScaleBar MAP_ID={MAP_ID} />
                     </Box>

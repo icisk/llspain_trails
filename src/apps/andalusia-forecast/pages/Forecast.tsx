@@ -142,6 +142,9 @@ export function Forecast() {
             </Center>
             <Box position="relative">
                 <MainMap MAP_ID={MAP_ID} />
+                <>
+                    {intl.formatMessage({id: "global.click"})}
+                </>
                 <DynamicLegend variable={variable} position="right" />
                 {showUncertainty && <DynamicLegend variable="uncertainty" position="left" />}
             </Box>

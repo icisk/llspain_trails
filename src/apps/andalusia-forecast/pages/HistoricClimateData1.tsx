@@ -837,6 +837,9 @@ const HistoricClimateData1 = () => {
                             <DynamicLegend variable={varLeft} position={"left"} />
                             <DynamicLegend variable={varRight} position={"right"} />
                         </Box>
+                        <>
+                            {intl.formatMessage({id: "global.click"})}
+                        </>
 
                         {leftLayers && rightLayers && mapModel.map && (
                             <LayerSwipe
@@ -852,6 +855,7 @@ const HistoricClimateData1 = () => {
                         <Box mb={4} gap={10}>
                             <RegionZoom MAP_ID={MAP_ID} />
                         </Box>
+
                         <Box mt={4}>
                             <RadioGroup
                                 onChange={(value) => {

@@ -61,7 +61,7 @@ export function HydrologicalService() {
     };
 
     const updateVisibleLegends = (layerId: string, show: boolean) => {
-        console.log(`Updating legend for layer: ${layerId}, show: ${show}`);
+        // console.log(`Updating legend for layer: ${layerId}, show: ${show}`);
 
         const legendUrl = legendUrls[layerId];
         const customLegend = buildCustomLegend(layerId);
@@ -144,20 +144,20 @@ export function HydrologicalService() {
 
     // debug use effect to track visibleLegends changes
     useEffect(() => {
-        console.log("Visible Legends Updated:", visibleLegends);
+        // console.log("Visible Legends Updated:", visibleLegends);
     }, [visibleLegends]);
 
     // Display different groundwater layer based on selected month
     useEffect(() => {
         if (!mapModel?.map?.olMap) return;    
         const mapLayers = mapModel.map.olMap.getLayers().getArray();
-        console.log("mapLayers:", mapLayers);
+        // console.log("mapLayers:", mapLayers);
 
         const groundwaterLayer = mapLayers.find(l => l.get("id") === "thematic-3");
 
         if (groundwaterLayer) {
 
-            console.log("groundwaterLayer found:", groundwaterLayer);
+            // console.log("groundwaterLayer found:", groundwaterLayer);
             const newSource = new GeoTIFF({
                 sources: [
                     {

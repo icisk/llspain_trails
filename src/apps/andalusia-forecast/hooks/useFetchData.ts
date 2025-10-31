@@ -46,7 +46,7 @@ export function useFetchData(clickedCoordinates: any, variable: string, startMon
                 const response = await fetch(url);
                 if (!response.ok) throw new Error("Network response was not ok");
                 const jsonData = await response.json();
-                console.log("Fetched data:", jsonData);
+                // console.log("Fetched data:", jsonData);
 
                 const metrics = jsonData?.domain.axes.time;
                 const ts = coords2TS(metrics.start, metrics.stop, metrics.num);

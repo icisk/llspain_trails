@@ -219,9 +219,13 @@ const OliveOil = () => {
                             </MapAnchor>
                         </MapContainer>
                     </Box>
+                    <>
+                        {intl.formatMessage({id: "global.click"})}
+                    </>
                     <Box mb={4}>
                         <CoordsScaleBar MAP_ID={MAP_ID} />
                     </Box>
+
                     <DynamicLegend variable={'oliveoil'} position={"right"} />
                 </Box>
             </Container>

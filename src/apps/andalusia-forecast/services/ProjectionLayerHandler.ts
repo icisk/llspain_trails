@@ -81,7 +81,8 @@ export class ProjectionLayerHandlerImpl implements ProjectionLayerHandler {
         }
         
 
-        const layerURL = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/PROJECTION/COG_${file_prefix}_EUR-11_MPI-M-MPI-ESM-LR_rcp45_mean_MPI-CSC-REMO2009_v1_mon_${year}-${month}_roi.tiff`;
+        // const layerURL = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/PROJECTION/COG_${file_prefix}_EUR-11_MPI-M-MPI-ESM-LR_rcp45_mean_MPI-CSC-REMO2009_v1_mon_${year}-${month}_roi.tiff`;
+        const layerURL = `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/PROJECTION/new/COG_${file_prefix}_${year}-${month}_cokriging.tiff`
         // console.log("🔗 Using layer URL:", layerURL);
         return new GeoTIFF({
             normalize: false,

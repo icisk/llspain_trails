@@ -18,7 +18,7 @@ const Home = () => {
         { id: 'tab8', title: 'oliveoil', url: "/oliveoil", png: baseUrl + "/images/cs7.PNG" },
     ];
 
-    console.log("Base URL:", baseUrl);
+    // console.log("Base URL:", baseUrl);
 
     return (
         <Container minWidth="container.xl" py={6}>

@@ -132,7 +132,7 @@ export class PrecipitationLayerHandlerImpl implements PrecipitationLayerHandler 
                 : `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/FORECAST/precip/${startMonth}/COG_PLforecast_${start}_${end}_${forecastMonth}-${forecastYear}_pc_50_corrected.tif`;
         }
 
-        console.log("🔗 Using layer URL:", layerURL);
+        // console.log("🔗 Using layer URL:", layerURL);
 
         return new GeoTIFF({
             normalize: false,
