@@ -122,28 +122,6 @@ jobs:
         vuln-type: 'os,library'
         severity: 'CRITICAL,HIGH'
     -
-      if: ${{ hashFiles('trivy-results.txt') != '' }}
-      name: Post results to slack channel
-      uses: MeilCli/slack-upload-file@v4
-      with:
-        slack_token: ${{ secrets.SLACK_TOKEN_52N }}
-        file_path: trivy-results.txt
-        file_type: text
-        title: trivy scan results of ${{ github.repository }}
-        channel_id: ${{ secrets.SLACK_CHANNEL_ID_52N }}
-        initial_comment: "Trivy Results for '${{ env.IMAGE_TAG }}' from '${{ github.repository }}' uploaded. Please review: https://github.com/${{ github.repository }}/actions"
-    -
-      if: ${{ hashFiles('trivy-results.txt') != '' }}
-      name: Upload to I-CISK slack
-      uses: MeilCli/slack-upload-file@v4
-      with:
-        slack_token: ${{ secrets.SLACK_TOKEN_I_CISK }}
-        file_path: trivy-results.txt
-        file_type: text/plain
-        title: trivy scan results of ${{ github.repository }}
-        channel_id: ${{ secrets.SLACK_CHANNEL_ID_I_CISK }}
-        initial_comment: "Trivy Results for '${{ env.IMAGE_TAG }}' from '${{ github.repository }}' uploaded. Please review: https://github.com/${{ github.repository }}/actions"
-    -
       name: Trigger redeployment
       uses: actions/github-script@v8
       with:
