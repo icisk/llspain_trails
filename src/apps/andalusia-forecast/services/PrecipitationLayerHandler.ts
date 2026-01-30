@@ -114,6 +114,7 @@ export class PrecipitationLayerHandlerImpl implements PrecipitationLayerHandler 
         const forecastDate = new Date(this.#currentForecast.value);
 
         const startMonth = String(startDate.getMonth() + 1).padStart(2, "0");
+        const dateStamp = `${startDate.getFullYear()}_${startMonth}`;
         const start = `${startDate.getFullYear()}${startMonth}`;
         const endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 5, 1);
         const end = `${endDate.getFullYear()}${String(endDate.getMonth() + 1).padStart(2, "0")}`;
@@ -124,12 +125,12 @@ export class PrecipitationLayerHandlerImpl implements PrecipitationLayerHandler 
         let layerURL: string;
         if (this.#currentVariable.value === "temp") {
             layerURL = this.#showUncert.value
-                ? `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/FORECAST/temp/${startMonth}/COG_TEMPforecast_${start}_${end}_${forecastMonth}-${forecastYear}_memberUNCERTAINTY.tif`
-                : `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/FORECAST/temp/${startMonth}/COG_TEMPforecast_${start}_${end}_${forecastMonth}-${forecastYear}_pc_50_corrected.tif`;
+                ? `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/FORECAST/temp/${dateStamp}/COG_TEMPforecast_${start}_${end}_${forecastMonth}-${forecastYear}_memberUNCERTAINTY.tif`
+                : `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/FORECAST/temp/${dateStamp}/COG_TEMPforecast_${start}_${end}_${forecastMonth}-${forecastYear}_pc_50_corrected.tif`;
         } else {
             layerURL = this.#showUncert.value
-                ? `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/FORECAST/precip/${startMonth}/COG_PLforecast_${start}_${end}_${forecastMonth}-${forecastYear}_memberUNCERTAINTY.tif`
-                : `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/FORECAST/precip/${startMonth}/COG_PLforecast_${start}_${end}_${forecastMonth}-${forecastYear}_pc_50_corrected.tif`;
+                ? `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/FORECAST/precip/${dateStamp}/COG_PLforecast_${start}_${end}_${forecastMonth}-${forecastYear}_memberUNCERTAINTY.tif`
+                : `https://52n-i-cisk.obs.eu-de.otc.t-systems.com/cog/spain/data/FORECAST/precip/${dateStamp}/COG_PLforecast_${start}_${end}_${forecastMonth}-${forecastYear}_pc_50_corrected.tif`;
         }
 
         // console.log("🔗 Using layer URL:", layerURL);
