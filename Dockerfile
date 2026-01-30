@@ -20,6 +20,11 @@ RUN pnpm build --base ${BASE_PATH}
 
 FROM nginxinc/nginx-unprivileged:stable-alpine-slim
 
+#keep updated
+USER root
+RUN apk update && apk upgrade
+USER 101
+
 # copy application from build stage to run stage
 COPY --from=build /app/dist/www /usr/share/nginx/html
 
