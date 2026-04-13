@@ -125,7 +125,7 @@ jobs:
         severity: 'CRITICAL,HIGH'
     -
       name: Trigger redeployment
-      uses: actions/github-script@v8
+      uses: actions/github-script@v9
       with:
         github-token: ${{ secrets.GHA_WORKFLOW_TRIGGER }}
         script: |
