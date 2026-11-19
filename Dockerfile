@@ -5,7 +5,7 @@ ARG BASE_PATH=/
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 
-RUN npm install -g corepack && corepack enable 
+RUN npm install -g corepack && corepack enable
 RUN corepack use pnpm@9.x
 
 COPY . /app
@@ -18,7 +18,7 @@ RUN pnpm install
 # RUN pnpm install --frozen-lockfile
 RUN pnpm build --base ${BASE_PATH}
 
-FROM nginxinc/nginx-unprivileged:stable-alpine-slim
+FROM nginx/nginx-unprivileged:1.31.9-alpine-slim
 
 #keep updated
 USER root
