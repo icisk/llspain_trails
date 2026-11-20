@@ -11,6 +11,8 @@ skipDevDependencies: true
 allowed:
   - "color-name"
   - "escape-string-regexp"
+  - "geotiff"
   - "source-map"
   - "stylis"
   - "tslib"
+  - "zstddec"

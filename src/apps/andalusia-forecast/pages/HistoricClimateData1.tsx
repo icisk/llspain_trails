@@ -16,7 +16,6 @@ import {
     HistoricPickerRight,
     SelectionRight
 } from "../components/VariablePicker/HistoricPickerRight";
-import { Knecht } from "../components/Legends/Knecht";
 import MapBrowserEvent from "ol/MapBrowserEvent";
 import { transform } from "ol/proj";
 import { createMarker, markerStyle } from "../components/utils/marker";
